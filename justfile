@@ -12,13 +12,17 @@ default:
 	just --list
 
 init:
+	just init-user
+	sudo just init-sudo
+
+init-sudo:
 	just install-apps-init
-	just stow-symlinks-init
-	just stow-files-init
-	just pull-repos-init
 
 # Run commands that must not be done as sudo
 init-user:
+	just stow-files-init
+	just stow-symlinks-init
+	just pull-repos-init
 	just install-user-apps-init
 
 install-apps-init:
@@ -43,10 +47,33 @@ install-apps-init:
 	just install-apps
 
 install-apps:
-	pacman -S --noconfirm \
-	stow									\
+	pacman -S --noconfirm --needed 	\
+	stow														\
 	zed
+	just install-rust
 	@echo "PASS install-apps"
+
+install-rust:
+	sudo pacman -Rns --noconfirm rust	|| true
+	sudo pacman -S --noconfirm --needed \
+	rustup cargo-binstall
+	# bevy dependencies https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md#arch--manjaro
+	sudo pacman -S --noconfirm --needed \
+	mold libx11 pkgconf alsa-lib pipewire-alsa
+	rustup default stable
+	rustup default nightly
+	cargo --version
+	# cargo install cargo-binstall
+	rustup target add wasm32-unknown-unknown
+	cargo binstall --no-confirm \
+	cargo-edit 									\
+	cargo-expand 								\
+	cargo-lambda 								\
+	cargo-watch 								\
+	leptosfmt										\
+	wasm-bindgen-cli 						\
+	wasm-opt
+	@echo "PASS install-rust"
 
 
 install-user-apps-init:
@@ -61,6 +88,7 @@ install-user-apps:
 stow-symlinks-init:
   rm -rf 													\
   ~/.bashrc												\
+  ~/.cargo												\
   ~/.config/hypr/input.conf 			\
   ~/.config/hypr/bindings.conf 		\
   ~/.config/hypr/monitors.conf 		\
@@ -73,6 +101,7 @@ stow-symlinks-init:
 stow-symlinks:
   cd stow && stow -vt ~ \
   bashrc 								\
+  cargo 								\
   hypr 									\
   mimeapps 							\
   starship 							\

@@ -12,4 +12,5 @@ alias zed='zeditor'
 alias z='zeditor'
 alias c='cargo'
 
+# export CARGO_TARGET_DIR="$HOME/.cargo_target"
 echo "PIZZA TIME"
