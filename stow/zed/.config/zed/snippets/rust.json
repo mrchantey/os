@@ -1,0 +1,532 @@
+{
+	"UnwrapChecked": {
+		"prefix": "unwrapchecked",
+		"body": ".unwrap(/*checked*/)$0"
+	},
+	"ToTheMoon": {
+		"prefix": "tothemoon",
+		"body": "println!(\"🚀🚀🚀\");"
+	},
+	"Log": {
+		"prefix": "log!",
+		"body": "sweet_utils::log!(\"${1:hello}\");$0"
+	},
+	"Print": {
+		"prefix": "println",
+		"body": "println!(\"${1:hello}\");$0"
+	},
+	"Dash": {
+		"prefix": "dash",
+		"body": "/*-*/"
+	},
+	"Pretty": {
+		"prefix": "pretty_env_logger",
+		"body": "pretty_env_logger::try_init().ok();"
+	},
+	"Trace": {
+		"prefix": "trace",
+		"body": "log::trace!(\"${1:hello}\");$0"
+	},
+	"Debug": {
+		"prefix": "debug",
+		"body": "log::debug!(\"${1:hello}\");$0"
+	},
+	"Info": {
+		"prefix": "info",
+		"body": "log::info!(\"${1:hello}\");$0"
+	},
+	"Pizza": {
+		"prefix": "pizza",
+		"body": "log::info!(\"pizza${1:1}\");$0"
+	},
+	"Warn": {
+		"prefix": "warn",
+		"body": "log::warn!(\"${1:hello}\");$0"
+	},
+	"Error": {
+		"prefix": "error",
+		"body": "log::error!(\"${1:hello}\");$0"
+	},
+	"Ok Or Log": {
+		"prefix": "okorlog",
+		"body": "ok_or(|e| log::error!(\"{e}\"))$0"
+	},
+	"Match Some": {
+		"prefix": "matchsome",
+		"body": [
+			"let ${1:foo} = match ${2:bar} {",
+			"\tSome(value) => value,",
+			"\tNone => ${3:return Ok(())},",
+			"};$0"
+		]
+	},
+	"derive": {
+		"prefix": "derive",
+		"body": "#[derive(${1:Debug,Clone,Copy,PartialEq})]$0"
+	},
+	"prelude": {
+		"prefix": "prelude",
+		"body": "use ${1:crate}::prelude::*;$0"
+	},
+	"result": {
+		"prefix": "result",
+		"body": "use anyhow::Result;$0"
+	},
+	"returnresult": {
+		"prefix": "returnresult",
+		"body": " -> Result<${1:()}>$0"
+	},
+	"super": {
+		"prefix": "super",
+		"body": "use super::*;$0"
+	},
+	"supersuper": {
+		"prefix": "supersuper",
+		"body": "use super::super::*;$0"
+	},
+	"crate": {
+		"prefix": "crate",
+		"body": "use crate::*;$0"
+	},
+	"ok": {
+		"prefix": "ok",
+		"body": "Ok(${1:()})$0"
+	},
+	"skip": {
+		"prefix": "skip",
+		"body": "#[rustfmt::skip]"
+	},
+	"allow": {
+		"prefix": "allow",
+		"body": "#[allow(${1:unused})]$0"
+	},
+	"skipfile": {
+		"prefix": "skipfile",
+		"body": "#![cfg_attr(rustfmt, rustfmt_skip)]$0"
+	},
+	"macro": {
+		"prefix": "macro",
+		"body": [
+			"#[macro_export]",
+			"macro_rules! ${1:my_macro} {",
+			"\t($$value:expr) => {",
+			"\t\tprint!(\"{}\", $$value);",
+			"\t};",
+			"}"
+		]
+	},
+	"inspect": {
+		"prefix": "inspect",
+		"body": ".inspect(|val|println!(\"{:?}\", val))$0"
+	},
+	"extend": {
+		"prefix": "extend",
+		"body": [
+			"#[extend::ext(name=${1:MyType}Ext)]",
+			"pub impl ${1:MyType} {",
+			"\tfn ${2:my_func}(&self) {",
+			"\t$0",
+			"\t}",
+			"}"
+		]
+	},
+	"thiserror": {
+		"prefix": "thiserror",
+		"description": "Create a new error type",
+		"body": [
+			"#[derive(Debug, thiserror::Error)]",
+			"pub enum ${1:${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}}Error{",
+			"\t#[error(\"${2:Failed}({0})\")]",
+			"\t${2:Failed}(${3:String}),",
+			"}"
+		]
+	},
+	"struct": {
+		"prefix": "struct",
+		"description": "Insert Struct",
+		"body": [
+			"#[derive(Debug, Clone, Copy, PartialEq)]",
+			"pub struct ${1:${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}}{",
+			"\t${2:value}: ${3:u32},",
+			"}",
+			"",
+			"impl $1{",
+			"\tpub fn ${4:new}()->Self{",
+			"\t\t${5:Self{}}",
+			"\t}",
+			"",
+			"}"
+		]
+	},
+	"action-system": {
+		"prefix": "actionsystem",
+		"body": [
+			"use beet::prelude::*;",
+			"use bevy::prelude::*;",
+			"",
+			"",
+			"#[derive(Debug, Default, Clone, PartialEq, Component, Reflect, Action)]",
+			"#[systems($2.in_set(TickSet))]",
+			"#[reflect(Default, Component)]",
+			"pub struct ${1:${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}} {",
+			"$3",
+			"}",
+			"",
+			"fn ${2:${TM_FILENAME_BASE}}(query: Query<&$1, With<Running>>) {",
+			"$0",
+			"\tfor $2 in query.iter() {",
+			"\t\tlog::info!(\"Running - {:?}\", $2);",
+			"\t\t$0",
+			"\t}",
+			"}",
+			""
+		]
+	},
+	"action-observer": {
+		"prefix": "actionobserver",
+		"body": [
+			"use beet::prelude::*;",
+			"use bevy::prelude::*;",
+			"",
+			"",
+			"#[derive(Debug, Default, Clone, PartialEq, Component, Reflect, Action)]",
+			"#[observers($2)]",
+			"#[reflect(Default, Component)]",
+			"pub struct ${1:${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}} {",
+			"$3",
+			"}",
+			"",
+			"fn ${2:${TM_FILENAME_BASE}}(trigger:Trigger<OnRun>, query: Query<&$1>) {",
+			"$0",
+			"\tlet action = query",
+			"\t\t.get(trigger.entity())",
+			"\t\t.expect(expect_action::ACTION_QUERY_MISSING);",
+			"\t$0",
+			"}",
+			""
+		]
+	},
+	"ignore": {
+		"prefix": "ignore",
+		"body": "#[ignore = \"${1:reason}\"]$0"
+	},
+	"cfgtest": {
+		"prefix": "cfgtest",
+		"body": "#[cfg(test)]$0"
+	},
+	"test": {
+		"prefix": "test",
+		"description": "Insert Test",
+		"body": [
+			"#[cfg(test)]",
+			"mod test {",
+			"\tuse crate::prelude::*;",
+			"\tuse sweet::prelude::*;",
+			"\t",
+			"\t#[test]",
+			"\tfn works() {",
+			"\t\texpect(true).to_be_false();",
+			"\t\t$0",
+			"\t}",
+			"\t",
+			"}"
+		]
+	},
+	"testasync": {
+		"prefix": "testasync",
+		"description": "Insert Async Test",
+		"body": [
+			"#[cfg(test)]",
+			"mod test {",
+			"\tuse crate::prelude::*;",
+			"\tuse anyhow::Result;",
+			"\tuse sweet::*;",
+			"\t",
+			"\t#[tokio::test]",
+			"\tasync fn works() -> Result<()> {",
+			"\t\texpect(true).to_be_false()?;",
+			"\t\t$0",
+			"\t\tOk(())",
+			"\t}",
+			"\t",
+			"}"
+		]
+	},
+	"sweet_runner": {
+		"prefix": "sweet_runner",
+		"description": "Use sweet as default runner",
+		"body": [
+			"#![cfg_attr(test, feature(test, custom_test_frameworks))]",
+			"#![cfg_attr(test, test_runner(sweet::test_runner))]",
+			"$0"
+		]
+	},
+	"testcase": {
+		"prefix": "testcase",
+		"description": "Insert Test",
+		"body": [
+			"#[test]",
+			"fn ${1:works}() {",
+			"\t${2:expect(true).to_be_false();}",
+			"\t$0",
+			"}"
+		]
+	},
+	//wasm--------------------------------------------
+	"Use Web": {
+		"prefix": "useweb",
+		"body": ["use wasm_bindgen::prelude::*;", "use web_sys::*;$0"]
+	},
+	"cfgattr": {
+		"prefix": "cfgattr",
+		"body": "#[cfg_attr(${1:feature = \"${2:my_feature}\"}, ${3:feature(${4:my_feature})})]$0"
+	},
+	"cfgattrserde": {
+		"prefix": "cfgattrserde",
+		"body": "#[cfg_attr(feature = \"serde\", derive(serde::Serialize, serde::Deserialize))]$0"
+	},
+	"cfgwasm": {
+		"prefix": "cfgwasm",
+		"body": "#[cfg(target_arch = \"wasm32\")]"
+	},
+	"cfgdebug": {
+		"prefix": "cfgdebug",
+		"body": "#[cfg(debug_assertions)]"
+	},
+	"cfgnottest": {
+		"prefix": "cfgnottest",
+		"body": "#[cfg(not(test))]"
+	},
+	"cfgnotdebug": {
+		"prefix": "cfgnotdebug",
+		"body": "#[cfg(not(debug_assertions))]"
+	},
+	"cfgnotwasm": {
+		"prefix": "cfgnotwasm",
+		"body": "#[cfg(not(target_arch = \"wasm32\"))]"
+	},
+	"cfgfeature": {
+		"prefix": "cfgfeature",
+		"body": "#[cfg(feature = \"${1:my_feature}\")]"
+	},
+	"cfgnotfeature": {
+		"prefix": "cfgnotfeature",
+		"body": "#[cfg(not(feature = \"${1:my_feature}\"))]"
+	},
+	//💡 Beet
+	"Beet Template": {
+		"prefix": "template",
+		"body": [
+			"use beet_rsx::as_beet::*;",
+			"",
+			"#[template]",
+			"pub fn ${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}() -> impl Bundle {",
+			"\t",
+			"\t",
+			"\trsx!{",
+			"\t\t",
+			"\t}",
+			"}"
+		]
+	},
+	//💡 leptos
+	"Leptos Optional": {
+		"prefix": "loptional",
+		"body": "#[prop(optional)]"
+	},
+	"Leptos Into": {
+		"prefix": "linto",
+		"body": "#[prop(into)]"
+	},
+	"Leptos Component": {
+		"prefix": "lcomponent",
+		"body": [
+			"use leptos::prelude::*;",
+			"",
+			"#[component]",
+			"pub fn ${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}() -> impl IntoView {",
+			"\t",
+			"\tview! {",
+			"\t<${2:div}>",
+			"\t$0",
+			"\t</$2>",
+			"\t}",
+			"}"
+		]
+	},
+	"Leptos Component Props": {
+		"prefix": "lcomponentprops",
+		"body": [
+			"use leptos::prelude::*;",
+			"",
+			"#[component]",
+			"pub fn ${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}(",
+			"\t#[prop(optional)]",
+			"\toptional: u16,",
+			"\t#[prop(default=4)]",
+			"\tdefault: u16,",
+			") -> impl IntoView {",
+			"\t",
+			"\tview! {",
+			"\t<${2:div}>",
+			"\t$0",
+			"\t</$2>",
+			"\t}",
+			"}"
+		]
+	},
+	"Leptos Test": {
+		"prefix": "ltest",
+		"body": [
+			"use coora_web::prelude::*;",
+			"use leptos::*;",
+			"use sweet::*;",
+			"",
+			"#[component]",
+			"fn TestComponent() -> impl IntoView {",
+			"\tview! {",
+			"\t\t<div/>",
+			"\t}",
+			"}",
+			"",
+			"",
+			"#[sweet_test]",
+			"pub async fn works() -> Result<()> {",
+			"\tmount_coora_head().await?;",
+			"\t$0",
+			"\tforky_web::mount(|| view! { <TestComponent/> });",
+			"\tOk(())",
+			"}"
+		]
+	},
+	"Leptos Signal": {
+		"prefix": "signal",
+		"body": "let (${1:value},set_$1) = signal(${2:initial_value});$0"
+	},
+	"Leptos Effect": {
+		"prefix": "effect",
+		"body": ["effect(move |_| {", "\t$0", "});"]
+	},
+	//bevy------------------------------------------
+	"Bevy Play Prelude": {
+		"prefix": "usebevy",
+		"body": ["use bevy::prelude::*;", "$0"]
+	},
+	"Bevy Component": {
+		"prefix": "component",
+		"body": [
+			"#[derive(Default, Component, Reflect)]",
+			"#[reflect(Default, Component)]",
+			"pub struct ${1:${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}}{",
+			"\t",
+			"}"
+		]
+	},
+	"Bevy Tag Component": {
+		"prefix": "tagcomponent",
+		"body": [
+			"#[derive(Component)]",
+			"pub struct ${1:${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}};"
+		]
+	},
+	"Bevy System Set": {
+		"prefix": "systemset",
+		"body": [
+			"#[derive(Debug, Clone, PartialEq, Eq, Hash, SystemSet)]",
+			"pub struct ${1:MySet};$0"
+			// "pub struct ${1:${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}};"
+		]
+	},
+	"Bevy Schedule Label": {
+		"prefix": "schedulelabel",
+		"body": [
+			"#[derive(ScheduleLabel, Clone, Debug, PartialEq, Eq, Hash, Default)]",
+			"pub struct ${1:Update};"
+		]
+	},
+	"Bevy Startup System": {
+		"prefix": "startup_system",
+		"body": [
+			"pub fn ${1:my_startup_system}(",
+			"\tmut commands: Commands,",
+			"\tmut meshes: ResMut<Assets<Mesh>>,",
+			"\tmut materials: ResMut<Assets<StandardMaterial>>,",
+			") {",
+			"\tcommands.spawn_bundle(PbrBundle {",
+			"\t\ttransform: Transform::from_xyz(0., 0., 0.),",
+			"\t\tmesh: meshes.add(Mesh::from(shape::Cube::default())),",
+			"\t\tmaterial: materials.add(Color::rgb(1., 1., 1.).into()),",
+			"\t\t..default()",
+			"\t});",
+			"}"
+		]
+	},
+	"Bevy System": {
+		"prefix": "system",
+		"body": [
+			"pub fn ${1:my_system}(",
+			"\ttime: Res<Time>,",
+			"\tmut query: Query<(&mut Transform)>) {",
+			"\tfor (mut tran) in query.iter_mut() {",
+			"\t\t$0",
+			"\t}",
+			"}"
+		]
+	},
+	"Bevy Plugin": {
+		"prefix": "plugin",
+		"body": [
+			"use bevy::prelude::*;",
+			"use crate::prelude::*;",
+			"",
+			"pub struct ${1:${TM_FILENAME_BASE/((^[a-z])|_([a-z]))/${2:/upcase}${3:/upcase}/g}};",
+			"",
+			"impl Plugin for $1 {",
+			"\tfn build(&self, app: &mut App) {",
+			"\t\t\t$0",
+			"\t\t}",
+			"}"
+		]
+	},
+	"Bevy Relationship": {
+		"prefix": "relationship",
+		"body": [
+			"#[derive(Deref, Reflect, Component)]",
+			"#[reflect(Component)]",
+			"#[relationship(relationship_target = MyRelationTarget)]",
+			"pub struct MyRelation(pub Entity);",
+			"",
+			"#[derive(Deref, Reflect, Component)]",
+			"#[reflect(Component)]",
+			"#[relationship_target(relationship = MyRelation, linked_spawn)]",
+			"pub struct MyRelationTarget(Vec<Entity>);"
+		]
+	},
+	"Bevy Test": {
+		"prefix": "bsweet",
+		"body": [
+			"use bevy::prelude::*;",
+			"use forky_play::*;",
+			"use sweet::*;",
+			"",
+			"sweet! {",
+			"\tit \"works\" {",
+			"\t\tlet mut app = App::new();",
+			"\t\t",
+			"\t\tapp.__()",
+			"\t\t\t.add_startup_system(setup)",
+			"\t\t\t.__();",
+			"\t\t",
+			"\t\tapp.update();",
+			"\t}",
+			"}",
+			"",
+			"",
+			"fn setup(mut commands: Commands) {",
+			"\t$0",
+			"}",
+			"",
+			""
+		]
+	}
+}

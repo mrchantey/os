@@ -1,0 +1,96 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// Workspace is root context
+// TROUBLESHOOTING: ctrl-shift-p debug: Open Key Context View
+[
+	{
+		//global
+		"bindings": {
+			"ctrl-shift-e": "project_panel::ToggleFocus",
+			"ctrl-r": "projects::OpenRecent",
+			"ctrl-w": "pane::CloseActiveItem",
+			// "ctrl-shift-f": "outline_panel::ToggleFocus",
+			"ctrl-p": "file_finder::Toggle",
+			"ctrl-1": ["workspace::ActivatePane", 0],
+			"ctrl-2": ["workspace::ActivatePane", 1],
+			"ctrl-3": ["workspace::ActivatePane", 2],
+			"ctrl-4": ["workspace::ActivatePane", 3],
+			"ctrl-5": ["workspace::ActivatePane", 4],
+			"ctrl-6": ["workspace::ActivatePane", 5],
+			"ctrl-7": ["workspace::ActivatePane", 6],
+			"ctrl-8": ["workspace::ActivatePane", 7],
+			"ctrl-9": ["workspace::ActivatePane", 8]
+		}
+	},
+	{
+		"context": "ProjectPanel",
+		"bindings": {
+			"ctrl-alt-[": "project_panel::CollapseAllEntries",
+			"ctrl-alt-]": "project_panel::ExpandSelectedEntry",
+			"ctrl-[": "project_panel::CollapseSelectedEntry",
+			"ctrl-]": "project_panel::ExpandSelectedEntry"
+		}
+	},
+	{
+		"context": "Editor",
+		"bindings": {
+			// "ctrl-shift-q": "assistant::NewChat",
+			"ctrl-alt-[": "editor::FoldAll",
+			"ctrl-alt-]": "editor::UnfoldAll",
+			// "shift shift": "file_finder::Toggle",
+			// "j k": ["workspace::SendKeystrokes", "escape"]
+			"alt-/": "editor::Hover",
+			"ctrl-alt-up": "editor::AddSelectionAbove",
+			"ctrl-alt-down": "editor::AddSelectionBelow",
+			"alt-shift-down": "editor::DuplicateLineDown",
+			"alt-shift-up": "editor::DuplicateLineUp",
+			"ctrl-shift-up": "editor::SelectUp",
+			"ctrl-shift-down": "editor::SelectDown"
+		}
+	},
+	{
+		"context": "Workspace || Editor",
+		"bindings": {
+			"ctrl-alt-left": [
+				"workspace::MoveItemToPaneInDirection",
+				{ "direction": "left" }
+			],
+			"ctrl-alt-right": [
+				"workspace::MoveItemToPaneInDirection",
+				{ "direction": "right" }
+			],
+			"ctrl-shift-alt-left": [
+				"workspace::MoveItemToPaneInDirection",
+				{ "direction": "left", "clone": true }
+			],
+			"ctrl-shift-alt-right": [
+				"workspace::MoveItemToPaneInDirection",
+				{ "direction": "right", "clone": true }
+			]
+		}
+	},
+	{
+		"context": "Workspace"
+	},
+	{
+		"context": "Pane",
+		"bindings": {
+			"ctrl-0": "pane::ActivateLastItem",
+			"ctrl-pageup": "pane::ActivatePreviousItem",
+			"ctrl-pagedown": "pane::ActivateNextItem",
+			"ctrl-shift-pageup": "pane::SwapItemLeft",
+			"ctrl-shift-pagedown": "pane::SwapItemRight",
+			"alt-ctrl-w": ["pane::CloseOtherItems", { "close_pinned": false }]
+		}
+	},
+	{
+		"context": "Terminal",
+		"bindings": {
+			"ctrl-k": "pane::CloseActiveItem",
+			"ctrl-1": "terminal_panel::ToggleFocus"
+		}
+	}
+]

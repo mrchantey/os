@@ -1,0 +1,5 @@
+infra/node_modules
+infra/.sst
+infra/sst-env.d.ts
+# just not nessecary for infra
+infra/package-lock.json
