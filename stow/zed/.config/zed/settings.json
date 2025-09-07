@@ -1,20 +1,6 @@
 // Zed settings
-//
-// For information on how to configure Zed, see the Zed
-// documentation: https://zed.dev/docs/configuring-zed
-//
-// To see all of Zed's default settings without changing your
-// custom settings, run `zed: open default settings` from the
-// command palette (cmd-shift-p / ctrl-shift-p)
+// https://zed.dev/docs/configuring-zed
 {
-	"indent_guides": {
-		"coloring": "indent_aware",
-		"active_line_width": 2,
-		"line_width": 2
-	},
-	"hard_tabs": true,
-	"tab_size": 2,
-	"autosave": { "after_delay": { "milliseconds": 1000 } },
 	"agent": {
 		"default_profile": "ask",
 		"inline_assistant_model": {
@@ -27,27 +13,38 @@
 			"model": "gpt-5"
 		}
 	},
-	"show_edit_predictions": true,
+	"auto_install_extensions": {
+		"html": true,
+		"toml": true
+	},
+	"autosave": { "after_delay": { "milliseconds": 1000 } },
+	"file_types": {
+		"JSONC": [
+			"**/.zed/**/*.json",
+			"**/zed/**/*.json",
+			"**/Zed/**/*.json",
+			"**/.vscode/**/*.json"
+		],
+		"Shell Script": [".env.*"],
+		"TOML": ["**/.config/hypr/**/*.conf"]
+	},
+	"hard_tabs": true,
+	"indent_guides": {
+		"coloring": "indent_aware",
+		"active_line_width": 2,
+		"line_width": 2
+	},
 	"edit_predictions": {
 		"mode": "subtle"
 		// "mode": "eager"
 	},
 	// "show_edit_predictions": false,
-	"icon_theme": "VSCode Icons (Dark)",
 	"features": {
 		"edit_prediction_provider": "zed"
 	},
 	"ui_font_size": 24,
 	"agent_font_size": 24,
 	"buffer_font_size": 20,
-	"theme": {
-		"mode": "system",
-		"light": "Ayu Mirage",
-		"dark": "Ayu Mirage"
-	},
-	"terminal": {
-		"dock": "right"
-	},
 	"languages": {
 		"Markdown": {
 			"show_edit_predictions": false,
@@ -108,5 +105,15 @@
 				"selected_symbol": false
 			}
 		}
+	},
+	"show_edit_predictions": true,
+	"tab_size": 2,
+	"theme": {
+		"mode": "system",
+		"light": "Ayu Mirage",
+		"dark": "Ayu Mirage"
+	},
+	"terminal": {
+		"dock": "right"
 	}
 }
