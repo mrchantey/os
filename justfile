@@ -1,13 +1,27 @@
+# Collection of commands to run, with the following format
+# hello-world-init:
+#		@echo "this is intended to only be run once per os install, but shouldnt fail otherwise"
+#		@echo "INIT hello-world"
+#		just hello-world
+#
+# hello-world:
+#		@echo "this command is generally less intensive may be edited and run again"
+#		@echo "PASS hello-world"
+
 default:
 	just --list
 
 init:
-	just remove-bloatware
-	just prepare-stow-symlinks
-	just stow-symlinks
-	just pull-repos
+	just install-apps-init
+	just stow-symlinks-init
+	just stow-files-init
+	just pull-repos-init
 
-remove-bloatware:
+# Run commands that must not be done as sudo
+init-user:
+	just install-user-apps-init
+
+install-apps-init:
 	sudo pacman -Rns --noconfirm spotify 				|| true
 	sudo pacman -Rns --noconfirm obsidian 			|| true
 	sudo pacman -Rns --noconfirm signal-desktop || true
@@ -25,18 +39,34 @@ remove-bloatware:
 	rm -rf ~/.local/share/applications/WhatsApp.desktop
 	rm -rf ~/.local/share/applications/X.desktop
 	rm -rf ~/.local/share/applications/Zoom.desktop
-	@echo "Bloatware removed"
+	@echo "INIT install-apps"
+	just install-apps
 
-# run this once on new install
-prepare-stow-symlinks:
+install-apps:
+	pacman -S --noconfirm \
+	stow									\
+	zed
+	@echo "PASS install-apps"
+
+
+install-user-apps-init:
+	@echo "INIT install-user-apps"
+	just install-user-apps
+install-user-apps:
+	yay -S --noconfirm --needed		\
+	google-chrome
+	@echo "PASS install-user-apps"
+
+stow-symlinks-init:
   rm -rf 													\
+  ~/.bashrc												\
   ~/.config/hypr/input.conf 			\
   ~/.config/hypr/bindings.conf 		\
   ~/.config/hypr/monitors.conf 		\
   ~/.config/mimeapps.list 				\
-  ~/.config/zed 									\
-  ~/.bashrc
-  @echo "symlink stow prepared"
+  ~/.config/zed
+  @echo "INIT stow-symlinks"
+  just stow-symlinks
 
 # initialize stow, the settings may freak out for a sec
 # just save a file like hyprland.conf again and should be fine
@@ -46,16 +76,25 @@ stow-symlinks:
   hypr 									\
   mimeapps 							\
   zed
-  @echo "symlinks stowed"
   touch ~/.config/hypr/hyprland.conf
+  @echo "PASS stow-symlinks"
 
 # perform cp for assets which cannot be stowed
 # because we dont own the
-stow-files:
+stow-files-init:
 	mkdir -p ~/.config/omarchy/themes/everforest/backgrounds
 	curl -fsSL -o ~/.config/omarchy/themes/everforest/backgrounds/firewatch.png \
 	https://mrchantey-os.s3.us-west-2.amazonaws.com/backgrounds/firewatch.png
-	@echo "files stowed"
+	@echo "INIT stow-files"
+	just stow-files
+stow-files:
+	@echo "PASS stow-files"
+
+pull-repos-init:
+	gh auth login
+	@echo "INIT pull-repos"
+	just pull-repos
+
 
 pull-repos:
 	mkdir ~/me || true
@@ -64,21 +103,22 @@ pull-repos:
 	cd ~/me && git clone https://github.com/mrchantey/beetmash		|| true
 	cd ~/me && git clone https://github.com/mrchantey/notes				|| true
 	cd ~/me && git clone https://github.com/bevyengine/bevy				|| true
-	@echo "Repos pulled"
+	@echo "PASS pull-repos"
 
 
 init-infra:
 	cd infra && npm install
-	@echo "Infra initialized"
+	@echo "PASS init-infra"
 
 deploy-infra:
 	cd infra && npx sst deploy --stage prod
-	@echo "Infra deployed"
+	@echo "PASS - deploy-infra"
 
 remove-infra:
 	cd infra && npx sst remove --stage prod
-	@echo "Infra removed"
+	@echo "PASS - remove-infra"
 
 # upload a file to the s3 bucket
 upload-file src dst:
 	aws s3 cp {{src}} s3://mrchantey-os/{{dst}} --region us-west-2
+	@echo "PASS - upload-file"
