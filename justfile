@@ -57,6 +57,7 @@ install-user-apps:
 	google-chrome
 	@echo "PASS install-user-apps"
 
+# this may break hyprland, if so run Menu > System > Relaunch
 stow-symlinks-init:
   rm -rf 													\
   ~/.bashrc												\
@@ -64,17 +65,17 @@ stow-symlinks-init:
   ~/.config/hypr/bindings.conf 		\
   ~/.config/hypr/monitors.conf 		\
   ~/.config/mimeapps.list 				\
+  ~/.config/starship.toml 				\
   ~/.config/zed
   @echo "INIT stow-symlinks"
   just stow-symlinks
 
-# initialize stow, the settings may freak out for a sec
-# just save a file like hyprland.conf again and should be fine
 stow-symlinks:
   cd stow && stow -vt ~ \
   bashrc 								\
   hypr 									\
   mimeapps 							\
+  starship 							\
   zed
   touch ~/.config/hypr/hyprland.conf
   @echo "PASS stow-symlinks"
