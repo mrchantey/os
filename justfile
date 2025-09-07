@@ -48,6 +48,7 @@ install-apps-init:
 
 install-apps:
 	pacman -S --noconfirm --needed 	\
+	aws-cli-v2											\
 	stow														\
 	zed
 	just install-rust
@@ -60,9 +61,10 @@ install-rust:
 	# bevy dependencies https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md#arch--manjaro
 	sudo pacman -S --noconfirm --needed \
 	mold libx11 pkgconf alsa-lib pipewire-alsa
+	# init stable
 	rustup default stable
+	# init nightly
 	rustup default nightly
-	cargo --version
 	# cargo install cargo-binstall
 	rustup target add wasm32-unknown-unknown
 	cargo binstall --no-confirm \
@@ -89,9 +91,7 @@ stow-symlinks-init:
   rm -rf 													\
   ~/.bashrc												\
   ~/.cargo												\
-  ~/.config/hypr/input.conf 			\
-  ~/.config/hypr/bindings.conf 		\
-  ~/.config/hypr/monitors.conf 		\
+  ~/.config/hypr 									\
   ~/.config/mimeapps.list 				\
   ~/.config/starship.toml 				\
   ~/.config/zed
