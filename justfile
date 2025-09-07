@@ -73,8 +73,10 @@ install-rust:
 	cargo-lambda 								\
 	cargo-watch 								\
 	leptosfmt										\
-	wasm-bindgen-cli 						\
 	wasm-opt
+	cargo binstall --no-confirm \
+	wasm-bindgen-cli 						\
+	--version=0.2.100
 	@echo "PASS install-rust"
 
 

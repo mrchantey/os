@@ -1,7 +1,6 @@
 # Linux Config
 
-Omarchy linux config
-
+My [Omarchy](https://omarchy.org/) config.
 
 This command will pull this repo into `~/me/os`, ensure just is installed and run the init command:
 ```sh
