@@ -11,3 +11,10 @@ Haven't yet found a way to automate these, to be executed post install.
 
 - `chrome://settings/content/notifications`
 - `Don't allow sites to send notifications`
+
+
+## AWS
+
+- `aws configure`
+- Create user `https://us-east-1.console.aws.amazon.com/iam/home?region=us-west-2#/users`
+- `Security Credentials > Access Keys > Create Access Key`

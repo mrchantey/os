@@ -17,6 +17,7 @@ init:
 
 init-sudo:
 	just install-apps-init
+	just install-rust
 
 # Run commands that must not be done as sudo
 init-user:
@@ -50,8 +51,8 @@ install-apps:
 	pacman -S --noconfirm --needed 	\
 	aws-cli-v2											\
 	stow														\
+	zig															\
 	zed
-	just install-rust
 	@echo "PASS install-apps"
 
 install-rust:
