@@ -50,9 +50,10 @@ install-apps-init:
 install-apps:
 	pacman -S --noconfirm --needed 	\
 	aws-cli-v2											\
+	steam														\
 	stow														\
-	zig															\
-	zed
+	zed															\
+	zig
 	@echo "PASS install-apps"
 
 install-rust:
@@ -97,6 +98,7 @@ stow-symlinks-init:
   ~/.config/hypr 									\
   ~/.config/mimeapps.list 				\
   ~/.config/starship.toml 				\
+  ~/.config/waybar 								\
   ~/.config/zed
   @echo "INIT stow-symlinks"
   just stow-symlinks
@@ -108,6 +110,7 @@ stow-symlinks:
   hypr 									\
   mimeapps 							\
   starship 							\
+  waybar 								\
   zed
   touch ~/.config/hypr/hyprland.conf
   @echo "PASS stow-symlinks"
