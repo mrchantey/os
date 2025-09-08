@@ -50,6 +50,7 @@ install-apps-init:
 install-apps:
 	pacman -S --noconfirm --needed 	\
 	aws-cli-v2											\
+	deno														\
 	steam														\
 	stow														\
 	zed															\
