@@ -225,7 +225,7 @@
 			"\t",
 			"\t#[test]",
 			"\tfn works() {",
-			"\t\texpect(true).to_be_false();",
+			"\t\t${2:true.xpect_false();}",
 			"\t\t$0",
 			"\t}",
 			"\t",
@@ -239,14 +239,12 @@
 			"#[cfg(test)]",
 			"mod test {",
 			"\tuse crate::prelude::*;",
-			"\tuse anyhow::Result;",
 			"\tuse sweet::*;",
 			"\t",
-			"\t#[tokio::test]",
-			"\tasync fn works() -> Result<()> {",
-			"\t\texpect(true).to_be_false()?;",
+			"\t#[sweet::test]",
+			"\tasync fn works() {",
+			"\t\t${2:true.xpect_false();}",
 			"\t\t$0",
-			"\t\tOk(())",
 			"\t}",
 			"\t",
 			"}"
@@ -267,7 +265,7 @@
 		"body": [
 			"#[test]",
 			"fn ${1:works}() {",
-			"\t${2:expect(true).to_be_false();}",
+			"\t${2:true.xpect_false();}",
 			"\t$0",
 			"}"
 		]
