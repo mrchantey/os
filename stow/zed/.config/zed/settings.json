@@ -2,7 +2,7 @@
 // https://zed.dev/docs/configuring-zed
 {
 	"agent": {
-		"default_profile": "write",
+		"default_profile": "ask",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "gpt-5-mini"
@@ -11,7 +11,8 @@
 		"default_model": {
 			"provider": "copilot_chat",
 			"model": "gpt-5"
-		}
+		},
+		"always_allow_tool_actions": true
 	},
 	"auto_install_extensions": {
 		"html": true,

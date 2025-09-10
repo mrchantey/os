@@ -94,6 +94,7 @@ install-user-apps:
 # this may break hyprland, if so run Menu > System > Relaunch
 stow-symlinks-init:
   rm -rf 													\
+  ~/.config/alacritty							\
   ~/.bashrc												\
   ~/.cargo												\
   ~/.config/hypr 									\
@@ -106,6 +107,7 @@ stow-symlinks-init:
 
 stow-symlinks:
   cd stow && stow -vt ~ \
+  alacritty 						\
   bashrc 								\
   cargo 								\
   hypr 									\
