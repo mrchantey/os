@@ -1,0 +1,27 @@
+{
+	"wasm-deps": {
+		"prefix": "wasm-dependencies",
+		"body": "[target.'cfg(target_arch = \"wasm32\")'.dependencies]"
+	},
+	"native-deps": {
+		"prefix": "native-dependencies",
+		"body": "[target.'cfg(not(target_arch = \"wasm32\"))'.dependencies]"
+	},
+	"Workspace=true": {
+		"prefix": ".workspace",
+		"body": ".workspace = true$0",
+		"description": "appends .workspace"
+	},
+	"sweet": {
+		"prefix": "sweet",
+		"body": [
+			"[dev-dependencies]",
+			"sweet = { workspace = true }",
+			"",
+			"",
+			"[[example]]",
+			"name = \"${1:test}\"",
+			"path = \"test/${2:sweet.rs}\""
+		]
+	}
+}

@@ -88,7 +88,8 @@ install-user-apps-init:
 	just install-user-apps
 install-user-apps:
 	yay -S --noconfirm --needed		\
-	google-chrome
+	google-chrome									\
+	visual-studio-code-bin
 	@echo "PASS install-user-apps"
 
 # this may break hyprland, if so run Menu > System > Relaunch
