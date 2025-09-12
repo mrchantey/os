@@ -48,7 +48,7 @@ install-apps-init:
 	just install-apps
 
 install-apps:
-	pacman -S --noconfirm --needed 	\
+	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2											\
 	deno														\
 	steam														\
@@ -56,6 +56,11 @@ install-apps:
 	zed															\
 	zig
 	@echo "PASS install-apps"
+
+# https://nixos.org/download/
+# do NOT use pacman it will setup invalid build groups difficult to clean up
+install-nix:
+	curl sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon
 
 install-rust:
 	sudo pacman -Rns --noconfirm rust	|| true
