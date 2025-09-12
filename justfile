@@ -11,20 +11,22 @@
 default:
 	just --list
 
+# only run this once per install
 init:
+	just init-sudo
 	just init-user
-	sudo just init-sudo
+	just install-rust
+	just install-nix
 
 init-sudo:
 	just install-apps-init
-	just install-rust
 
 # Run commands that must not be done as sudo
 init-user:
 	just stow-files-init
 	just stow-symlinks-init
-	just pull-repos-init
 	just install-user-apps-init
+	just pull-repos-init
 
 install-apps-init:
 	sudo pacman -Rns --noconfirm spotify 				|| true
@@ -49,18 +51,19 @@ install-apps-init:
 
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
-	aws-cli-v2											\
-	deno														\
-	steam														\
-	stow														\
-	zed															\
+	aws-cli-v2														\
+	deno																	\
+	steam																	\
+	stow																	\
+	zed																		\
 	zig
 	@echo "PASS install-apps"
 
 # https://nixos.org/download/
 # do NOT use pacman it will setup invalid build groups difficult to clean up
 install-nix:
-	curl sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon
+	sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+	nix-shell -p nix-info --run "nix-info -m"
 
 install-rust:
 	sudo pacman -Rns --noconfirm rust	|| true
