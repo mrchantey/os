@@ -1,25 +1,41 @@
 // Zed settings
 // https://zed.dev/docs/configuring-zed
 {
+	"inlay_hints": {
+		"enabled": false
+	},
+	// AGENTS
 	"agent": {
 		"default_profile": "ask",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "gpt-5-mini"
 		},
-		// "always_allow_tool_actions": true,
+		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
 			"model": "gpt-5-mini"
 		}
-		// "always_allow_tool_actions": true
 	},
+	"edit_predictions": {
+		"mode": "subtle"
+	},
+	"features": {
+		"edit_prediction_provider": "copilot"
+	},
+	// "show_edit_predictions": false,
+	//
+	//
+	//
+	//
 	"auto_install_extensions": {
 		"html": true,
 		"toml": true,
 		"just": true,
 		"git-firefly": true
 	},
+	"snippet_sort_order": "top",
+
 	"autosave": { "after_delay": { "milliseconds": 1000 } },
 	"file_types": {
 		"JSONC": [
@@ -36,14 +52,6 @@
 		"coloring": "indent_aware",
 		"active_line_width": 2,
 		"line_width": 2
-	},
-	"edit_predictions": {
-		"mode": "subtle"
-		// "mode": "eager"
-	},
-	// "show_edit_predictions": false,
-	"features": {
-		"edit_prediction_provider": "zed"
 	},
 	"ui_font_size": 24,
 	"agent_font_size": 24,

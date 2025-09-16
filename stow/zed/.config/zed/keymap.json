@@ -9,6 +9,7 @@
 	{
 		//global
 		"bindings": {
+			"esc": "workspace::ClearAllNotifications",
 			"ctrl-shift-e": "project_panel::ToggleFocus",
 			"ctrl-r": "projects::OpenRecent",
 			"ctrl-w": "pane::CloseActiveItem",

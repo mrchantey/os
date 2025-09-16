@@ -66,6 +66,7 @@ install-nix:
 	nix-shell -p nix-info --run "nix-info -m"
 
 install-rust:
+	# uninstall omarchy rust, it has no rustup
 	sudo pacman -Rns --noconfirm rust	|| true
 	sudo pacman -S --noconfirm --needed \
 	rustup cargo-binstall
