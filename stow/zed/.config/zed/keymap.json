@@ -27,6 +27,18 @@
 		}
 	},
 	{
+		"context": "Editor",
+		"bindings": {
+			"ctrl-up": null
+		}
+	},
+	{
+		"context": "GitPanel",
+		"bindings": {
+			"ctrl-up": "git::Push",
+		}
+	},
+	{
 		"context": "ProjectPanel",
 		"bindings": {
 			"ctrl-alt-[": "project_panel::CollapseAllEntries",
@@ -36,8 +48,9 @@
 		}
 	},
 	{
-		"context": "Editor",
+		"context": "Editor && !GitPanel",
 		"bindings": {
+			"ctrl-up": "editor::LineUp",
 			// "ctrl-shift-q": "assistant::NewChat",
 			"ctrl-alt-[": "editor::FoldAll",
 			"ctrl-alt-]": "editor::UnfoldAll",

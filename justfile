@@ -95,11 +95,14 @@ install-rust:
 install-user-apps-init:
 	@echo "INIT install-user-apps"
 	just install-user-apps
+
+
 install-user-apps:
 	yay -S --noconfirm --needed		\
 	google-chrome									\
 	visual-studio-code-bin
 	@echo "PASS install-user-apps"
+# opencode-bin									\
 
 # this may break hyprland, if so run Menu > System > Relaunch
 stow-symlinks-init:

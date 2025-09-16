@@ -6,7 +6,7 @@
 	},
 	// AGENTS
 	"agent": {
-		"default_profile": "ask",
+		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "gpt-5-mini"
@@ -14,7 +14,7 @@
 		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
-			"model": "gpt-5"
+			"model": "gpt-5-mini"
 		}
 	},
 	"edit_predictions": {
@@ -32,6 +32,7 @@
 		"html": true,
 		"toml": true,
 		"just": true,
+		"deno": true,
 		"git-firefly": true
 	},
 	"snippet_sort_order": "top",
