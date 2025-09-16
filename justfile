@@ -111,6 +111,7 @@ stow-symlinks-init:
   ~/.config/mimeapps.list 				\
   ~/.config/starship.toml 				\
   ~/.config/waybar 								\
+  ~/.config/omarchy/branding			\
   ~/.config/zed
   @echo "INIT stow-symlinks"
   just stow-symlinks
@@ -122,6 +123,7 @@ stow-symlinks:
   cargo 								\
   hypr 									\
   mimeapps 							\
+  omarchy 							\
   starship 							\
   waybar 								\
   zed
