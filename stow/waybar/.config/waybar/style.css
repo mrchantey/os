@@ -26,14 +26,26 @@
 	min-width: 9px;
 }
 
+#workspaces button {
+	opacity: 0.7;
+}
 #workspaces button.empty {
-	opacity: 0.5;
+	opacity: 0.2;
 }
+/*current workspace for both monitors */
+#workspaces button.visible {
+	opacity: 0.9;
+}
+/* the single selected monitor */
 #workspaces button.active {
-	font-weight: bold;
-	font-size: 14px;
 	opacity: 1;
+	font-weight: bold;
+	background-color: rgba(0, 0, 0, 0.15);
 }
+
+/* https://man.archlinux.org/man/extra/waybar/waybar-hyprland-workspaces.5.en*/
+/* https://github.com/Alexays/Waybar/wiki/Module:-Hyprland#style*/
+
 #tray,
 #cpu,
 #battery,
