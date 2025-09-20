@@ -9,6 +9,7 @@
 	{
 		//global
 		"bindings": {
+			"ctrl-q": null,
 			"esc": "workspace::ClearAllNotifications",
 			"ctrl-shift-e": "project_panel::ToggleFocus",
 			"ctrl-r": "projects::OpenRecent",
@@ -35,7 +36,7 @@
 	{
 		"context": "GitPanel",
 		"bindings": {
-			"ctrl-up": "git::Push",
+			"ctrl-up": "git::Push"
 		}
 	},
 	{
