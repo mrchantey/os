@@ -54,6 +54,8 @@
 	{
 		"context": "Editor && !GitPanel",
 		"bindings": {
+			"F12": "editor::GoToDeclaration",
+			"ctrl-shift-F12": "editor::GoToDefinition",
 			"ctrl-up": "editor::LineUp",
 			// "ctrl-shift-q": "assistant::NewChat",
 			"ctrl-alt-[": "editor::FoldAll",
