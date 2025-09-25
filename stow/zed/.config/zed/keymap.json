@@ -10,6 +10,7 @@
 		//global
 		"bindings": {
 			"ctrl-q": null,
+			"ctrl-shift-w": null,
 			"esc": "workspace::ClearAllNotifications",
 			"ctrl-shift-e": "project_panel::ToggleFocus",
 			"ctrl-r": "projects::OpenRecent",
@@ -54,8 +55,8 @@
 	{
 		"context": "Editor && !GitPanel",
 		"bindings": {
-			"F12": "editor::GoToDeclaration",
-			"ctrl-shift-F12": "editor::GoToDefinition",
+			// "F12": "editor::GoToDeclaration",
+			"ctrl-shift-F12": "editor::GoToDeclaration",
 			"ctrl-up": "editor::LineUp",
 			// "ctrl-shift-q": "assistant::NewChat",
 			"ctrl-alt-[": "editor::FoldAll",
