@@ -53,6 +53,7 @@ install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
 	deno																	\
+	cuda																	\
 	steam																	\
 	stow																	\
 	zed																		\

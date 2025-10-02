@@ -31,8 +31,8 @@
 	{
 		"context": "Editor",
 		"bindings": {
-			"ctrl-up": null,
-			"ctrl-down": null
+			// "ctrl-up": null,
+			// "ctrl-down": null
 		}
 	},
 	{
