@@ -29,27 +29,14 @@
 		}
 	},
 	{
+		"context": "AgentPanel",
+		"bindings": {}
+	},
+	{
 		"context": "Editor",
 		"bindings": {
 			// "ctrl-up": null,
 			// "ctrl-down": null
-		}
-	},
-	{
-		"context": "GitPanel",
-		"bindings": {
-			"ctrl-up": "git::Push",
-			"ctrl-f": "git::Fetch",
-			"ctrl-down": "git::Pull"
-		}
-	},
-	{
-		"context": "ProjectPanel",
-		"bindings": {
-			"ctrl-alt-[": "project_panel::CollapseAllEntries",
-			"ctrl-alt-]": "project_panel::ExpandSelectedEntry",
-			"ctrl-[": "project_panel::CollapseSelectedEntry",
-			"ctrl-]": "project_panel::ExpandSelectedEntry"
 		}
 	},
 	{
@@ -70,6 +57,41 @@
 			"alt-shift-up": "editor::DuplicateLineUp",
 			"ctrl-shift-up": "editor::SelectUp",
 			"ctrl-shift-down": "editor::SelectDown"
+		}
+	},
+	{
+		"context": "GitPanel",
+		"bindings": {
+			"ctrl-up": "git::Push",
+			"ctrl-f": "git::Fetch",
+			"ctrl-down": "git::Pull"
+		}
+	},
+	{
+		"context": "ProjectPanel",
+		"bindings": {
+			"ctrl-alt-[": "project_panel::CollapseAllEntries",
+			"ctrl-alt-]": "project_panel::ExpandSelectedEntry",
+			"ctrl-[": "project_panel::CollapseSelectedEntry",
+			"ctrl-]": "project_panel::ExpandSelectedEntry"
+		}
+	},
+	{
+		"context": "Pane",
+		"bindings": {
+			"ctrl-0": "pane::ActivateLastItem",
+			"ctrl-pageup": "pane::ActivatePreviousItem",
+			"ctrl-pagedown": "pane::ActivateNextItem",
+			"ctrl-shift-pageup": "pane::SwapItemLeft",
+			"ctrl-shift-pagedown": "pane::SwapItemRight",
+			"alt-ctrl-w": ["pane::CloseOtherItems", { "close_pinned": false }]
+		}
+	},
+	{
+		"context": "Terminal",
+		"bindings": {
+			"ctrl-k": "pane::CloseActiveItem",
+			"ctrl-1": "terminal_panel::ToggleFocus"
 		}
 	},
 	{
@@ -95,23 +117,5 @@
 	},
 	{
 		"context": "Workspace"
-	},
-	{
-		"context": "Pane",
-		"bindings": {
-			"ctrl-0": "pane::ActivateLastItem",
-			"ctrl-pageup": "pane::ActivatePreviousItem",
-			"ctrl-pagedown": "pane::ActivateNextItem",
-			"ctrl-shift-pageup": "pane::SwapItemLeft",
-			"ctrl-shift-pagedown": "pane::SwapItemRight",
-			"alt-ctrl-w": ["pane::CloseOtherItems", { "close_pinned": false }]
-		}
-	},
-	{
-		"context": "Terminal",
-		"bindings": {
-			"ctrl-k": "pane::CloseActiveItem",
-			"ctrl-1": "terminal_panel::ToggleFocus"
-		}
 	}
 ]
