@@ -279,6 +279,10 @@
 		"prefix": "cfgattr",
 		"body": "#[cfg_attr(${1:feature = \"${2:my_feature}\"}, ${3:feature(${4:my_feature})})]$0"
 	},
+	"cfgall": {
+		"prefix": "cfgall",
+		"body": "#[cfg(all(target_arch = \"wasm32\", ${1:feature = \"${2:my_feature}\"}))]"
+	},
 	"cfgattrserde": {
 		"prefix": "cfgattrserde",
 		"body": "#[cfg_attr(feature = \"serde\", derive(serde::Serialize, serde::Deserialize))]$0"
