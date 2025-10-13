@@ -17,6 +17,9 @@
 			"model": "claude-sonnet-4"
 		}
 	},
+	"completions": {
+		"words": "disabled"
+	},
 	"edit_predictions": {
 		"mode": "subtle"
 	},

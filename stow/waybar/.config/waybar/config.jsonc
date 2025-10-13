@@ -23,9 +23,9 @@
 		"format": "{icon}",
 		"format-icons": {
 			"default": "",
-			"1": "1 Beet",
-			"2": "2 Beetmash",
-			"3": "3 Browser",
+			"1": "1 Scratch",
+			"2": "2 Beet",
+			"3": "3 Beetmash",
 			"4": "4 Misc",
 			"5": "5 Misc",
 			"6": "6 Misc",
