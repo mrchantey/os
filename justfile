@@ -187,10 +187,10 @@ upload-file src dst:
 
 pre-reset:
 	set -e
-	for repo in {{repositories}}; do \
+	@for repo in {{repositories}}; do \
 		just pre-reset-repo $repo || exit 1; \
 	done
-	just pre-reset-repo mrchantey/os || exit 1;
+	@just pre-reset-repo mrchantey/os || exit 1;
 	@echo "PASS pull-repos"
 
 @pre-reset-repo repo:
