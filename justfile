@@ -186,7 +186,7 @@ upload-file src dst:
 
 
 pre-reset:
-	set -e
+	@set -e
 	@for repo in {{repositories}}; do \
 		just pre-reset-repo $repo || exit 1; \
 	done
