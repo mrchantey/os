@@ -191,7 +191,10 @@ pre-reset:
 		just pre-reset-repo $repo || exit 1; \
 	done
 	@just pre-reset-repo mrchantey/os || exit 1;
-	@echo "PASS pull-repos"
+	@echo "PASS pre-reset"
+	@echo "You are almost ready to reset your machine: \
+	- ensure assets directories have been pushed: beet, beetmash \
+	"
 
 @pre-reset-repo repo:
 	cd ~/me/$(basename {{repo}}) && \
