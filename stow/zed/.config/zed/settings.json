@@ -59,7 +59,7 @@
 		"line_width": 2
 	},
 	"ui_font_size": 24,
-	"agent_font_size": 24,
+	"agent_ui_font_size": 24,
 	"buffer_font_size": 20,
 	"languages": {
 		"Markdown": {
