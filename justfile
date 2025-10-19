@@ -193,7 +193,7 @@ pre-reset:
 	just pre-reset-repo mrchantey/os || exit 1;
 	@echo "PASS pull-repos"
 
-pre-reset-repo repo:
+@pre-reset-repo repo:
 	cd ~/me/$(basename {{repo}}) && \
 	(git diff --exit-code || (echo "Error: $(basename {{repo}}) has uncommitted changes" && exit 1)) && \
 	(git diff --exit-code --cached || (echo "Error: $(basename {{repo}}) has staged uncommitted changes" && exit 1)) && \
