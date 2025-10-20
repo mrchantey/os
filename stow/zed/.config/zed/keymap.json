@@ -35,6 +35,7 @@
 	{
 		"context": "Editor",
 		"bindings": {
+			// "ctrl": "editor::ShowWordCompletions"
 			// "ctrl-up": null,
 			// "ctrl-down": null
 		}

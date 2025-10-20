@@ -6,7 +6,7 @@
 	},
 	// AGENTS
 	"agent": {
-		"default_profile": "ask",
+		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "claude-3.5-sonnet"
@@ -14,8 +14,11 @@
 		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
-			"model": "claude-sonnet-4"
+			"model": "claude-sonnet-4.5"
 		}
+	},
+	"completions": {
+		"words": "disabled"
 	},
 	"edit_predictions": {
 		"mode": "subtle"
@@ -56,7 +59,7 @@
 		"line_width": 2
 	},
 	"ui_font_size": 24,
-	"agent_font_size": 24,
+	"agent_ui_font_size": 24,
 	"buffer_font_size": 20,
 	"languages": {
 		"Markdown": {
