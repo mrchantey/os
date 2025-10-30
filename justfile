@@ -201,3 +201,11 @@ pre-reset:
 	(git diff --exit-code || (echo "Error: $(basename {{repo}}) has uncommitted changes" && exit 1)) && \
 	(git diff --exit-code --cached || (echo "Error: $(basename {{repo}}) has staged uncommitted changes" && exit 1)) && \
 	(test -z "$(git log @{u}..)" || (echo "Error: $(basename {{repo}}) has unpushed commits" && exit 1))
+
+
+
+
+# best-effort apply these settings for windows
+@windows-push:
+	cp -r ./stow/zed/.config/zed/. "/mnt/c/Users/$(cmd.exe /c 'echo %USERNAME%' 2>/dev/null | tr -d '\r')/AppData/Roaming/Zed"
+	@echo "PASS windows-push"
