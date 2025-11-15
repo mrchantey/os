@@ -64,7 +64,8 @@ install-apps:
 # do NOT use pacman it will setup invalid build groups difficult to clean up
 install-nix:
 	sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
-	nix-shell -p nix-info --run "nix-info -m"
+
+# nix-shell -p nix-info --run "nix-info -m"
 
 install-rust:
 	# uninstall omarchy rust, it has no rustup

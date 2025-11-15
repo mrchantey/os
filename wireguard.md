@@ -18,6 +18,7 @@ sudo wg-quick down /etc/wireguard/sg-sin-wg-003.conf
 curl https://am.i.mullvad.net/connected
 ```
 
+## Server List
 
 Countries and cities are inferred from their codes.
 
