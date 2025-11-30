@@ -102,7 +102,9 @@ install-user-apps-init:
 install-user-apps:
 	yay -S --noconfirm --needed		\
 	google-chrome									\
-	visual-studio-code-bin
+	visual-studio-code-bin				\
+	xone-dkms											\
+	xone-dongle-firmware
 	@echo "PASS install-user-apps"
 # opencode-bin									\
 

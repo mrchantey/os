@@ -1,20 +1,24 @@
 // Zed settings
 // https://zed.dev/docs/configuring-zed
 {
-	"inlay_hints": {
+	"agent_buffer_font_size": 20.0,
+ "project_panel": {
+  "hide_hidden": false
+ },
+ "inlay_hints": {
 		"enabled": false
 	},
 	// AGENTS
 	"agent": {
-		"default_profile": "write",
+		"default_profile": "ask",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
-			"model": "claude-3.5-sonnet"
+			"model": "gpt-5-mini"
 		},
 		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
-			"model": "claude-sonnet-4.5"
+			"model": "gpt-5"
 		}
 	},
 	"completions": {
@@ -58,8 +62,8 @@
 		"active_line_width": 2,
 		"line_width": 2
 	},
-	"ui_font_size": 24,
-	"agent_ui_font_size": 24,
+	"ui_font_size": 24.0,
+	"agent_ui_font_size": 24.0,
 	"buffer_font_size": 20,
 	"languages": {
 		"Markdown": {
