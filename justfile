@@ -60,6 +60,21 @@ install-apps:
 	zig
 	@echo "PASS install-apps"
 
+	# install NVIDIA driver and related 32-bit / Vulkan / OpenCL / performance tooling for gaming
+install-nvidia-deps:
+	sudo pacman -S --noconfirm --needed \
+	nvtop \
+	nvidia-open-dkms \
+	nvidia-utils \
+	lib32-nvidia-utils \
+	nvidia-settings \
+	vulkan-icd-loader \
+	lib32-vulkan-icd-loader \
+	gamemode \
+	lib32-gamemode
+	@echo "PASS install-nvidia-deps"
+
+
 # https://nixos.org/download/
 # do NOT use pacman it will setup invalid build groups difficult to clean up
 install-nix:
@@ -108,7 +123,9 @@ install-user-apps:
 	@echo "PASS install-user-apps"
 # opencode-bin									\
 
-# this may break hyprland, if so run Menu > System > Relaunch
+
+# required to run after fresh install or omarchy update
+# this may break hyprland, if so run Menu > System > Rel
 stow-symlinks-init:
   rm -rf 													\
   ~/.config/alacritty							\
@@ -162,6 +179,7 @@ pull-repos:
 	for repo in {{repositories}}; do \
 		just pull-repo $repo; \
 	done
+	cd ~/me && git clone https://github.com/basecamp/omarchy --depth=1
 	@echo "PASS pull-repos"
 
 pull-repo repo:
