@@ -179,6 +179,8 @@ pull-repos:
 	for repo in {{repositories}}; do \
 		just pull-repo $repo; \
 	done
+	mkdir -p ~/me/scratch
+	touch ~/me/scratch/scratch.md
 	cd ~/me && git clone https://github.com/basecamp/omarchy --depth=1
 	@echo "PASS pull-repos"
 

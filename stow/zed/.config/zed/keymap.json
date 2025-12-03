@@ -28,18 +28,27 @@
 			"ctrl-9": ["workspace::ActivatePane", 8]
 		}
 	},
+	// {
+	// 	"context": "AgentPanel",
+	// 	"bindings": {
+	// 		"ctrl-u": "agent::ToggleModelSelector"
+	// 	}
+	// },
 	{
-		"context": "AgentPanel",
-		"bindings": {}
-	},
-	{
-		"context": "Editor",
+		"context": "AgentPanel > Editor",
 		"bindings": {
-			// "ctrl": "editor::ShowWordCompletions"
-			// "ctrl-up": null,
-			// "ctrl-down": null
+			"ctrl-u": "agent::ToggleModelSelector"
 		}
 	},
+	// {
+	// 	"context": "Editor",
+	// 	"bindings": {
+	// 		"ctrl-u": null
+	// 		// "ctrl": "editor::ShowWordCompletions"
+	// 		// "ctrl-up": null,
+	// 		// "ctrl-down": null
+	// 	}
+	// },
 	{
 		"context": "Editor && !GitPanel",
 		"bindings": {

@@ -1,11 +1,12 @@
 // Zed settings
 // https://zed.dev/docs/configuring-zed
 {
+	// "show_completions_on_input": false,
 	"agent_buffer_font_size": 20.0,
- "project_panel": {
-  "hide_hidden": false
- },
- "inlay_hints": {
+	"project_panel": {
+		"hide_hidden": false
+	},
+	"inlay_hints": {
 		"enabled": false
 	},
 	// AGENTS
@@ -21,9 +22,9 @@
 			"model": "gpt-5"
 		}
 	},
-	"completions": {
-		"words": "disabled"
-	},
+	// "completions": {
+	// 	"words": "disabled"
+	// },
 	"edit_predictions": {
 		"mode": "subtle"
 	},
@@ -43,7 +44,6 @@
 		"git-firefly": true
 	},
 	"snippet_sort_order": "top",
-
 	// "autosave": "on_focus_change",
 	"autosave": { "after_delay": { "milliseconds": 1000 } },
 	"file_types": {
@@ -127,6 +127,7 @@
 		}
 	},
 	"show_edit_predictions": true,
+	"edit_predictions_disabled_in": ["comment"],
 	"tab_size": 2,
 	"theme": {
 		"mode": "system",
