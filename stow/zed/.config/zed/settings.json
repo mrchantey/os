@@ -11,7 +11,7 @@
 	},
 	// AGENTS
 	"agent": {
-		"default_profile": "ask",
+		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "gpt-5-mini"
@@ -19,7 +19,7 @@
 		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
-			"model": "gpt-5-mini"
+			"model": "claude-sonnet-4.5"
 		}
 	},
 	// "completions": {

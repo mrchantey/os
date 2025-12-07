@@ -67,7 +67,7 @@
 	},
 	"clock": {
 		// hour:minute · weekday week number · day month year
-		"format": "{:%H:%M · L%A W%V · %d %B %Y}",
+		"format": "{:%H:%M · %A W%V · %d %B %Y}",
 		"format-alt": "{:L%d %B W%V %Y}",
 		"tooltip": false,
 		"on-click-right": "omarchy-cmd-tzupdate",
