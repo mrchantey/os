@@ -61,6 +61,7 @@ install-apps:
 	@echo "PASS install-apps"
 
 	# install NVIDIA driver and related 32-bit / Vulkan / OpenCL / performance tooling for gaming
+
 install-nvidia-deps:
 	sudo pacman -S --noconfirm --needed \
 	nvtop \
@@ -74,8 +75,8 @@ install-nvidia-deps:
 	lib32-gamemode
 	@echo "PASS install-nvidia-deps"
 
-
 # https://nixos.org/download/
+
 # do NOT use pacman it will setup invalid build groups difficult to clean up
 install-nix:
 	sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
@@ -108,11 +109,9 @@ install-rust:
 	--version=0.2.100
 	@echo "PASS install-rust"
 
-
 install-user-apps-init:
 	@echo "INIT install-user-apps"
 	just install-user-apps
-
 
 install-user-apps:
 	yay -S --noconfirm --needed		\
@@ -121,42 +120,45 @@ install-user-apps:
 	xone-dkms											\
 	xone-dongle-firmware
 	@echo "PASS install-user-apps"
+
 # opencode-bin									\
-
-
 # required to run after fresh install or omarchy update
+
 # this may break hyprland, if so run Menu > System > Rel
 stow-symlinks-init:
-  rm -rf 													\
-  ~/.config/alacritty							\
-  ~/.bashrc												\
-  ~/.cargo												\
-  ~/.config/hypr 									\
-  ~/.config/mimeapps.list 				\
-  ~/.config/starship.toml 				\
-  ~/.config/waybar 								\
-  ~/.config/omarchy/branding			\
-  ~/.config/uwsm/default					\
-  ~/.config/zed
-  @echo "INIT stow-symlinks"
-  just stow-symlinks
+	rm -rf 													\
+	~/.config/alacritty							\
+	~/.bashrc												\
+	~/.cargo												\
+	~/.config/hypr 									\
+	~/.config/mimeapps.list 				\
+	~/.config/starship.toml 				\
+	~/.config/waybar 								\
+	~/.config/omarchy/branding			\
+	~/.config/uwsm/default					\
+	~/.config/zed											\
+	~/.XCompose
+	@echo "INIT stow-symlinks"
+	just stow-symlinks
 
 stow-symlinks:
-  cd stow && stow -vt ~ \
-  alacritty 						\
-  bashrc 								\
-  cargo 								\
-  hypr 									\
-  mimeapps 							\
-  omarchy 							\
-  starship 							\
-  uwsm 									\
-  waybar 								\
-  zed
-  touch ~/.config/hypr/hyprland.conf
-  @echo "PASS stow-symlinks"
+	cd stow && stow -vt ~ \
+	alacritty 						\
+	bashrc 								\
+	cargo 								\
+	hypr 									\
+	mimeapps 							\
+	omarchy 							\
+	starship 							\
+	uwsm 									\
+	waybar 								\
+	xcompose								\
+	zed
+	touch ~/.config/hypr/hyprland.conf
+	@echo "PASS stow-symlinks"
 
 # perform cp for assets which cannot be stowed
+
 # because we dont own the
 stow-files-init:
 	mkdir -p ~/.config/omarchy/themes/everforest/backgrounds
@@ -164,6 +166,7 @@ stow-files-init:
 	https://mrchantey-os.s3.us-west-2.amazonaws.com/backgrounds/firewatch.png
 	@echo "INIT stow-files"
 	just stow-files
+
 stow-files:
 	@echo "PASS stow-files"
 
@@ -176,7 +179,7 @@ repositories := "mrchantey/beet mrchantey/beet-draft mrchantey/beetmash mrchante
 
 pull-repos:
 	mkdir -p ~/me
-	for repo in {{repositories}}; do \
+	for repo in {{ repositories }}; do \
 		just pull-repo $repo; \
 	done
 	mkdir -p ~/me/scratch
@@ -186,7 +189,7 @@ pull-repos:
 
 pull-repo repo:
 	mkdir -p ~/me
-	cd ~/me && git clone https://github.com/{{repo}} || true
+	cd ~/me && git clone https://github.com/{{ repo }} || true
 
 init-infra:
 	cd infra && npm install
@@ -202,15 +205,12 @@ remove-infra:
 
 # upload a file to the s3 bucket
 upload-file src dst:
-	aws s3 cp {{src}} s3://mrchantey-os/{{dst}} --region us-west-2
+	aws s3 cp {{ src }} s3://mrchantey-os/{{ dst }} --region us-west-2
 	@echo "PASS - upload-file"
-
-
-
 
 pre-reset:
 	@set -e
-	@for repo in {{repositories}}; do \
+	@for repo in {{ repositories }}; do \
 		just pre-reset-repo $repo || exit 1; \
 	done
 	@just pre-reset-repo mrchantey/os || exit 1;
@@ -220,13 +220,10 @@ pre-reset:
 	"
 
 @pre-reset-repo repo:
-	cd ~/me/$(basename {{repo}}) && \
-	(git diff --exit-code || (echo "Error: $(basename {{repo}}) has uncommitted changes" && exit 1)) && \
-	(git diff --exit-code --cached || (echo "Error: $(basename {{repo}}) has staged uncommitted changes" && exit 1)) && \
-	(test -z "$(git log @{u}..)" || (echo "Error: $(basename {{repo}}) has unpushed commits" && exit 1))
-
-
-
+	cd ~/me/$(basename {{ repo }}) && \
+	(git diff --exit-code || (echo "Error: $(basename {{ repo }}) has uncommitted changes" && exit 1)) && \
+	(git diff --exit-code --cached || (echo "Error: $(basename {{ repo }}) has staged uncommitted changes" && exit 1)) && \
+	(test -z "$(git log @{u}..)" || (echo "Error: $(basename {{ repo }}) has unpushed commits" && exit 1))
 
 # best-effort apply these settings for windows
 @windows-push:
