@@ -13,3 +13,11 @@ alias c='cargo'
 export EDITOR="zeditor"
 export CARGO_TARGET_DIR="$HOME/.cargo_target"
 export PATH="$HOME/.cargo/bin:$PATH"
+
+# Copy current prompt line to clipboard (Ctrl+Y)
+if command -v wl-copy &> /dev/null; then
+  copy_line_to_clipboard() {
+    printf %s "$READLINE_LINE" | wl-copy
+  }
+  bind -x '"\C-y": copy_line_to_clipboard'
+fi
