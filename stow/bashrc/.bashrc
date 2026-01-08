@@ -13,5 +13,3 @@ alias c='cargo'
 export EDITOR="zeditor"
 export CARGO_TARGET_DIR="$HOME/.cargo_target"
 export PATH="$HOME/.cargo/bin:$PATH"
-
-echo "PIZZA TIME"

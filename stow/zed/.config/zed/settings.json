@@ -14,12 +14,12 @@
 		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
-			"model": "gpt-5-mini"
+			"model": "claude-haiku-4.5"
 		},
 		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
-			"model": "gpt-5-mini"
+			"model": "claude-sonnet-4.5"
 		}
 	},
 	// "completions": {
@@ -69,12 +69,99 @@
 		"Markdown": {
 			"show_edit_predictions": false,
 			"show_completions_on_input": false
+		},
+		"JavaScript": {
+			"language_servers": [
+				"deno",
+				"!typescript-language-server",
+				"!vtsls",
+				"!eslint"
+			],
+			"formatter": "language_server"
+		},
+		"TypeScript": {
+			"language_servers": [
+				"deno",
+				"!typescript-language-server",
+				"!vtsls",
+				"!eslint"
+			],
+			"formatter": "language_server"
+		},
+		"TSX": {
+			"language_servers": [
+				"deno",
+				"!typescript-language-server",
+				"!vtsls",
+				"!eslint"
+			],
+			"formatter": "language_server"
 		}
 	},
 	"lsp": {
+		"deno": {
+			"settings": {
+				"deno": {
+					"enable": true
+				}
+			}
+		},
 		"rust-analyzer": {
 			"enable_lsp_tasks": true,
 			"initialization_options": {
+				"completion": {
+					"postfix": {
+						// disable the &foo, Box::new(foo) etc suggestions
+						"enable": false
+					},
+					"snippets.custom": {
+						"Pizza": {
+							"postfix": "pizza",
+							"body": "Pizza(${receiver})",
+							"description": "Wrap the expression in a `Pizza()`",
+							"scope": "expr"
+						}
+						// "Ok": {
+						// 	"postfix": "ok",
+						// 	"body": "Ok(${receiver})",
+						// 	"description": "Wrap the expression in a `Result::Ok`",
+						// 	"scope": "expr"
+						// },
+						// "Box::pin": {
+						// 	"postfix": "pinbox",
+						// 	"body": "Box::pin(${receiver})",
+						// 	"requires": "std::boxed::Box",
+						// 	"description": "Put the expression into a pinned `Box`",
+						// 	"scope": "expr"
+						// },
+						// "Arc::new": {
+						// 	"postfix": "arc",
+						// 	"body": "Arc::new(${receiver})",
+						// 	"requires": "std::sync::Arc",
+						// 	"description": "Put the expression into an `Arc`",
+						// 	"scope": "expr"
+						// },
+						// "Some": {
+						// 	"postfix": "some",
+						// 	"body": "Some(${receiver})",
+						// 	"description": "Wrap the expression in an `Option::Some`",
+						// 	"scope": "expr"
+						// },
+						// "Err": {
+						// 	"postfix": "err",
+						// 	"body": "Err(${receiver})",
+						// 	"description": "Wrap the expression in a `Result::Err`",
+						// 	"scope": "expr"
+						// },
+						// "Rc::new": {
+						// 	"postfix": "rc",
+						// 	"body": "Rc::new(${receiver})",
+						// 	"requires": "std::rc::Rc",
+						// 	"description": "Put the expression into an `Rc`",
+						// 	"scope": "expr"
+						// }
+					}
+				},
 				"rust": {
 					"analyzerTargetDir": "/home/pete/.cargo_target/rust-analyzer"
 				}
