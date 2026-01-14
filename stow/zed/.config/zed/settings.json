@@ -4,32 +4,32 @@
 	// "show_completions_on_input": false,
 	"agent_buffer_font_size": 20.0,
 	"project_panel": {
-		"hide_hidden": false
+		"hide_hidden": false,
 	},
 	"inlay_hints": {
-		"enabled": false
+		"enabled": false,
 	},
 	// AGENTS
 	"agent": {
 		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
-			"model": "claude-haiku-4.5"
+			"model": "claude-haiku-4.5",
 		},
 		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
-			"model": "claude-sonnet-4.5"
-		}
+			"model": "claude-sonnet-4.5",
+		},
 	},
 	// "completions": {
 	// 	"words": "disabled"
 	// },
 	"edit_predictions": {
-		"mode": "subtle"
+		"mode": "subtle",
 	},
 	"features": {
-		"edit_prediction_provider": "copilot"
+		"edit_prediction_provider": "copilot",
 	},
 	// "show_edit_predictions": false,
 	//
@@ -41,7 +41,7 @@
 		"toml": true,
 		"just": true,
 		"deno": true,
-		"git-firefly": true
+		"git-firefly": true,
 	},
 	"snippet_sort_order": "top",
 	// "autosave": "on_focus_change",
@@ -51,60 +51,68 @@
 			"**/.zed/**/*.json",
 			"**/zed/**/*.json",
 			"**/Zed/**/*.json",
-			"**/.vscode/**/*.json"
+			"**/.vscode/**/*.json",
 		],
 		"Shell Script": [".env.*"],
-		"TOML": ["**/.config/hypr/**/*.conf"]
+		"TOML": ["**/.config/hypr/**/*.conf"],
 	},
 	"hard_tabs": true,
 	"indent_guides": {
 		"coloring": "indent_aware",
 		"active_line_width": 2,
-		"line_width": 2
+		"line_width": 2,
 	},
 	"ui_font_size": 24.0,
 	"agent_ui_font_size": 24.0,
 	"buffer_font_size": 20,
 	"languages": {
+		"Just": {
+			// seems to completely ignore these
+			"language_servers": ["!just-lsp"],
+			"enable_language_server": false,
+			"tab_size": 2,
+			"hard_tabs": true,
+			"auto_indent": false,
+		},
 		"Markdown": {
 			"show_edit_predictions": false,
-			"show_completions_on_input": false
+			"show_completions_on_input": false,
 		},
 		"JavaScript": {
 			"language_servers": [
 				"deno",
 				"!typescript-language-server",
 				"!vtsls",
-				"!eslint"
+				"!eslint",
 			],
-			"formatter": "language_server"
+			"formatter": "language_server",
 		},
 		"TypeScript": {
 			"language_servers": [
 				"deno",
 				"!typescript-language-server",
 				"!vtsls",
-				"!eslint"
+				"!eslint",
 			],
-			"formatter": "language_server"
+			"formatter": "language_server",
 		},
 		"TSX": {
 			"language_servers": [
 				"deno",
 				"!typescript-language-server",
 				"!vtsls",
-				"!eslint"
+				"!eslint",
 			],
-			"formatter": "language_server"
-		}
+			"formatter": "language_server",
+		},
 	},
 	"lsp": {
 		"deno": {
 			"settings": {
 				"deno": {
-					"enable": true
-				}
-			}
+					"enable": true,
+				},
+			},
 		},
 		"rust-analyzer": {
 			"enable_lsp_tasks": true,
@@ -112,15 +120,15 @@
 				"completion": {
 					"postfix": {
 						// disable the &foo, Box::new(foo) etc suggestions
-						"enable": false
+						"enable": false,
 					},
 					"snippets.custom": {
 						"Pizza": {
 							"postfix": "pizza",
 							"body": "Pizza(${receiver})",
 							"description": "Wrap the expression in a `Pizza()`",
-							"scope": "expr"
-						}
+							"scope": "expr",
+						},
 						// "Ok": {
 						// 	"postfix": "ok",
 						// 	"body": "Ok(${receiver})",
@@ -160,24 +168,24 @@
 						// 	"description": "Put the expression into an `Rc`",
 						// 	"scope": "expr"
 						// }
-					}
+					},
 				},
 				"rust": {
-					"analyzerTargetDir": "/home/pete/.cargo_target/rust-analyzer"
-				}
-			}
-		}
+					"analyzerTargetDir": "/home/pete/.cargo_target/rust-analyzer",
+				},
+			},
+		},
 	},
 	"git": {
 		"inline_blame": {
-			"enabled": false
-		}
+			"enabled": false,
+		},
 	},
 	"gutter": {
 		"line_numbers": true,
 		"runnables": false,
 		"breakpoints": false,
-		"folds": false
+		"folds": false,
 	},
 	"profiles": {
 		"Focus": {
@@ -186,21 +194,21 @@
 			// "buffer_line_height": { "custom": 2.0 },
 			"tab_bar": {
 				"show": false,
-				"show_nav_history_buttons": false
+				"show_nav_history_buttons": false,
 			},
 			"toolbar": {
 				"breadcrumbs": false,
-				"quick_actions": false
+				"quick_actions": false,
 			},
 			"gutter": {
 				"line_numbers": false,
 				"folds": false,
 				"breakpoints": false,
 				"runnables": false,
-				"min_line_number_digits": 0
+				"min_line_number_digits": 0,
 			},
 			"indent_guides": {
-				"enabled": false
+				"enabled": false,
 			},
 			"current_line_highlight": "none",
 			"scrollbar": {
@@ -209,9 +217,9 @@
 				"git_diff": false,
 				"diagnostics": "none",
 				"search_results": false,
-				"selected_symbol": false
-			}
-		}
+				"selected_symbol": false,
+			},
+		},
 	},
 	"show_edit_predictions": true,
 	"edit_predictions_disabled_in": ["comment"],
@@ -219,9 +227,9 @@
 	"theme": {
 		"mode": "system",
 		"light": "Ayu Mirage",
-		"dark": "Ayu Mirage"
+		"dark": "Ayu Mirage",
 	},
 	"terminal": {
-		"dock": "right"
-	}
+		"dock": "right",
+	},
 }
