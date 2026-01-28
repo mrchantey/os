@@ -6,13 +6,10 @@ source ~/.local/share/omarchy/default/bash/rc
 # PS1="\W \[\e]0;\w\a\]$PS1"
 # . "$HOME/.cargo/env"
 
-alias zed='zeditor'
-alias z='zeditor'
-alias c='cargo'
-
-export EDITOR="zeditor"
+export EDITOR="zed"
 export CARGO_TARGET_DIR="$HOME/.cargo_target"
 export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/home/pete/.local/bin:$PATH"
 
 # Copy current prompt line to clipboard (Ctrl+Y)
 if command -v wl-copy &> /dev/null; then

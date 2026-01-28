@@ -49,6 +49,7 @@ install-apps-init:
 	rm -rf ~/.local/share/applications/Zoom.desktop
 	@echo "INIT install-apps"
 	just install-apps
+	curl -f https://zed.dev/install.sh | sh
 
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
@@ -57,7 +58,6 @@ install-apps:
 	cuda																	\
 	steam																	\
 	stow																	\
-	zed																		\
 	zig
 	@echo "PASS install-apps"
 
