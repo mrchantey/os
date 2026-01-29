@@ -108,9 +108,9 @@ install-rust:
 	cargo binstall --no-confirm \
 	cargo-edit 									\
 	cargo-expand 								\
+	cargo-generate							\
 	cargo-lambda 								\
 	cargo-watch 								\
-	leptosfmt										\
 	wasm-opt
 	cargo binstall --no-confirm \
 	wasm-bindgen-cli 						\

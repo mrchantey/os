@@ -25,8 +25,8 @@
 			"ctrl-6": ["workspace::ActivatePane", 5],
 			"ctrl-7": ["workspace::ActivatePane", 6],
 			"ctrl-8": ["workspace::ActivatePane", 7],
-			"ctrl-9": ["workspace::ActivatePane", 8]
-		}
+			"ctrl-9": ["workspace::ActivatePane", 8],
+		},
 	},
 	// {
 	// 	"context": "AgentPanel",
@@ -37,8 +37,8 @@
 	{
 		"context": "AgentPanel > Editor",
 		"bindings": {
-			"ctrl-u": "agent::ToggleModelSelector"
-		}
+			"ctrl-u": "agent::ToggleModelSelector",
+		},
 	},
 	// {
 	// 	"context": "Editor",
@@ -66,16 +66,16 @@
 			"alt-shift-down": "editor::DuplicateLineDown",
 			"alt-shift-up": "editor::DuplicateLineUp",
 			"ctrl-shift-up": "editor::SelectUp",
-			"ctrl-shift-down": "editor::SelectDown"
-		}
+			"ctrl-shift-down": "editor::SelectDown",
+		},
 	},
 	{
 		"context": "GitPanel",
 		"bindings": {
 			"ctrl-up": "git::Push",
 			"ctrl-f": "git::Fetch",
-			"ctrl-down": "git::Pull"
-		}
+			"ctrl-down": "git::Pull",
+		},
 	},
 	{
 		"context": "ProjectPanel",
@@ -83,8 +83,8 @@
 			"ctrl-alt-[": "project_panel::CollapseAllEntries",
 			"ctrl-alt-]": "project_panel::ExpandSelectedEntry",
 			"ctrl-[": "project_panel::CollapseSelectedEntry",
-			"ctrl-]": "project_panel::ExpandSelectedEntry"
-		}
+			"ctrl-]": "project_panel::ExpandSelectedEntry",
+		},
 	},
 	{
 		"context": "Pane",
@@ -94,38 +94,38 @@
 			"ctrl-pagedown": "pane::ActivateNextItem",
 			"ctrl-shift-pageup": "pane::SwapItemLeft",
 			"ctrl-shift-pagedown": "pane::SwapItemRight",
-			"alt-ctrl-w": ["pane::CloseOtherItems", { "close_pinned": false }]
-		}
+			"alt-ctrl-w": ["pane::CloseOtherItems", { "close_pinned": false }],
+		},
 	},
 	{
 		"context": "Terminal",
 		"bindings": {
 			"ctrl-k": "pane::CloseActiveItem",
-			"ctrl-1": "terminal_panel::ToggleFocus"
-		}
+			"ctrl-1": "terminal_panel::ToggleFocus",
+		},
 	},
 	{
 		"context": "Workspace || Editor",
 		"bindings": {
 			"ctrl-alt-left": [
 				"workspace::MoveItemToPaneInDirection",
-				{ "direction": "left" }
+				{ "direction": "left" },
 			],
 			"ctrl-alt-right": [
 				"workspace::MoveItemToPaneInDirection",
-				{ "direction": "right" }
+				{ "direction": "right" },
 			],
 			"ctrl-shift-alt-left": [
 				"workspace::MoveItemToPaneInDirection",
-				{ "direction": "left", "clone": true }
+				{ "direction": "left", "clone": true },
 			],
 			"ctrl-shift-alt-right": [
 				"workspace::MoveItemToPaneInDirection",
-				{ "direction": "right", "clone": true }
-			]
-		}
+				{ "direction": "right", "clone": true },
+			],
+		},
 	},
 	{
-		"context": "Workspace"
-	}
+		"context": "Workspace",
+	},
 ]
