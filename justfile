@@ -54,8 +54,9 @@ install-apps-init:
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
-	deno																	\
 	cuda																	\
+	deno																	\
+	helix																	\
 	steam																	\
 	stow																	\
 	zig

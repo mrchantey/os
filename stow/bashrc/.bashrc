@@ -6,6 +6,9 @@ source ~/.local/share/omarchy/default/bash/rc
 # PS1="\W \[\e]0;\w\a\]$PS1"
 # . "$HOME/.cargo/env"
 
+alias hx='helix'
+
+
 export EDITOR="zed"
 export CARGO_TARGET_DIR="$HOME/.cargo_target"
 export PATH="$HOME/.cargo/bin:$PATH"
