@@ -51,16 +51,21 @@ install-apps-init:
 	just install-apps
 	curl -f https://zed.dev/install.sh | sh
 
+# note: python already installed
+
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
 	cuda																	\
 	deno																	\
 	helix																	\
+	python-pip														\
+	python-pipx														\
 	steam																	\
 	stow																	\
 	zig
 	@echo "PASS install-apps"
+
 
 	# install NVIDIA driver and related 32-bit / Vulkan / OpenCL / performance tooling for gaming
 
