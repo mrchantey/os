@@ -50,6 +50,7 @@ install-apps-init:
 	@echo "INIT install-apps"
 	just install-apps
 	curl -f https://zed.dev/install.sh | sh
+	curl -fsSL https://get.pulumi.com | sh
 
 # note: python already installed
 

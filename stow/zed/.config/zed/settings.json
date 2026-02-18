@@ -11,7 +11,8 @@
 	},
 	// AGENTS
 	"agent": {
-		"default_profile": "write",
+		"show_turn_stats": true,
+  "default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "claude-haiku-4.5",
@@ -19,7 +20,7 @@
 		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
-			"model": "claude-opus-4.6",
+			"model": "claude-haiku-4.5",
 		},
 	},
 	// "completions": {

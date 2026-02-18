@@ -8,7 +8,6 @@ source ~/.local/share/omarchy/default/bash/rc
 
 alias hx='helix'
 
-
 export EDITOR="zed"
 export CARGO_TARGET_DIR="$HOME/.cargo_target"
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -21,3 +20,10 @@ if command -v wl-copy &> /dev/null; then
   }
   bind -x '"\C-y": copy_line_to_clipboard'
 fi
+
+# if [[ "$PWD" == "$HOME" ]]; then
+#   cd ~/me
+# fi
+
+# add Pulumi to the PATH
+export PATH=$PATH:/home/pete/.pulumi/bin
