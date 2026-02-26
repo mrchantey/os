@@ -1,0 +1,8 @@
+{
+	"$schema": "https://opencode.ai/config.json",
+	"theme": "system",
+	"compaction": {
+		// until https://github.com/anomalyco/opencode/issues/8030
+		"auto": false
+	}
+}

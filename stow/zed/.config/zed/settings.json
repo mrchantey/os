@@ -2,7 +2,8 @@
 // https://zed.dev/docs/configuring-zed
 {
 	// "show_completions_on_input": false,
-	"agent_buffer_font_size": 20.0,
+	"diff_view_style": "unified",
+ "agent_buffer_font_size": 20.0,
 	"project_panel": {
 		"hide_hidden": false,
 	},
@@ -11,26 +12,26 @@
 	},
 	// AGENTS
 	"agent": {
-		"show_turn_stats": true,
+		"tool_permissions": {
+   "default": "allow"
+  },
+  "show_turn_stats": true,
   "default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "claude-haiku-4.5",
 		},
-		"always_allow_tool_actions": true,
 		"default_model": {
 			"provider": "copilot_chat",
-			"model": "claude-haiku-4.5",
+			"model": "claude-sonnet-4.6",
 		},
 	},
 	// "completions": {
 	// 	"words": "disabled"
 	// },
 	"edit_predictions": {
-		"mode": "subtle",
-	},
-	"features": {
-		"edit_prediction_provider": "copilot",
+		"provider": "copilot",
+  "mode": "subtle",
 	},
 	// "show_edit_predictions": false,
 	//

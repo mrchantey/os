@@ -62,6 +62,7 @@ install-apps:
 	helix																	\
 	python-pip														\
 	python-pipx														\
+	rsync																	\
 	steam																	\
 	stow																	\
 	zig
@@ -128,17 +129,17 @@ install-user-apps-init:
 	@echo "INIT install-user-apps"
 	just install-user-apps
 
+# apps from aur, usually more up-to-date than stable
 install-user-apps:
 	yay -S --noconfirm --needed		\
 	google-chrome									\
 	visual-studio-code-bin				\
+	opencode-bin									\
 	xone-dkms											\
 	xone-dongle-firmware
 	@echo "PASS install-user-apps"
 
-# opencode-bin									\
 # required to run after fresh install or omarchy update
-
 # this may break hyprland, if so run Menu > System > Rel
 stow-symlinks-init:
 	rm -rf 													\
@@ -147,6 +148,7 @@ stow-symlinks-init:
 	~/.cargo												\
 	~/.config/hypr 									\
 	~/.config/mimeapps.list 				\
+	~/.config/opencode							\
 	~/.config/starship.toml 				\
 	~/.config/waybar 								\
 	~/.config/omarchy/branding			\
@@ -164,6 +166,7 @@ stow-symlinks:
 	hypr 									\
 	mimeapps 							\
 	omarchy 							\
+	opencode							\
 	starship 							\
 	uwsm 									\
 	waybar 								\
@@ -173,8 +176,6 @@ stow-symlinks:
 	@echo "PASS stow-symlinks"
 
 # perform cp for assets which cannot be stowed
-
-# because we dont own the
 stow-files-init:
 	mkdir -p ~/.config/omarchy/themes/everforest/backgrounds
 	curl -fsSL -o ~/.config/omarchy/themes/everforest/backgrounds/firewatch.png \
