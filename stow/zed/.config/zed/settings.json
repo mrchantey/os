@@ -1,9 +1,10 @@
 // Zed settings
 // https://zed.dev/docs/configuring-zed
 {
-	// "show_completions_on_input": false,
+	"show_completions_on_input": false,
+	"disable_ai": false,
 	"diff_view_style": "unified",
- "agent_buffer_font_size": 20.0,
+	"agent_buffer_font_size": 20.0,
 	"project_panel": {
 		"hide_hidden": false,
 	},
@@ -12,28 +13,77 @@
 	},
 	// AGENTS
 	"agent": {
-		"tool_permissions": {
-   "default": "allow"
-  },
-  "show_turn_stats": true,
-  "default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "claude-haiku-4.5",
+			"enable_thinking": false,
 		},
 		"default_model": {
+			"effort": "high",
 			"provider": "copilot_chat",
-			"model": "claude-sonnet-4.6",
+			"model": "claude-opus-4.6",
+			"enable_thinking": true,
+		},
+
+		"favorite_models": [
+			{
+				"effort": "high",
+				"provider": "copilot_chat",
+				"model": "claude-sonnet-4.6",
+				"enable_thinking": true,
+			},
+			{
+				"effort": "high",
+				"provider": "copilot_chat",
+				"model": "claude-opus-4.6",
+				"enable_thinking": true,
+			},
+		],
+		"model_parameters": [],
+		"tool_permissions": {
+			"default": "allow",
+			"tools": {
+				"move_path": {
+					"default": "allow",
+				},
+				"delete_path": {
+					"default": "allow",
+				},
+				"copy_path": {
+					"default": "allow",
+				},
+				"edit_file": {
+					"default": "allow",
+				},
+				"restore_file_from_disk": {
+					"default": "allow",
+				},
+				"terminal": {
+					"default": "allow",
+					"always_confirm": [
+						// Destructive git operations
+						{ "pattern": "git\\s+(reset|clean)\\s+--hard" },
+						{ "pattern": "git\\s+push\\s+(-f|--force)" },
+					],
+					"always_allow": [
+						{
+							"pattern": "^cargo\\s+check(\\s|$)",
+						},
+					],
+				},
+			},
 		},
 	},
 	// "completions": {
 	// 	"words": "disabled"
 	// },
 	"edit_predictions": {
+		"copilot": {
+			"enable_next_edit_suggestions": true,
+		},
 		"provider": "copilot",
-  "mode": "subtle",
+		"mode": "subtle",
 	},
-	// "show_edit_predictions": false,
 	//
 	//
 	//
@@ -67,18 +117,23 @@
 	"ui_font_size": 24.0,
 	"agent_ui_font_size": 24.0,
 	"buffer_font_size": 20,
+	"colorize_brackets": true,
 	"languages": {
+		"Rust": {
+			"colorize_brackets": true,
+		},
 		"Just": {
 			// seems to completely ignore these
 			"language_servers": ["!just-lsp"],
 			"enable_language_server": false,
 			"tab_size": 2,
 			"hard_tabs": true,
-			"auto_indent": false,
+			"auto_indent": "none",
 		},
 		"Markdown": {
 			"show_edit_predictions": false,
 			"show_completions_on_input": false,
+			"edit_predictions_disabled_in": ["rust"],
 		},
 		"JavaScript": {
 			"language_servers": [
@@ -223,7 +278,7 @@
 			},
 		},
 	},
-	"show_edit_predictions": true,
+	"show_edit_predictions": false,
 	"edit_predictions_disabled_in": ["comment"],
 	"tab_size": 2,
 	"theme": {

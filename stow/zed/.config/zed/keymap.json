@@ -52,6 +52,7 @@
 	{
 		"context": "Editor && !GitPanel",
 		"bindings": {
+			"alt": "editor::ShowEditPrediction",
 			// "F12": "editor::GoToDeclaration",
 			"ctrl-shift-F12": "editor::GoToDeclaration",
 			"ctrl-up": "editor::LineUp",

@@ -16,7 +16,6 @@ init:
 	just init-sudo
 	just init-user
 	just install-rust
-	just install-nix
 	chmod +x startup.sh
 
 init-sudo:
@@ -51,6 +50,7 @@ install-apps-init:
 	just install-apps
 	curl -f https://zed.dev/install.sh | sh
 	curl -fsSL https://get.pulumi.com | sh
+	curl -fsSL https://vite.plus | sh
 
 # note: python already installed
 
@@ -90,14 +90,6 @@ install-ollama:
 	ollama pull functiongemma:270m-it-fp16
 	# chat
 	ollama pull huihui_ai/qwen3-abliterated:14b
-
-# https://nixos.org/download/
-
-# do NOT use pacman it will setup invalid build groups difficult to clean up
-install-nix:
-	sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
-
-# nix-shell -p nix-info --run "nix-info -m"
 
 install-rust:
 	# uninstall omarchy rust, it has no rustup
