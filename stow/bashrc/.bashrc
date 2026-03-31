@@ -27,3 +27,6 @@ fi
 
 # add Pulumi to the PATH
 export PATH=$PATH:/home/pete/.pulumi/bin
+
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"

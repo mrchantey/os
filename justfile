@@ -48,9 +48,6 @@ install-apps-init:
 	rm -rf ~/.local/share/applications/Zoom.desktop
 	@echo "INIT install-apps"
 	just install-apps
-	curl -f https://zed.dev/install.sh | sh
-	curl -fsSL https://get.pulumi.com | sh
-	curl -fsSL https://vite.plus | sh
 
 # note: python already installed
 
@@ -60,12 +57,15 @@ install-apps:
 	cuda																	\
 	deno																	\
 	helix																	\
+	opentofu															\
 	python-pip														\
 	python-pipx														\
 	rsync																	\
 	steam																	\
 	stow																	\
 	zig
+	curl -f https://zed.dev/install.sh | sh
+	curl -fsSL https://vite.plus | sh
 	@echo "PASS install-apps"
 
 
@@ -86,10 +86,10 @@ install-nvidia-deps:
 
 install-ollama:
 	curl -fsSL https://ollama.com/install.sh | sh
-	# tool call
-	ollama pull functiongemma:270m-it-fp16
-	# chat
-	ollama pull huihui_ai/qwen3-abliterated:14b
+	# general use
+	ollama pull qwen3.5:9b
+	# abliterated
+	ollama pull huihui_ai/qwen3.5-abliterated:9b
 
 install-rust:
 	# uninstall omarchy rust, it has no rustup
