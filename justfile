@@ -204,10 +204,10 @@ badlogic/pi-mono
 
 pull-repos:
 	mkdir -p ~/me
-	for repo in {{ write_repositories }}; do \
+	for repo in {{ replace(write_repositories, "\n", " ") }}; do \
 		just pull-repo $repo; \
 	done
-	for repo in {{ read_repositories }}; do \
+	for repo in {{ replace(read_repositories, "\n", " ") }}; do \
 		just pull-repo $repo --depth=1; \
 	done
 	mkdir -p ~/me/scratch
@@ -239,7 +239,7 @@ upload-file src dst:
 
 pre-reset:
 	@set -e
-	@for repo in {{ write_repositories }}; do \
+	@for repo in {{ replace(write_repositories, "\n", " ") }}; do \
 		just pre-reset-repo $repo || exit 1; \
 	done
 	@echo "PASS pre-reset"

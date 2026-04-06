@@ -1,7 +1,7 @@
 // Zed settings
 // https://zed.dev/docs/configuring-zed
 {
-	"show_completions_on_input": false,
+	// "show_completions_on_input": false,
 	"disable_ai": false,
 	"diff_view_style": "unified",
 	"agent_buffer_font_size": 20.0,
@@ -21,7 +21,7 @@
 		"default_model": {
 			"effort": "high",
 			"provider": "copilot_chat",
-			"model": "claude-opus-4.6",
+			"model": "claude-sonnet-4.6",
 			"enable_thinking": true,
 		},
 
