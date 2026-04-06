@@ -140,6 +140,7 @@ stow-symlinks-init:
 	~/.cargo												\
 	~/.config/hypr 									\
 	~/.config/mimeapps.list 				\
+	~/.config/obs-studio						\
 	~/.config/opencode							\
 	~/.config/starship.toml 				\
 	~/.config/waybar 								\
@@ -157,6 +158,7 @@ stow-symlinks:
 	cargo 								\
 	hypr 									\
 	mimeapps 							\
+	obs										\
 	omarchy 							\
 	opencode							\
 	starship 							\
