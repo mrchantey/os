@@ -185,21 +185,40 @@ pull-repos-init:
 	@echo "INIT pull-repos"
 	just pull-repos
 
-repositories := "mrchantey/beet mrchantey/beet-draft mrchantey/beetmash mrchantey/notes bevyengine/bevy"
+write_repositories := "
+mrchantey/beet
+mrchantey/beet-draft
+mrchantey/beetmash
+mrchantey/os
+mrchantey/notes
+bevyengine/bevy
+"
+# when unlikely to edit, pulled with --depth=1
+read_repositories := "
+alexjg/samod
+basecamp/omarchy
+bevy_ratatui
+openclaw/openclaw
+badlogic/pi-mono
+"
 
 pull-repos:
 	mkdir -p ~/me
-	for repo in {{ repositories }}; do \
+	for repo in {{ write_repositories }}; do \
 		just pull-repo $repo; \
+	done
+	for repo in {{ read_repositories }}; do \
+		just pull-repo $repo --depth=1; \
 	done
 	mkdir -p ~/me/scratch
 	touch ~/me/scratch/scratch.md
 	cd ~/me && git clone https://github.com/basecamp/omarchy --depth=1
 	@echo "PASS pull-repos"
 
-pull-repo repo:
+# pull a repository, discarding errors
+pull-repo repo *args:
 	mkdir -p ~/me
-	cd ~/me && git clone https://github.com/{{ repo }} || true
+	cd ~/me && git clone https://github.com/{{ repo }} {{args}} || true
 
 init-infra:
 	cd infra && npm install
@@ -220,10 +239,9 @@ upload-file src dst:
 
 pre-reset:
 	@set -e
-	@for repo in {{ repositories }}; do \
+	@for repo in {{ write_repositories }}; do \
 		just pre-reset-repo $repo || exit 1; \
 	done
-	@just pre-reset-repo mrchantey/os || exit 1;
 	@echo "PASS pre-reset"
 	@echo "You are almost ready to reset your machine: \
 	- ensure assets directories have been pushed: beet, beetmash \
