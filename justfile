@@ -55,6 +55,7 @@ install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
 	cuda																	\
+	caligula															\
 	deno																	\
 	helix																	\
 	opentofu															\
@@ -261,3 +262,4 @@ pre-reset:
 
 startup:
 	./startup.sh
+
