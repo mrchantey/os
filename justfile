@@ -141,6 +141,7 @@ stow-symlinks-init:
 	~/.config/alacritty							\
 	~/.bashrc												\
 	~/.cargo												\
+	~/.config/ghostty								\
 	~/.config/mimeapps.list 				\
 	~/.config/obs-studio						\
 	~/.config/opencode							\
@@ -171,6 +172,7 @@ stow-symlinks:
 	alacritty 						\
 	bashrc 								\
 	cargo 								\
+	ghostty								\
 	hypr 									\
 	mimeapps 							\
 	obs										\
