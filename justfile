@@ -1,13 +1,3 @@
-# Collection of commands to run, with the following format
-# hello-world-init:
-#		@echo "this is intended to only be run once per os install, but shouldnt fail otherwise"
-#		@echo "INIT hello-world"
-#		just hello-world
-#
-# hello-world:
-#		@echo "this command is generally less intensive may be edited and run again"
-#		@echo "PASS hello-world"
-
 default:
 	just --list
 
@@ -26,7 +16,7 @@ init-user:
 	just stow-files-init
 	just stow-symlinks-init
 	just install-user-apps-init
-	just pull-repos-init
+	just pull-repos
 
 install-apps-init:
 	sudo pacman -Rns --noconfirm spotify 				|| true
@@ -69,29 +59,6 @@ install-apps:
 	curl -fsSL https://vite.plus | sh
 	@echo "PASS install-apps"
 
-
-	# install NVIDIA driver and related 32-bit / Vulkan / OpenCL / performance tooling for gaming
-
-install-nvidia-deps:
-	sudo pacman -S --noconfirm --needed \
-	nvtop \
-	nvidia-open-dkms \
-	nvidia-utils \
-	lib32-nvidia-utils \
-	nvidia-settings \
-	vulkan-icd-loader \
-	lib32-vulkan-icd-loader \
-	gamemode \
-	lib32-gamemode
-	@echo "PASS install-nvidia-deps"
-
-install-ollama:
-	curl -fsSL https://ollama.com/install.sh | sh
-	# general use
-	ollama pull qwen3.5:9b
-	# abliterated
-	ollama pull huihui_ai/qwen3.5-abliterated:9b
-
 install-rust:
 	# uninstall omarchy rust, it has no rustup
 	sudo pacman -Rns --noconfirm rust	|| true
@@ -116,7 +83,7 @@ install-rust:
 	wasm-opt
 	cargo binstall --no-confirm \
 	wasm-bindgen-cli 						\
-	--version=0.2.100
+	--version=0.2.106
 	@echo "PASS install-rust"
 
 install-user-apps-init:
@@ -196,11 +163,6 @@ stow-files-init:
 stow-files:
 	@echo "PASS stow-files"
 
-pull-repos-init:
-	gh auth login
-	@echo "INIT pull-repos"
-	just pull-repos
-
 write_repositories := "
 mrchantey/beet
 mrchantey/beet-draft
@@ -274,5 +236,25 @@ pre-reset:
 	@echo "PASS windows-push"
 
 
-startup:
-	./startup.sh
+### OPTIONAL
+
+# install NVIDIA driver and related 32-bit / Vulkan / OpenCL / performance tooling for gaming
+install-nvidia-deps:
+	sudo pacman -S --noconfirm --needed \
+	nvtop \
+	nvidia-open-dkms \
+	nvidia-utils \
+	lib32-nvidia-utils \
+	nvidia-settings \
+	vulkan-icd-loader \
+	lib32-vulkan-icd-loader \
+	gamemode \
+	lib32-gamemode
+	@echo "PASS install-nvidia-deps"
+
+install-ollama:
+	curl -fsSL https://ollama.com/install.sh | sh
+	# general use
+	ollama pull qwen3.5:9b
+	# abliterated
+	ollama pull huihui_ai/qwen3.5-abliterated:9b
