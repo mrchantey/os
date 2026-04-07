@@ -140,7 +140,6 @@ stow-symlinks-init:
 	~/.config/alacritty							\
 	~/.bashrc												\
 	~/.cargo												\
-	~/.config/hypr 									\
 	~/.config/mimeapps.list 				\
 	~/.config/obs-studio						\
 	~/.config/opencode							\
@@ -150,6 +149,19 @@ stow-symlinks-init:
 	~/.config/uwsm/default					\
 	~/.config/zed											\
 	~/.XCompose
+	# fine-grained hyprland removal
+	rm -f 													\
+	~/.config/hypr/hyprland.conf		\
+	~/.config/hypr/monitors.conf		\
+	~/.config/hypr/input.conf				\
+	~/.config/hypr/bindings.conf		\
+	~/.config/hypr/envs.conf				\
+	~/.config/hypr/looknfeel.conf		\
+	~/.config/hypr/autostart.conf		\
+	~/.config/hypr/hypridle.conf		\
+	~/.config/hypr/hyprlock.conf		\
+	~/.config/hypr/hyprsunset.conf	\
+	~/.config/hypr/xdph.conf
 	@echo "INIT stow-symlinks"
 	just stow-symlinks
 
@@ -168,7 +180,6 @@ stow-symlinks:
 	waybar 								\
 	xcompose								\
 	zed
-	touch ~/.config/hypr/hyprland.conf
 	@echo "PASS stow-symlinks"
 
 # perform cp for assets which cannot be stowed

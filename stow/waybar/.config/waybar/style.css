@@ -7,7 +7,7 @@
 	border: none;
 	border-radius: 0;
 	min-height: 0;
-	font-family: CaskaydiaMono Nerd Font;
+	font-family: JetBrainsMono Nerd Font;
 	font-size: 12px;
 }
 
@@ -83,7 +83,7 @@ tooltip {
 	min-width: 12px;
 	margin-left: 5px;
 	font-size: 10px;
-  padding-bottom: 1px;
+	padding-bottom: 1px;
 }
 
 #custom-screenrecording-indicator.active {
@@ -91,10 +91,10 @@ tooltip {
 }
 
 #custom-voxtype {
-  min-width: 12px;
-  margin: 0 0 0 7.5px;
+	min-width: 12px;
+	margin: 0 0 0 7.5px;
 }
 
 #custom-voxtype.recording {
-  color: #a55555;
+	color: #a55555;
 }
