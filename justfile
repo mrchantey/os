@@ -126,9 +126,10 @@ install-user-apps-init:
 # apps from aur, usually more up-to-date than stable
 install-user-apps:
 	yay -S --noconfirm --needed		\
+	ghostty												\
 	google-chrome									\
-	visual-studio-code-bin				\
 	opencode-bin									\
+	visual-studio-code-bin				\
 	xone-dkms											\
 	xone-dongle-firmware
 	@echo "PASS install-user-apps"

@@ -1,3 +1,3 @@
-# export TERMINAL=ghostty
-export TERMINAL=alacritty
+export TERMINAL=ghostty
+# export TERMINAL=alacritty
 export EDITOR=zed
