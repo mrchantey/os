@@ -95,6 +95,7 @@ install-ollama:
 install-rust:
 	# uninstall omarchy rust, it has no rustup
 	sudo pacman -Rns --noconfirm rust	|| true
+	# pacman for cargo-binstall so we dont build from source
 	sudo pacman -S --noconfirm --needed \
 	rustup cargo-binstall
 	# bevy dependencies https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md#arch--manjaro
@@ -213,7 +214,6 @@ pull-repos:
 	done
 	mkdir -p ~/me/scratch
 	touch ~/me/scratch/scratch.md
-	cd ~/me && git clone https://github.com/basecamp/omarchy --depth=1
 	@echo "PASS pull-repos"
 
 # pull a repository, discarding errors
@@ -262,4 +262,3 @@ pre-reset:
 
 startup:
 	./startup.sh
-
