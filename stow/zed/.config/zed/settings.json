@@ -2,6 +2,9 @@
 // https://zed.dev/docs/configuring-zed
 {
 	// "show_completions_on_input": false,
+	"session": {
+		"trust_all_worktrees": true,
+	},
 	"disable_ai": false,
 	"diff_view_style": "unified",
 	"agent_buffer_font_size": 20.0,
@@ -13,6 +16,7 @@
 	},
 	// AGENTS
 	"agent": {
+		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
 			"model": "claude-haiku-4.5",
@@ -43,21 +47,6 @@
 		"tool_permissions": {
 			"default": "allow",
 			"tools": {
-				"move_path": {
-					"default": "allow",
-				},
-				"delete_path": {
-					"default": "allow",
-				},
-				"copy_path": {
-					"default": "allow",
-				},
-				"edit_file": {
-					"default": "allow",
-				},
-				"restore_file_from_disk": {
-					"default": "allow",
-				},
 				"terminal": {
 					"default": "allow",
 					"always_confirm": [

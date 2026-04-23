@@ -35,6 +35,8 @@ Haven't yet found a way to automate these, to be executed post install.
 	- `Security Credentials > Access Keys > Create Access Key`
 		- Command Line Interface (CLI)
 		- Description Tag: None
+	- `Access Key Id: ^`
+	- `Access Key Secret Key: ^`
 	- `Default region name: us-west-2`
 	- `Default output format: None`
 
