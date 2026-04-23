@@ -5,6 +5,7 @@ infra/sst-env.d.ts
 infra/package-lock.json
 
 stow/cargo/.cargo
+stow/zed/.config/zed/settings_backup.json
 !stow/cargo/.cargo/config.toml
 
 stow/obs/.config/obs-studio/logs
