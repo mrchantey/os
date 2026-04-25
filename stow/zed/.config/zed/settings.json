@@ -2,10 +2,16 @@
 // https://zed.dev/docs/configuring-zed
 {
 	// "show_completions_on_input": false,
+	"agent_servers": {
+		"opencode": {
+			"type": "registry",
+		},
+	},
+	"cli_default_open_behavior": "new_window",
 	"git_panel": {
-  "dock": "left"
- },
- "session": {
+		"dock": "left",
+	},
+	"session": {
 		"trust_all_worktrees": true,
 	},
 	"disable_ai": false,
@@ -13,13 +19,14 @@
 	"agent_buffer_font_size": 20.0,
 	"project_panel": {
 		"dock": "left",
-  "hide_hidden": false,
+		"hide_hidden": false,
 	},
 	"inlay_hints": {
 		"enabled": false,
 	},
 	// AGENTS
 	"agent": {
+		// "dock": "right",
 		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
@@ -111,6 +118,15 @@
 	"agent_ui_font_size": 24.0,
 	"buffer_font_size": 20,
 	"colorize_brackets": true,
+	"language_models": {
+		"bedrock": {
+			"authentication_method": "named_profile",
+			"region": "us-east-1",
+			"profile": "default",
+			// "region": "ap-southeast-2",
+		},
+	},
+
 	"languages": {
 		"Rust": {
 			"colorize_brackets": true,
@@ -242,36 +258,36 @@
 			// "ui_font_size": 16,
 			// "buffer_font_size": 18,
 			// "buffer_line_height": { "custom": 2.0 },
-   "settings": {
-    "tab_bar": {
-     "show": false,
-     "show_nav_history_buttons": false
-    },
-    "toolbar": {
-     "breadcrumbs": false,
-     "quick_actions": false
-    },
-    "gutter": {
-     "line_numbers": false,
-     "folds": false,
-     "breakpoints": false,
-     "runnables": false,
-     "min_line_number_digits": 0
-    },
-    "indent_guides": {
-     "enabled": false
-    },
-    "current_line_highlight": "none",
-    "scrollbar": {
-     "show": "never",
-     "cursors": false,
-     "git_diff": false,
-     "diagnostics": "none",
-     "search_results": false,
-     "selected_symbol": false
-    }
-   }
-  },
+			"settings": {
+				"tab_bar": {
+					"show": false,
+					"show_nav_history_buttons": false,
+				},
+				"toolbar": {
+					"breadcrumbs": false,
+					"quick_actions": false,
+				},
+				"gutter": {
+					"line_numbers": false,
+					"folds": false,
+					"breakpoints": false,
+					"runnables": false,
+					"min_line_number_digits": 0,
+				},
+				"indent_guides": {
+					"enabled": false,
+				},
+				"current_line_highlight": "none",
+				"scrollbar": {
+					"show": "never",
+					"cursors": false,
+					"git_diff": false,
+					"diagnostics": "none",
+					"search_results": false,
+					"selected_symbol": false,
+				},
+			},
+		},
 	},
 	"show_edit_predictions": false,
 	"edit_predictions_disabled_in": ["comment"],
