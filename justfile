@@ -50,6 +50,7 @@ install-apps:
 	helix																	\
 	opentofu															\
 	python-pip														\
+	podman																\
 	python-pipx														\
 	rsync																	\
 	steam																	\

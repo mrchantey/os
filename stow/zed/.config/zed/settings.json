@@ -3,6 +3,9 @@
 {
 	// "show_completions_on_input": false,
 	"agent_servers": {
+		"claude-acp": {
+			"type": "registry",
+		},
 		"opencode": {
 			"type": "registry",
 		},
@@ -26,7 +29,7 @@
 	},
 	// AGENTS
 	"agent": {
-		// "dock": "right",
+		"dock": "right",
 		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
@@ -119,12 +122,12 @@
 	"buffer_font_size": 20,
 	"colorize_brackets": true,
 	"language_models": {
-		"bedrock": {
-			"authentication_method": "named_profile",
-			"region": "us-east-1",
-			"profile": "default",
-			// "region": "ap-southeast-2",
-		},
+		// "bedrock": {
+		// 	"authentication_method": "named_profile",
+		// 	"region": "us-east-1",
+		// 	"profile": "default",
+		// 	// "region": "ap-southeast-2",
+		// },
 	},
 
 	"languages": {
