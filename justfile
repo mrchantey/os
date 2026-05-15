@@ -107,6 +107,7 @@ install-user-apps:
 stow-symlinks-init:
 	rm -rf 													\
 	~/.config/alacritty							\
+	~/.config/autostart							\
 	~/.bashrc												\
 	~/.cargo												\
 	~/.config/ghostty								\
@@ -114,6 +115,7 @@ stow-symlinks-init:
 	~/.config/obs-studio						\
 	~/.config/opencode							\
 	~/.config/starship.toml 				\
+	~/.config/vocalinux							\
 	~/.config/waybar 								\
 	~/.config/omarchy/branding			\
 	~/.config/uwsm/default					\
@@ -138,6 +140,7 @@ stow-symlinks-init:
 stow-symlinks:
 	cd stow && stow -vt ~ \
 	alacritty 						\
+	autostart							\
 	bashrc 								\
 	cargo 								\
 	ghostty								\
@@ -148,6 +151,7 @@ stow-symlinks:
 	opencode							\
 	starship 							\
 	uwsm 									\
+	vocalinux							\
 	waybar 								\
 	xcompose								\
 	zed

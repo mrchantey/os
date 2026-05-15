@@ -4,7 +4,12 @@
 	// "show_completions_on_input": false,
 	"agent_servers": {
 		"claude-acp": {
-			"type": "registry",
+			"favorite_config_option_values": {
+    "mode": [
+     "auto"
+    ]
+   },
+   "type": "registry",
 		},
 		"opencode": {
 			"type": "registry",
