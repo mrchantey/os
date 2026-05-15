@@ -26,6 +26,10 @@
 			"ctrl-7": ["workspace::ActivatePane", 6],
 			"ctrl-8": ["workspace::ActivatePane", 7],
 			"ctrl-9": ["workspace::ActivatePane", 8],
+			"ctrl-alt-c": [
+				"agent::NewExternalAgentThread",
+				{ "agent": { "custom": { "name": "claude-acp" } } },
+			],
 		},
 	},
 	// {

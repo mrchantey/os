@@ -1,11 +1,11 @@
 {
     "speech_recognition": {
         "engine": "whisper_cpp",
-        "language": "auto",
-        "model_size": "tiny",
+        "language": "en-us",
+        "model_size": "large",
         "vosk_model_size": "small",
         "whisper_model_size": "tiny",
-        "whisper_cpp_model_size": "tiny",
+        "whisper_cpp_model_size": "large",
         "vad_sensitivity": 3,
         "silence_timeout": 2.0,
         "voice_commands_enabled": null
@@ -18,8 +18,8 @@
         "enabled": true
     },
     "shortcuts": {
-        "toggle_recognition": "ctrl+ctrl",
-        "mode": "toggle"
+        "toggle_recognition": "right_alt+right_alt",
+        "mode": "push_to_talk"
     },
     "ui": {
         "start_minimized": false,

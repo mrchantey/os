@@ -6,7 +6,8 @@
 		"claude-acp": {
 			"favorite_config_option_values": {
     "mode": [
-     "auto"
+     "auto",
+     "bypassPermissions"
     ]
    },
    "type": "registry",
