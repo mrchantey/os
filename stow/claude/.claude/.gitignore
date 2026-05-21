@@ -1,0 +1,6 @@
+# Ignore everything by default; whitelist only the config we want to track.
+# ~/.claude contains a lot of WIP state (sessions, projects memory, caches,
+# credentials, shell snapshots, telemetry, etc.) — none of which belongs in git.
+*
+!.gitignore
+!settings.json
