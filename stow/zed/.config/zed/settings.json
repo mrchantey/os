@@ -4,13 +4,14 @@
 	// "show_completions_on_input": false,
 	"agent_servers": {
 		"claude-acp": {
+			"default_config_options": {
+				"model": "opus",
+				"mode": "bypassPermissions",
+			},
 			"favorite_config_option_values": {
-    "mode": [
-     "auto",
-     "bypassPermissions"
-    ]
-   },
-   "type": "registry",
+				"mode": ["auto", "bypassPermissions"],
+			},
+			"type": "registry",
 		},
 		"opencode": {
 			"type": "registry",
@@ -192,6 +193,10 @@
 		"rust-analyzer": {
 			"enable_lsp_tasks": true,
 			"initialization_options": {
+				"diagnostics": {
+					// disable #![feature] may not be used on the stable release channel
+					"disabled": ["E0554"],
+				},
 				"completion": {
 					"postfix": {
 						// disable the &foo, Box::new(foo) etc suggestions

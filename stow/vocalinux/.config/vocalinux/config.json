@@ -15,10 +15,10 @@
         "device_name": null
     },
     "sound_effects": {
-        "enabled": true
+        "enabled": false
     },
     "shortcuts": {
-        "toggle_recognition": "right_alt+right_alt",
+        "toggle_recognition": "right_shift+right_shift",
         "mode": "push_to_talk"
     },
     "ui": {
