@@ -1,0 +1,5 @@
+# cargo manages most of this dir itself (bin/, registry/, .crates.toml, ...).
+# Only track the config we author.
+*
+!.gitignore
+!config.toml

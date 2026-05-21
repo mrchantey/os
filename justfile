@@ -121,7 +121,8 @@ stow-symlinks-init:
 	~/.config/uwsm/default					\
 	~/.config/zed											\
 	~/.XCompose
-	# fine-grained hyprland removal
+	# fine-grained removal for dirs whose other contents we must preserve
+	# (hypr ships other files; ~/.claude holds sessions/credentials/etc.)
 	rm -f 													\
 	~/.config/hypr/hyprland.conf		\
 	~/.config/hypr/monitors.conf		\
@@ -133,7 +134,8 @@ stow-symlinks-init:
 	~/.config/hypr/hypridle.conf		\
 	~/.config/hypr/hyprlock.conf		\
 	~/.config/hypr/hyprsunset.conf	\
-	~/.config/hypr/xdph.conf
+	~/.config/hypr/xdph.conf				\
+	~/.claude/settings.json
 	@echo "INIT stow-symlinks"
 	just stow-symlinks
 
@@ -143,6 +145,7 @@ stow-symlinks:
 	autostart							\
 	bashrc 								\
 	cargo 								\
+	claude								\
 	ghostty								\
 	hypr 									\
 	mimeapps 							\
