@@ -26,7 +26,7 @@
         "show_notifications": true
     },
     "general": {
-        "autostart": true,
+        "autostart": false,
         "first_run": false
     },
     "text_injection": {
