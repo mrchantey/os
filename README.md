@@ -9,9 +9,15 @@ My [Omarchy](https://omarchy.org/) config.
 mkdir ~/me && cd ~/me && git clone https://github.com/mrchantey/os.git && cd os && sudo pacman -S --noconfirm just
 # log into github
 gh auth login
-# run
-just init
+# pick the recipe for this machine:
+just init             # device-agnostic base (no monitor / input / GPU opinions)
+just init-blackboy    # blackboy: the desktop (dual monitor, NVIDIA primary)
+just init-prettyboy   # prettyboy: Dell XPS 15 9500 laptop (Intel compositor, NVIDIA for CUDA/offload)
 ```
+
+A new device gets its own `stow/hypr-<name>` package (monitors/input/envs.conf)
+plus an `init-<name>` recipe that runs `just init`, `stow-device <name>`, and the
+shared `install-extras` gaming/GPU stack.
 
 # Additional Steps
 

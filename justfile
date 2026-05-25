@@ -4,12 +4,30 @@ default:
 restart-voxtype:
 	systemctl --user restart voxtype.service
 
-# only run this once per install
+# device-agnostic base; run this once per install (or a device recipe below)
 init:
 	just init-sudo
 	just init-user
 	just install-rust
 	chmod +x startup.sh
+
+# blackboy (desktop): base + device hypr overrides + gaming/GPU stack
+init-blackboy:
+	just init
+	just stow-device blackboy
+	just install-extras
+
+# prettyboy (Dell XPS 15 9500): base + device hypr overrides + gaming/GPU stack
+init-prettyboy:
+	just init
+	just stow-device prettyboy
+	just install-extras
+
+# stow the per-device hypr overrides; idempotent
+stow-device device:
+	rm -f ~/.config/hypr/monitors.conf ~/.config/hypr/input.conf ~/.config/hypr/envs.conf
+	cd stow && stow -vt ~ hypr-{{device}}
+	@echo "PASS stow-device {{device}}"
 
 init-sudo:
 	just install-apps-init
@@ -47,7 +65,6 @@ install-apps-init:
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
-	cuda																	\
 	caligula															\
 	deno																	\
 	gtk4-layer-shell											\
@@ -58,7 +75,6 @@ install-apps:
 	podman																\
 	python-pipx														\
 	rsync																	\
-	steam																	\
 	stow																	\
 	wl-clipboard													\
 	wtype																	\
@@ -99,14 +115,40 @@ install-user-apps-init:
 	just install-user-apps
 	just setup-voxtype
 
-# download whisper model and install the user systemd service
+# base (CPU): download whisper model and install the user systemd service
 # note: config.toml is managed via stow (built-in hotkey disabled there)
 setup-voxtype:
 	voxtype setup --download --model large-v3-turbo	|| true
 	voxtype setup systemd														|| true
-	# enable GPU (Vulkan) acceleration, otherwise large models run on CPU
-	sudo voxtype setup gpu --enable									|| true
 	@echo "PASS setup-voxtype"
+
+# device: enable GPU (Vulkan) acceleration, otherwise large models run on CPU
+setup-voxtype-gpu:
+	sudo voxtype setup gpu --enable									|| true
+	@echo "PASS setup-voxtype-gpu"
+
+# gaming / GPU stack — wanted on both blackboy and prettyboy
+install-extras:
+	sudo pacman -S --noconfirm --needed cuda steam
+	yay -S --noconfirm --needed xone-dkms xone-dongle-firmware
+	just install-nvidia-deps
+	# NOTE: prettyboy Optimus power management (dGPU off on battery) is a separate step.
+	just setup-voxtype-gpu
+	@echo "PASS install-extras"
+
+# install NVIDIA driver and related 32-bit / Vulkan / OpenCL / performance tooling for gaming
+install-nvidia-deps:
+	sudo pacman -S --noconfirm --needed \
+	nvtop \
+	nvidia-open-dkms \
+	nvidia-utils \
+	lib32-nvidia-utils \
+	nvidia-settings \
+	vulkan-icd-loader \
+	lib32-vulkan-icd-loader \
+	gamemode \
+	lib32-gamemode
+	@echo "PASS install-nvidia-deps"
 
 # apps from aur, usually more up-to-date than stable
 install-user-apps:
@@ -115,9 +157,7 @@ install-user-apps:
 	google-chrome									\
 	opencode-bin									\
 	visual-studio-code-bin				\
-	voxtype-bin										\
-	xone-dkms											\
-	xone-dongle-firmware
+	voxtype-bin
 	@echo "PASS install-user-apps"
 
 # required to run after fresh install or omarchy update
@@ -143,10 +183,7 @@ stow-symlinks-init:
 	# (hypr ships other files; ~/.claude holds sessions/credentials/etc.)
 	rm -f 													\
 	~/.config/hypr/hyprland.conf		\
-	~/.config/hypr/monitors.conf		\
-	~/.config/hypr/input.conf				\
 	~/.config/hypr/bindings.conf		\
-	~/.config/hypr/envs.conf				\
 	~/.config/hypr/looknfeel.conf		\
 	~/.config/hypr/autostart.conf		\
 	~/.config/hypr/hypridle.conf		\
@@ -263,20 +300,6 @@ pre-reset:
 
 
 ### OPTIONAL
-
-# install NVIDIA driver and related 32-bit / Vulkan / OpenCL / performance tooling for gaming
-install-nvidia-deps:
-	sudo pacman -S --noconfirm --needed \
-	nvtop \
-	nvidia-open-dkms \
-	nvidia-utils \
-	lib32-nvidia-utils \
-	nvidia-settings \
-	vulkan-icd-loader \
-	lib32-vulkan-icd-loader \
-	gamemode \
-	lib32-gamemode
-	@echo "PASS install-nvidia-deps"
 
 install-ollama:
 	curl -fsSL https://ollama.com/install.sh | sh
