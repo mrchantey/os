@@ -40,14 +40,16 @@ install-apps-init:
 	just install-apps
 
 # note: python already installed
-
+# libnotify, gtk4-layer-shell,wl-clipboard, wtype dependencies of voxtype
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
 	cuda																	\
 	caligula															\
 	deno																	\
+	gtk4-layer-shell											\
 	helix																	\
+	libnotify															\
 	opentofu															\
 	python-pip														\
 	podman																\
@@ -55,6 +57,8 @@ install-apps:
 	rsync																	\
 	steam																	\
 	stow																	\
+	wl-clipboard													\
+	wtype																	\
 	zig
 	curl -f https://zed.dev/install.sh | sh
 	curl -fsSL https://vite.plus | sh
@@ -90,6 +94,14 @@ install-rust:
 install-user-apps-init:
 	@echo "INIT install-user-apps"
 	just install-user-apps
+	just setup-voxtype
+
+# download whisper model and install the user systemd service
+# note: config.toml is managed via stow (built-in hotkey disabled there)
+setup-voxtype:
+	voxtype setup --download	|| true
+	voxtype setup systemd			|| true
+	@echo "PASS setup-voxtype"
 
 # apps from aur, usually more up-to-date than stable
 install-user-apps:
@@ -98,6 +110,7 @@ install-user-apps:
 	google-chrome									\
 	opencode-bin									\
 	visual-studio-code-bin				\
+	voxtype-bin										\
 	xone-dkms											\
 	xone-dongle-firmware
 	@echo "PASS install-user-apps"
@@ -115,7 +128,7 @@ stow-symlinks-init:
 	~/.config/obs-studio						\
 	~/.config/opencode							\
 	~/.config/starship.toml 				\
-	~/.config/vocalinux							\
+	~/.config/voxtype								\
 	~/.config/waybar 								\
 	~/.config/omarchy/branding			\
 	~/.config/uwsm/default					\
@@ -154,7 +167,7 @@ stow-symlinks:
 	opencode							\
 	starship 							\
 	uwsm 									\
-	vocalinux							\
+	voxtype								\
 	waybar 								\
 	xcompose								\
 	zed
