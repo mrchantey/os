@@ -1,6 +1,9 @@
 default:
 	just --list
 
+restart-voxtype:
+	systemctl --user restart voxtype.service
+
 # only run this once per install
 init:
 	just init-sudo
@@ -99,8 +102,10 @@ install-user-apps-init:
 # download whisper model and install the user systemd service
 # note: config.toml is managed via stow (built-in hotkey disabled there)
 setup-voxtype:
-	voxtype setup --download	|| true
-	voxtype setup systemd			|| true
+	voxtype setup --download --model large-v3-turbo	|| true
+	voxtype setup systemd														|| true
+	# enable GPU (Vulkan) acceleration, otherwise large models run on CPU
+	sudo voxtype setup gpu --enable									|| true
 	@echo "PASS setup-voxtype"
 
 # apps from aur, usually more up-to-date than stable

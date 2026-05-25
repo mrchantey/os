@@ -16,7 +16,7 @@ sample_rate = 16000
 max_duration_secs = 60
 
 [whisper]
-model = "base.en"
+model = "large-v3-turbo"
 language = "en"
 translate = false
 on_demand_loading = false
@@ -34,3 +34,23 @@ on_transcription = false
 
 [status]
 icon_theme = "emoji"
+
+
+[text.replacements]
+"vox type" = "voxtype"
+"oh marky" = "Omarchy"
+"beat mash" = "beetmash"
+"beatmash" = "beetmash"
+"beat draft" = "beet-draft"
+"beat cli" = "beet-cli"
+"beat core" = "beet_core"
+"beat core macros" = "beet_core_macros"
+"beat core shared" = "beet_core_shared"
+"beat infra" = "beet_infra"
+"beat net" = "beet_net"
+"beat ui" = "beet_ui"
+"beat router" = "beet_router"
+"beat thread" = "beet_thread"
+"beat action" = "beet_action"
+"bait" = "beet"
+"beat" = "beet"
