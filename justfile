@@ -124,13 +124,28 @@ install-user-apps-init:
 setup-voxtype:
 	voxtype setup --download --model large-v3-turbo	|| true
 	voxtype setup systemd														|| true
+	just setup-voxtype-isolation
 	@echo "PASS setup-voxtype"
+
+# render gpu_isolation per power-state at daemon start (see scripts/voxtype-render-config.sh):
+# isolate on battery so the dGPU can suspend between clips, stay warm on AC / desktop for
+# instant capture. keeps ONE shared config.toml (dictionary etc.) — the flag is injected
+# into a runtime copy the daemon reads via -c, never the stowed file. machine-agnostic:
+# the script self-detects, so this drop-in is identical on every device.
+setup-voxtype-isolation:
+	chmod +x scripts/voxtype-render-config.sh
+	mkdir -p ~/.config/systemd/user/voxtype.service.d
+	printf '[Service]\nExecStartPre=%%h/me/os/scripts/voxtype-render-config.sh\nExecStart=\nExecStart=/usr/bin/voxtype -c %%t/voxtype/config.toml daemon\n' > ~/.config/systemd/user/voxtype.service.d/battery-isolation.conf
+	systemctl --user daemon-reload || true
+	systemctl --user restart voxtype.service || true
+	@echo "PASS setup-voxtype-isolation"
 
 # device: enable GPU (Vulkan) acceleration, otherwise large models run on CPU.
 # hybrid-graphics laptops (prettyboy: Intel iGPU + NVIDIA dGPU) enumerate the slow
 # iGPU as Vulkan device 0, so whisper picks it and takes ~30s/clip; pin whisper to
-# the NVIDIA dGPU via a systemd drop-in. paired with gpu_isolation=true in voxtype
-# config.toml so the dGPU sleeps between clips and a worker crash can't kill the daemon.
+# the NVIDIA dGPU via a systemd drop-in. GGML_VK_VISIBLE_DEVICES restricts ggml to
+# only that device, which the persistent daemon honors (verified), so the long-lived
+# daemon uses the dGPU directly — no gpu_isolation needed (see voxtype config.toml).
 setup-voxtype-gpu:
 	#!/usr/bin/env bash
 	set -uo pipefail

@@ -20,10 +20,12 @@ model = "large-v3-turbo"
 language = "en"
 translate = false
 on_demand_loading = false
-# hybrid-graphics: run each transcription in an isolated subprocess so it honors
-# VOXTYPE_VULKAN_DEVICE=nvidia (the long-lived daemon does not) and lets the dGPU
-# sleep between uses. see ~/.config/systemd/user/voxtype.service.d/gpu.conf
-gpu_isolation = true
+# gpu_isolation is intentionally OFF (the schema default). It spawns a fresh worker
+# per clip, which reloads the model (~1.7s) and only opens the mic after — that delay
+# swallows short push-to-talk recordings ("No audio was captured"). GPU selection on
+# hybrid-graphics laptops is instead pinned by GGML_VK_VISIBLE_DEVICES in the per-device
+# drop-in (~/.config/systemd/user/voxtype.service.d/gpu.conf, written by `just
+# setup-voxtype-gpu`), which the persistent daemon honors — so isolation isn't needed.
 
 [output]
 mode = "type"
