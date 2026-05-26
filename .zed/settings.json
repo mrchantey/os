@@ -4,4 +4,5 @@
 // see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
 	"file_scan_inclusions": ["agent/plans"],
+	"file_scan_exclusions": ["CLAUDE.md"],
 }

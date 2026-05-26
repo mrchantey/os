@@ -4,9 +4,15 @@ My [Omarchy](https://omarchy.org/) config.
 
 ## Quickstart
 
+pull this repo into `~/me/os`, cd into it and install just.
+
 ```sh
-# pull this repo into `~/me/os`, cd into it and install just
 mkdir ~/me && cd ~/me && git clone https://github.com/mrchantey/os.git && cd os && sudo pacman -S --noconfirm just
+```
+
+
+
+```sh
 # log into github
 gh auth login
 # pick the recipe for this machine:
@@ -23,12 +29,8 @@ shared `install-extras` gaming/GPU stack.
 
 Haven't yet found a way to automate these, to be executed post install.
 
-1. Auth:
-```
-
-```
 2. Background
-	- `GO > Style > Background > Everforest`
+	- `Super + Alt + Space > Style > Theme > Everforest`
 	- `SUPER + CTRL + SPACE`
 3. Bluetooth Mouse
 4. Chrome notifications
