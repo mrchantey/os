@@ -20,6 +20,10 @@ model = "large-v3-turbo"
 language = "en"
 translate = false
 on_demand_loading = false
+# hybrid-graphics: run each transcription in an isolated subprocess so it honors
+# VOXTYPE_VULKAN_DEVICE=nvidia (the long-lived daemon does not) and lets the dGPU
+# sleep between uses. see ~/.config/systemd/user/voxtype.service.d/gpu.conf
+gpu_isolation = true
 
 [output]
 mode = "type"

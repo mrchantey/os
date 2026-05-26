@@ -122,13 +122,34 @@ setup-voxtype:
 	voxtype setup systemd														|| true
 	@echo "PASS setup-voxtype"
 
-# device: enable GPU (Vulkan) acceleration, otherwise large models run on CPU
+# device: enable GPU (Vulkan) acceleration, otherwise large models run on CPU.
+# hybrid-graphics laptops (prettyboy: Intel iGPU + NVIDIA dGPU) enumerate the slow
+# iGPU as Vulkan device 0, so whisper picks it and takes ~30s/clip; pin whisper to
+# the NVIDIA dGPU via a systemd drop-in. paired with gpu_isolation=true in voxtype
+# config.toml so the dGPU sleeps between clips and a worker crash can't kill the daemon.
 setup-voxtype-gpu:
-	sudo voxtype setup gpu --enable									|| true
-	# the daemon caches its backend at startup; restart so GPU takes effect now
-	# (otherwise a fresh install keeps running on CPU until the next login)
-	systemctl --user restart voxtype.service				|| true
-	@echo "PASS setup-voxtype-gpu"
+	#!/usr/bin/env bash
+	set -uo pipefail
+	sudo voxtype setup gpu --enable || true
+	# find the ggml Vulkan index of the NVIDIA dGPU (0 on single-GPU machines like
+	# blackboy, 1 behind the iGPU on prettyboy). a 1s tone forces model init; grep -m1
+	# SIGPIPEs transcribe right after the device list prints, before slow inference.
+	# detect with gpu_isolation stripped: isolation hides the worker's ggml log, and
+	# a partial config is rejected, so we strip just that line from the real config.
+	wav="$(mktemp --suffix=.wav)"; cfg="$(mktemp --suffix=.toml)"
+	ffmpeg -nostdin -hide_banner -loglevel error -f lavfi -i sine=frequency=220:duration=1 -ar 16000 -ac 1 "$wav" -y >/dev/null 2>&1 || true
+	grep -v 'gpu_isolation' ~/.config/voxtype/config.toml > "$cfg"
+	idx="$(timeout 30 voxtype -c "$cfg" transcribe "$wav" 2>&1 | grep -m1 -oP 'ggml_vulkan: \K[0-9]+(?= = NVIDIA)')"
+	rm -f "$wav" "$cfg"
+	idx="${idx:-0}"
+	echo "voxtype: pinning whisper to NVIDIA ggml Vulkan device ${idx}"
+	mkdir -p ~/.config/systemd/user/voxtype.service.d
+	printf '[Service]\nEnvironment="VOXTYPE_VULKAN_DEVICE=nvidia"\nEnvironment="GGML_VK_VISIBLE_DEVICES=%s"\n' "$idx" > ~/.config/systemd/user/voxtype.service.d/gpu.conf
+	systemctl --user daemon-reload || true
+	# the daemon caches its backend/device at startup; restart so the dGPU takes effect
+	# now (otherwise a fresh install keeps running on the iGPU until the next login)
+	systemctl --user restart voxtype.service || true
+	echo "PASS setup-voxtype-gpu"
 
 # gaming / GPU stack — wanted on both blackboy and prettyboy
 install-extras:
