@@ -45,9 +45,9 @@
 			"enable_thinking": false,
 		},
 		"default_model": {
-			"effort": "high",
-			"provider": "copilot_chat",
-			"model": "claude-sonnet-4.6",
+			"effort": "medium",
+   "provider": "google",
+			"model": "gemini-3.5-flash",
 			"enable_thinking": true,
 		},
 
