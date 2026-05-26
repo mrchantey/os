@@ -9,7 +9,7 @@ init:
 	just init-sudo
 	just init-user
 	just install-rust
-	chmod +x startup.sh
+	chmod +x scripts/*/startup.sh
 
 # blackboy (desktop): base + device hypr overrides + gaming/GPU stack
 init-blackboy:
