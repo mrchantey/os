@@ -1,0 +1,7 @@
+# fcitx5 manages most of this dir (profile, cached_layouts, other conf/*);
+# only track the config we author.
+*
+!.gitignore
+!conf/
+conf/*
+!conf/keyboard.conf

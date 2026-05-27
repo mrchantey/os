@@ -235,6 +235,7 @@ stow-symlinks-init:
 	~/.config/hypr/hyprlock.conf		\
 	~/.config/hypr/hyprsunset.conf	\
 	~/.config/hypr/xdph.conf				\
+	~/.config/fcitx5/conf/keyboard.conf	\
 	~/.claude/settings.json
 	@echo "INIT stow-symlinks"
 	just stow-symlinks
@@ -248,12 +249,16 @@ stow-symlinks:
 	# `just init-*` fails when run from inside a running Hyprland session.
 	mkdir -p ~/.config/hypr
 	ln -sfn ../../me/os/stow/hypr/.config/hypr/hyprland.conf ~/.config/hypr/hyprland.conf
+	# ensure fcitx5's conf/ exists so stow links keyboard.conf into it rather than
+	# folding (symlinking) the whole dir and hiding fcitx5's app-managed state
+	mkdir -p ~/.config/fcitx5/conf
 	cd stow && stow -vt ~ \
 	alacritty 						\
 	autostart							\
 	bashrc 								\
 	cargo 								\
 	claude								\
+	fcitx5								\
 	ghostty								\
 	hypr 									\
 	mimeapps 							\
