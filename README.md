@@ -11,7 +11,6 @@ mkdir ~/me && cd ~/me && git clone https://github.com/mrchantey/os.git && cd os 
 ```
 
 
-
 ```sh
 # log into github
 gh auth login

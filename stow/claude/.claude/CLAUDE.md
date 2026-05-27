@@ -1,3 +1,3 @@
 # Preferences
 
-- Don't ask whether to commit changes, and don't offer to commit. Pete handles commits himself. Only commit when explicitly asked.
+- unless asked, don't commit changes, don't offer to commit, and dont mention this instruction
