@@ -81,9 +81,35 @@ before=$(git rev-parse HEAD)      # remember where we were, for the diff below
 git pull --rebase origin main
 ```
 
-**On conflict: stop.** Do not auto-resolve dotfiles blindly. Report the
-conflicting files, let the user resolve, then `git rebase --continue` (or
-`git rebase --abort` to back out). Resume at step 4 afterward.
+**On conflict: classify before acting.** Open the conflicted file(s) and look
+at the markers. There are two kinds:
+
+- **Benign — resolve it yourself.** Both sides only *added* distinct lines in
+  the same neighbourhood: no line was edited or deleted on both sides, and the
+  two insertions don't set the same key to two different values. This is the
+  common case for append-only tables/lists (the voxtype corrections map, a
+  package/keybind list, etc.) where two machines each tacked on entries.
+  **Keep both sides**: delete the `<<<<<<<` / `=======` / `>>>>>>>` markers,
+  leave every added line from both sides, then:
+
+  ```sh
+  grep -rn '^<<<<<<<\|^=======\|^>>>>>>>' <file>   # sanity-check: NO markers left
+  git add <file>
+  GIT_EDITOR=true git rebase --continue
+  ```
+
+  After continuing, sanity-check the file still parses (valid TOML/JSONC/conf).
+
+- **Gnarly — stop and ask.** Anything that isn't a clean "keep both": the same
+  line or key changed to *different values* on each side, overlapping
+  edits/deletes, reordering, or any resolution where keeping both would be
+  wrong or ambiguous. **Always stop** for the session-critical hypr files
+  (`monitors.conf`, `input.conf`, `hyprland.conf`, `hypridle.conf`,
+  `layout.conf`) even when it looks additive — a bad merge there can wedge the
+  session. Report the conflicting files + the diff, let the user resolve, then
+  `git rebase --continue` (or `git rebase --abort` to back out).
+
+Resume at step 4 afterward.
 
 ### 4. Push
 
@@ -132,8 +158,10 @@ none were needed).
 
 - **Never `git pull` with a dirty tree** — commit (step 2) or `git stash`
   first, or the rebase refuses. Prefer committing; that's the point of a sync.
-- **Don't auto-resolve conflicts** in dotfiles. A bad merge of
-  `monitors.conf` or a hypr file can wedge the session. Stop and ask.
+- **Conflicts: keep-both is fine, value clashes are not** (see step 3). You
+  *may* auto-resolve a purely additive conflict by keeping both sides; stop and
+  ask for anything where the same key/line diverges, and *always* stop for hypr
+  session files (`monitors.conf`, a bad merge there can wedge the session).
 - **`just stow-symlinks` and `just stow-device` are idempotent** — safe to run
   even when nothing structural changed. When unsure whether a pull added a
   module, just run `stow-symlinks`; it only relinks.
@@ -146,3 +174,11 @@ none were needed).
 - **Don't reflexively re-run install recipes.** A pull that only touched config
   installs nothing new — only `just install-*` when the package *lists* changed,
   and confirm first (they use `sudo`/`yay`).
+- **Never `rm` a "blocking" file to clear a stow conflict.** Stow folds whole
+  directories: `~/.config/autostart` is often a *symlink to the repo dir*, so a
+  file inside it that looks like a plain real file is actually the repo file
+  surfaced through that folded symlink — `rm`-ing it deletes it straight out of
+  `~/me/os` (recover with `git checkout -- <path>`). Check with
+  `readlink ~/.config/<dir>` first. New files under an already-folded dir are
+  live automatically; let `just stow-symlinks` (which is idempotent) handle
+  real conflicts, and if it reports one, surface it rather than deleting.
