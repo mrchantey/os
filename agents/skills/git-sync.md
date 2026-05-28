@@ -22,7 +22,7 @@ You only need to patch when the pull changed something *structural*:
 - a **new or removed stow module** (no symlink exists yet at its target),
 - a change to the **stow lists / justfile** wiring,
 - a **systemd unit / drop-in** (systemd caches units until `daemon-reload`),
-- a **long-running app that reads its config once at startup** (Hyprland, Waybar, Walker, the voxtype daemon) — the file is new but the process is still running the old config.
+- a **long-running app that reads its config once at startup** (Hyprland, Waybar, Walker, the fcitx5 IME daemon, the voxtype daemon) — the file's bytes are already live through the symlink, but the *running process* is still using the config it loaded at launch, so the change has no effect until it re-reads.
 
 So: do the git half, diff what landed, and apply *only* the matching patches.
 
@@ -100,6 +100,8 @@ git diff --name-only "$before" HEAD
 | `stow/hypr/` (common hypr) | Hyprland holds config in memory | `omarchy-restart-hyprctl` (`hyprctl reload`) |
 | `stow/waybar/` | Waybar reads config at launch | `omarchy-restart-waybar` |
 | `stow/<walker>/` (walker/elephant) | Walker reads config at launch | `omarchy-restart-walker` |
+| `stow/fcitx5/conf/<addon>.conf` (e.g. `keyboard.conf` — the hint hotkeys) | a **per-addon** config; the daemon caches it at startup. **`fcitx5-remote -r` does NOT pick this up** — that only reloads fcitx5's *global* `config`, not addon configs | reload just that addon over dbus (daemon keeps running, no input drop): `gdbus call --session --dest org.fcitx.Fcitx5 --object-path /controller --method org.fcitx.Fcitx.Controller1.ReloadAddonConfig "<addon>"` (addon name = the conf filename without `.conf`, e.g. `keyboard`). Bulletproof fallback (resets IME state briefly): `... --method org.fcitx.Fcitx.Controller1.Restart` |
+| fcitx5's top-level `config` (i.e. `~/.config/fcitx5/config`, **not** under `conf/`) | the daemon's **global** config (IME-switch hotkeys etc.) | `fcitx5-remote -r` (`ReloadConfig`) — global config only |
 | `stow/voxtype/`, `scripts/voxtype-*`, or voxtype `just` recipes | daemon caches model/config at startup | `just restart-voxtype`; if the drop-in *generation* logic changed, re-run `just setup-voxtype-isolation` (and `just setup-voxtype-gpu` if GPU pinning changed) |
 | `scripts/*/startup.sh` | needs exec bit | `chmod +x scripts/*/startup.sh` |
 | `justfile` **install lists** (`install-apps`, `install-user-apps`, `install-extras`, `install-rust`) | new packages aren't installed by a pull | **ask the user** before running — these are heavy/`sudo`. Then run the matching `just install-*` recipe |
@@ -126,6 +128,6 @@ Report what you pushed, what you pulled, and which patches you ran (or that none
 - **Conflicts: keep-both is fine, value clashes are not** (see step 3). You *may* auto-resolve a purely additive conflict by keeping both sides; stop and ask for anything where the same key/line diverges, and *always* stop for hypr session files (`monitors.conf`, a bad merge there can wedge the session).
 - **`just stow-symlinks` and `just stow-device` are idempotent** — safe to run even when nothing structural changed. When unsure whether a pull added a module, just run `stow-symlinks`; it only relinks.
 - **`hyprland.conf` is special**: a live Hyprland regenerates a default stub the instant that symlink goes missing, which aborts the whole hypr stow. `just stow-symlinks` pre-creates it atomically — don't `rm` it by hand mid-sync.
-- **Content vs structure**: a one-line edit to an existing tracked file needs *no* patch (symlink already points at it); a *new* file/module needs a relink. When in doubt, the table's "Action" column is always safe to run.
+- **Content vs structure**: a one-line edit to an existing tracked file usually needs *no* patch (symlink already points at it); a *new* file/module needs a relink. **The exception is a config owned by a long-running daemon** (hypr, waybar, walker, fcitx5, voxtype): the new bytes are live on disk, but the process won't act on them until it re-reads — so even a pure content edit there still needs the matching reload/restart from the table. When in doubt, the table's "Action" column is always safe to run.
 - **Don't reflexively re-run install recipes.** A pull that only touched config installs nothing new — only `just install-*` when the package *lists* changed, and confirm first (they use `sudo`/`yay`).
 - **Never `rm` a "blocking" file to clear a stow conflict.** Stow folds whole directories: `~/.config/autostart` is often a *symlink to the repo dir*, so a file inside it that looks like a plain real file is actually the repo file surfaced through that folded symlink — `rm`-ing it deletes it straight out of `~/me/os` (recover with `git checkout -- <path>`). Check with `readlink ~/.config/<dir>` first. New files under an already-folded dir are live automatically; let `just stow-symlinks` (which is idempotent) handle real conflicts, and if it reports one, surface it rather than deleting.
