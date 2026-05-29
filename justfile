@@ -253,6 +253,7 @@ stow-symlinks:
 	# folding (symlinking) the whole dir and hiding fcitx5's app-managed state
 	mkdir -p ~/.config/fcitx5/conf
 	cd stow && stow -vt ~ \
+	agents								\
 	alacritty 						\
 	autostart							\
 	bashrc 								\

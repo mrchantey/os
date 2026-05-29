@@ -1,0 +1,8 @@
+# Ignore everything by default; whitelist only the config we want to track.
+# ~/.agents may accumulate runtime state (caches, sessions, credentials)
+# depending on the agent runtime -- none of which belongs in git.
+*
+!.gitignore
+!AGENTS.md
+!skills/
+!skills/**
