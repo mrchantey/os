@@ -107,6 +107,9 @@
 		"bindings": {
 			"ctrl-k": "pane::CloseActiveItem",
 			"ctrl-1": "terminal_panel::ToggleFocus",
+			// override default ctrl-shift-t (workspace::NewTerminal) so the
+			// sidebar toggle below is consistent even when focus is in the terminal
+			"ctrl-shift-t": "multi_workspace::ToggleWorkspaceSidebar",
 		},
 	},
 	{
@@ -132,5 +135,11 @@
 	},
 	{
 		"context": "Workspace",
+		"bindings": {
+			// move the agent/workspace sidebar toggle off ctrl-alt-j onto
+			// ctrl-shift-t (overrides the default pane::ReopenClosedItem)
+			"ctrl-shift-t": "multi_workspace::ToggleWorkspaceSidebar",
+			"ctrl-alt-j": null,
+		},
 	},
 ]
