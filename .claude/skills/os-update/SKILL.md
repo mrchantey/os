@@ -22,7 +22,7 @@ defaults/migrations — without leaving broken symlinks or losing customizations
 - **Omarchy install:** `~/.local/share/omarchy` (READ-ONLY; reading is fine). Version: `omarchy-version`.
 - **Migrations:** `~/.local/share/omarchy/migrations/*.sh`; applied-markers in
   `~/.local/state/omarchy/migrations/` (empty file per applied migration; `skipped/` subdir for skips).
-- **Device packages:** `hypr-blackboy`, `hypr-prettyboy` hold ONLY `monitors.conf`,
+- **Device packages:** `hypr-blackboy`, `hypr-silver-fox` hold ONLY `monitors.conf`,
   `input.conf`, `envs.conf`, `layout.conf`. Everything else hypr is the common `hypr` package.
   Detect device: `readlink ~/.config/hypr/monitors.conf` (→ `hypr-<device>`), or `hostname`.
 - **Stow recipes** (`~/me/os/justfile`): `stow-symlinks` (common pkgs), `stow-device <name>`

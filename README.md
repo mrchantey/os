@@ -17,7 +17,7 @@ gh auth login
 # pick the recipe for this machine:
 just init             # device-agnostic base (no monitor / input / GPU opinions)
 just init-blackboy    # blackboy: the desktop (dual monitor, NVIDIA primary)
-just init-prettyboy   # prettyboy: Dell XPS 15 9500 laptop (Intel compositor, NVIDIA for CUDA/offload)
+just init-silver-fox  # silver-fox: Dell XPS 15 9500 laptop (Intel compositor, NVIDIA for CUDA/offload)
 ```
 
 A new device gets its own `stow/hypr-<name>` package (monitors/input/envs.conf)

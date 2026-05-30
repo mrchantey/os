@@ -14,11 +14,11 @@ When asked to make changes use these files as reference to understand the system
 Most config is common, stowed by the `hypr` package and shared `just` recipes.
 Only the four device-specific hypr files — `monitors.conf`, `input.conf`,
 `envs.conf`, `layout.conf` — live in per-device stow packages named after the
-machine (`stow/hypr-blackboy`, `stow/hypr-prettyboy`), stowed by `stow-device
+machine (`stow/hypr-blackboy`, `stow/hypr-silver-fox`), stowed by `stow-device
 <name>` and selected via `init-<name>`. When editing monitors/input/GPU-env or
 window-layout settings, edit the right device package; everything else goes in
 the common `hypr` package.
 
 `layout.conf` holds the master-layout `master {}` block (sourced after the
 shared `looknfeel.conf` so it overrides it): blackboy opens a centered master
-column for its ultrawide; prettyboy opens windows full-screen.
+column for its ultrawide; silver-fox opens windows full-screen.
