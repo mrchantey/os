@@ -22,6 +22,11 @@ init-silver-fox:
 	just init
 	just stow-device silver-fox
 	just install-extras
+	just install-silver-fox
+
+# silver-fox system-level tweaks that need root (e.g. keyboard backlight timeout)
+install-silver-fox:
+	bash scripts/silver-fox/install.sh
 
 # stow the per-device hypr overrides; idempotent
 stow-device device:
