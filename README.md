@@ -16,7 +16,7 @@ mkdir ~/me && cd ~/me && git clone https://github.com/mrchantey/os.git && cd os 
 gh auth login
 # pick the recipe for this machine:
 just init             # device-agnostic base (no monitor / input / GPU opinions)
-just init-blackboy    # blackboy: the desktop (dual monitor, NVIDIA primary)
+just init-rainbow-cat # rainbow-cat: the desktop (dual monitor, NVIDIA primary)
 just init-silver-fox  # silver-fox: Dell XPS 15 9500 laptop (Intel compositor, NVIDIA for CUDA/offload)
 ```
 

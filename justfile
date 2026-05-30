@@ -11,10 +11,10 @@ init:
 	just install-rust
 	chmod +x scripts/*/startup.sh
 
-# blackboy (desktop): base + device hypr overrides + gaming/GPU stack
-init-blackboy:
+# rainbow-cat (desktop): base + device hypr overrides + gaming/GPU stack
+init-rainbow-cat:
 	just init
-	just stow-device blackboy
+	just stow-device rainbow-cat
 	just install-extras
 
 # silver-fox (Dell XPS 15 9500): base + device hypr overrides + gaming/GPU stack
@@ -151,7 +151,7 @@ setup-voxtype-gpu:
 	set -uo pipefail
 	sudo voxtype setup gpu --enable || true
 	# find the ggml Vulkan index of the NVIDIA dGPU (0 on single-GPU machines like
-	# blackboy, 1 behind the iGPU on silver-fox). a 1s tone forces model init; grep -m1
+	# rainbow-cat, 1 behind the iGPU on silver-fox). a 1s tone forces model init; grep -m1
 	# SIGPIPEs transcribe right after the device list prints, before slow inference.
 	# detect with gpu_isolation stripped: isolation hides the worker's ggml log, and
 	# a partial config is rejected, so we strip just that line from the real config.
@@ -170,7 +170,7 @@ setup-voxtype-gpu:
 	systemctl --user restart voxtype.service || true
 	echo "PASS setup-voxtype-gpu"
 
-# gaming / GPU stack — wanted on both blackboy and silver-fox
+# gaming / GPU stack — wanted on both rainbow-cat and silver-fox
 install-extras:
 	sudo pacman -S --noconfirm --needed cuda steam
 	yay -S --noconfirm --needed xone-dkms xone-dongle-firmware
