@@ -22,3 +22,9 @@ the common `hypr` package.
 `layout.conf` holds the master-layout `master {}` block (sourced after the
 shared `looknfeel.conf` so it overrides it): rainbow-cat opens a centered master
 column for its ultrawide; silver-fox opens windows full-screen.
+
+
+### Devices
+
+`silver-fox`
+	- Dell XPS 15 9500 laptop
