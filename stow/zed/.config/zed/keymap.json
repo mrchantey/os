@@ -10,7 +10,8 @@
 		//global
 		"bindings": {
 			"ctrl-q": null,
-			"ctrl-shift-w": null,
+			// open the git worktree picker (default: alt-ctrl-shift-w)
+			"ctrl-shift-w": "git::Worktree",
 			"esc": "workspace::ClearAllNotifications",
 			"ctrl-shift-e": "project_panel::ToggleFocus",
 			"ctrl-r": "projects::OpenRecent",
@@ -60,6 +61,9 @@
 			// "F12": "editor::GoToDeclaration",
 			"ctrl-shift-F12": "editor::GoToDeclaration",
 			"ctrl-up": "editor::LineUp",
+			// override default editor::SelectSmallerSyntaxNode so the global
+			// git worktree picker still fires while focused in an editor
+			"ctrl-shift-w": "git::Worktree",
 			// "ctrl-shift-q": "assistant::NewChat",
 			"ctrl-alt-[": "editor::FoldAll",
 			"ctrl-alt-]": "editor::UnfoldAll",
@@ -107,6 +111,9 @@
 		"bindings": {
 			"ctrl-k": "pane::CloseActiveItem",
 			"ctrl-1": "terminal_panel::ToggleFocus",
+			// override default pane::CloseActiveItem so the global git
+			// worktree picker still fires while focused in the terminal
+			"ctrl-shift-w": "git::Worktree",
 			// override default ctrl-shift-t (workspace::NewTerminal) so the
 			// sidebar toggle below is consistent even when focus is in the terminal
 			"ctrl-shift-t": "multi_workspace::ToggleWorkspaceSidebar",
