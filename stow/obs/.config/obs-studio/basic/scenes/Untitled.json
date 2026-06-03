@@ -1,7 +1,7 @@
 {
     "name": "Untitled",
     "DesktopAudioDevice1": {
-        "prev_ver": 536936448,
+        "prev_ver": 536936450,
         "name": "Desktop Audio",
         "uuid": "e5391119-e89c-4879-96d0-770297ae97b7",
         "id": "pulse_output_capture",
@@ -32,7 +32,7 @@
         "private_settings": {}
     },
     "AuxAudioDevice1": {
-        "prev_ver": 536936448,
+        "prev_ver": 536936450,
         "name": "Mic/Aux",
         "uuid": "125ebf0c-60cd-498a-827f-5aeb5d00a635",
         "id": "pulse_input_capture",
@@ -43,7 +43,7 @@
         "mixers": 255,
         "sync": 0,
         "flags": 0,
-        "volume": 0.5872259736061096,
+        "volume": 1.0,
         "balance": 0.5,
         "enabled": true,
         "muted": false,
@@ -64,15 +64,15 @@
     },
     "sources": [
         {
-            "prev_ver": 536936448,
+            "prev_ver": 536936450,
             "name": "Video Capture Device (PipeWire) (BETA)",
             "uuid": "e8c243b5-0064-45e5-a5e6-57ef148954ea",
             "id": "pipewire-camera-source",
             "versioned_id": "pipewire-camera-source",
             "settings": {
                 "framerate": "{\"framerate\":{\"numerator\":30.0,\"denominator\":1.0}}",
-                "device_id": "v4l2_input.pci-0000_00_14.0-usb-0_6_1.0",
-                "format": "{\"encoded\":false,\"video_format\":4,\"width\":960,\"height\":540}"
+                "format": "{\"encoded\":false,\"video_format\":4,\"width\":960,\"height\":540}",
+                "device_id": "v4l2_input.pci-0000_00_14.0-usb-0_6_1.0"
             },
             "mixers": 0,
             "sync": 0,
@@ -92,7 +92,7 @@
             "private_settings": {},
             "filters": [
                 {
-                    "prev_ver": 536936448,
+                    "prev_ver": 536936450,
                     "name": "Crop/Pad",
                     "uuid": "87a91386-e2e5-4765-b0a2-52071ad1e6e5",
                     "id": "crop_filter",
@@ -122,7 +122,7 @@
             ]
         },
         {
-            "prev_ver": 536936448,
+            "prev_ver": 536936450,
             "name": "Screen Capture 2",
             "uuid": "afb0e62b-2d58-4c21-a3d4-14a304db7be8",
             "id": "pipewire-screen-capture-source",
@@ -149,7 +149,7 @@
             "private_settings": {}
         },
         {
-            "prev_ver": 536936448,
+            "prev_ver": 536936450,
             "name": "Screen Capture (PipeWire)",
             "uuid": "2f3ac27b-91a4-4238-9733-8193a6b0620e",
             "id": "pipewire-screen-capture-source",
@@ -175,7 +175,7 @@
             "private_settings": {}
         },
         {
-            "prev_ver": 536936448,
+            "prev_ver": 536936450,
             "name": "Scene",
             "uuid": "d69063d9-ad27-40c8-9af7-1a636fcdc5bb",
             "id": "scene",
@@ -309,10 +309,10 @@
             "push-to-talk-delay": 0,
             "hotkeys": {
                 "OBSBasic.SelectScene": [],
-                "libobs.show_scene_item.1": [],
-                "libobs.hide_scene_item.1": [],
                 "libobs.show_scene_item.5": [],
-                "libobs.hide_scene_item.5": []
+                "libobs.hide_scene_item.5": [],
+                "libobs.show_scene_item.1": [],
+                "libobs.hide_scene_item.1": []
             },
             "deinterlace_mode": 0,
             "deinterlace_field_order": 0,
@@ -321,7 +321,7 @@
             "private_settings": {}
         },
         {
-            "prev_ver": 536936448,
+            "prev_ver": 536936450,
             "name": "Screen 2",
             "uuid": "c5e5da2d-7439-4919-a065-e574c096bdb7",
             "id": "scene",
@@ -450,8 +450,8 @@
     ],
     "saved_projectors": [],
     "preview_locked": false,
-    "scaling_enabled": true,
-    "scaling_level": -11,
+    "scaling_enabled": false,
+    "scaling_level": -9,
     "scaling_off_x": 0.0,
     "scaling_off_y": 0.0,
     "modules": {
