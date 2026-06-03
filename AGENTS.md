@@ -28,3 +28,4 @@ column for its ultrawide; silver-fox opens windows full-screen.
 
 `silver-fox`
 	- Dell XPS 15 9500 laptop
+	- NVIDIA GTX 1650 Ti, 4GB of GDDR6 VRAM

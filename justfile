@@ -4,6 +4,10 @@ default:
 restart-voxtype:
 	systemctl --user restart voxtype.service
 
+# re-pick GPU vs CPU for the kokoro tts server by current power state (see scripts/tts-server.sh)
+restart-tts:
+	systemctl --user restart kokoro-tts.service
+
 # device-agnostic base; run this once per install (or a device recipe below)
 init:
 	just init-sudo
@@ -71,13 +75,16 @@ install-apps-init:
 
 # note: python already installed
 # libnotify, gtk4-layer-shell,wl-clipboard, wtype dependencies of voxtype
+# espeak-ng (phonemizer), uv (venv runner), jq (json) for kokoro tts (see setup-tts)
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
 	caligula															\
 	deno																	\
+	espeak-ng															\
 	gtk4-layer-shell											\
 	helix																	\
+	jq																		\
 	libnotify															\
 	opentofu															\
 	python-pip														\
@@ -85,6 +92,7 @@ install-apps:
 	python-pipx														\
 	rsync																	\
 	stow																	\
+	uv																		\
 	wl-clipboard													\
 	wtype																	\
 	zig
@@ -123,6 +131,7 @@ install-user-apps-init:
 	@echo "INIT install-user-apps"
 	just install-user-apps
 	just setup-voxtype
+	just setup-tts
 
 # base (CPU): download whisper model and install the user systemd service
 # note: config.toml is managed via stow (built-in hotkey disabled there)
@@ -174,6 +183,28 @@ setup-voxtype-gpu:
 	# now (otherwise a fresh install keeps running on the iGPU until the next login)
 	systemctl --user restart voxtype.service || true
 	echo "PASS setup-voxtype-gpu"
+
+# kokoro tts (highlight-to-speak, the reverse of voxtype dictation). ONE venv with the CUDA
+# torch wheel — that same wheel runs CPU inference fine, so tts-server.sh just flips USE_GPU
+# by power state (GPU on AC, CPU on battery so the dGPU can suspend), exactly like voxtype.
+# cloned to ~/.local/share since it's a build artifact, not dotfiles. enabled as a user
+# service that starts on login. SHIFT+PAUSE / SHIFT+INSERT toggle playback (bindings.conf).
+setup-tts:
+	#!/usr/bin/env bash
+	set -uo pipefail
+	chmod +x scripts/tts.sh scripts/tts-server.sh
+	dir="$HOME/.local/share/kokoro-fastapi"
+	[ -d "$dir/.git" ] || git clone --depth 1 https://github.com/remsky/Kokoro-FastAPI.git "$dir"
+	cd "$dir"
+	export USE_ONNX=false PYTHONPATH="$PWD:$PWD/api"
+	uv venv
+	uv pip install -e ".[gpu]"
+	uv run --no-sync python docker/scripts/download_model.py --output api/src/models/v1_0
+	mkdir -p ~/.config/systemd/user
+	printf '[Unit]\nDescription=Kokoro TTS (FastAPI)\nAfter=graphical-session.target\n\n[Service]\nExecStart=%%h/me/os/scripts/tts-server.sh\nRestart=on-failure\nRestartSec=2\n\n[Install]\nWantedBy=default.target\n' > ~/.config/systemd/user/kokoro-tts.service
+	systemctl --user daemon-reload || true
+	systemctl --user enable --now kokoro-tts.service || true
+	echo "PASS setup-tts"
 
 # gaming / GPU stack — wanted on both rainbow-cat and silver-fox
 install-extras:
