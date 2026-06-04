@@ -13,6 +13,7 @@ init:
 	just init-sudo
 	just init-user
 	just install-rust
+	just install-playwright
 	chmod +x scripts/*/startup.sh
 
 # rainbow-cat (desktop): base + device hypr overrides + gaming/GPU stack
@@ -238,6 +239,15 @@ install-user-apps:
 	visual-studio-code-bin				\
 	voxtype-bin
 	@echo "PASS install-user-apps"
+
+# playwright browser-automation CLI (npm). install into the ~/.local prefix, NOT the
+# default global: vite-plus owns the npm prefix and never puts -g bins on PATH, whereas
+# ~/.local/bin is on PATH and node-version-agnostic. we drive the already-installed
+# system Google Chrome via `--channel=chrome`, so we deliberately SKIP `playwright
+# install` and never download a redundant bundled chromium.
+install-playwright:
+	npm install -g --prefix ~/.local playwright
+	@echo "PASS install-playwright"
 
 # required to run after fresh install or omarchy update
 # this may break hyprland, if so run Menu > System > Rel
