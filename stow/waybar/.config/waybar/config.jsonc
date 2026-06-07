@@ -23,13 +23,13 @@
 		"format": "{icon}",
 		"format-icons": {
 			"default": "",
-			"1": "1 Beet",
-			"2": "2 Beetmash",
+			"1": "1 Alt",
+			"2": "2 Alt",
 			"3": "3 Alt",
 			"4": "4 Alt",
 			"5": "5 Alt",
 			"6": "6 Alt",
-			"7": "7 Music",
+			"7": "7 Alt",
 			"8": "8 Alt",
 			"9": "9 Alt",
 			// "active": "󱓻",
@@ -72,13 +72,13 @@
 		"tooltip": false,
 		"on-click-right": "omarchy-cmd-tzupdate",
 	},
-  "custom/weather": {
-    "exec": "$OMARCHY_PATH/default/waybar/weather.sh",
-    "return-type": "json",
-    "interval": 60,
-    "tooltip": false,
-    "on-click": "notify-send -u low \"$(omarchy-weather-status)\""
-  },
+	"custom/weather": {
+		"exec": "$OMARCHY_PATH/default/waybar/weather.sh",
+		"return-type": "json",
+		"interval": 60,
+		"tooltip": false,
+		"on-click": "notify-send -u low \"$(omarchy-weather-status)\"",
+	},
 	"network": {
 		"format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
 		"format": "{icon}",
@@ -106,7 +106,7 @@
 		"tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
 		"interval": 5,
 		"on-click": "omarchy-menu power",
-    "on-click-right": "notify-send -u low \"$(omarchy-battery-status)\"",
+		"on-click-right": "notify-send -u low \"$(omarchy-battery-status)\"",
 		"states": {
 			"warning": 20,
 			"critical": 10,
@@ -129,7 +129,7 @@
 		"scroll-step": 5,
 		"format-muted": "",
 		"format-icons": {
-      "headphone": "",
+			"headphone": "",
 			"default": ["", "", ""],
 		},
 	},
@@ -151,19 +151,19 @@
 		"signal": 8,
 		"return-type": "json",
 	},
-  "custom/voxtype": {
-    "exec": "omarchy-voxtype-status",
-    "return-type": "json",
-    "format": "{icon}",
-    "format-icons": {
-      "idle": "",
-      "recording": "󰍬",
-      "transcribing": "󰔟"
-    },
-    "tooltip": true,
-    "on-click-right": "omarchy-voxtype-config",
-    "on-click": "omarchy-voxtype-model"
-  },
+	"custom/voxtype": {
+		"exec": "omarchy-voxtype-status",
+		"return-type": "json",
+		"format": "{icon}",
+		"format-icons": {
+			"idle": "",
+			"recording": "󰍬",
+			"transcribing": "󰔟",
+		},
+		"tooltip": true,
+		"on-click-right": "omarchy-voxtype-config",
+		"on-click": "omarchy-voxtype-model",
+	},
 	"tray": {
 		"icon-size": 12,
 		"spacing": 12,

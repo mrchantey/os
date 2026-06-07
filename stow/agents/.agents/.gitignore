@@ -6,3 +6,7 @@
 !AGENTS.md
 !skills/
 !skills/**
+# omarchy drops its own skill symlink here once ~/.agents/skills is folded into
+# this package; it points at the omarchy install and is recreated by init, not
+# tracked.
+skills/omarchy

@@ -298,6 +298,16 @@ stow-symlinks:
 	# ensure fcitx5's conf/ exists so stow links keyboard.conf into it rather than
 	# folding (symlinking) the whole dir and hiding fcitx5's app-managed state
 	mkdir -p ~/.config/fcitx5/conf
+	# omarchy's installer pre-creates ~/.agents/skills as a REAL dir (and drops an
+	# `omarchy` skill symlink in it), which blocks stow from folding skills/ -- so
+	# new skills created under ~/.agents/skills would be untracked real dirs. Fold
+	# it ourselves: replace the dir with the symlink stow would create (safe -- the
+	# only contents are stow-owned skill links plus the recreatable omarchy link),
+	# then re-drop omarchy's link (it now lands in the repo via the fold; gitignored).
+	mkdir -p ~/.agents
+	rm -rf ~/.agents/skills
+	ln -sfn ../me/os/stow/agents/.agents/skills ~/.agents/skills
+	ln -sfn "${OMARCHY_PATH:-$HOME/.local/share/omarchy}/default/omarchy-skill" ~/.agents/skills/omarchy
 	cd stow && stow -vt ~ \
 	agents								\
 	alacritty 						\
