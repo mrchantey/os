@@ -10,6 +10,13 @@
 		//global
 		"bindings": {
 			"ctrl-q": null,
+			// default bindings zoom with { "persist": false } so the change is
+			// in-memory only and resets on reload. Persist it so ctrl +/- writes
+			// buffer_font_size into settings.json and stays constant.
+			"ctrl-=": ["zed::IncreaseBufferFontSize", { "persist": true }],
+			"ctrl-+": ["zed::IncreaseBufferFontSize", { "persist": true }],
+			"ctrl--": ["zed::DecreaseBufferFontSize", { "persist": true }],
+			"ctrl-0": ["zed::ResetBufferFontSize", { "persist": true }],
 			// open the git worktree picker (default: alt-ctrl-shift-w)
 			"ctrl-shift-w": "git::Worktree",
 			"esc": "workspace::ClearAllNotifications",
