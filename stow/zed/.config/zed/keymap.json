@@ -34,10 +34,6 @@
 			"ctrl-7": ["workspace::ActivatePane", 6],
 			"ctrl-8": ["workspace::ActivatePane", 7],
 			"ctrl-9": ["workspace::ActivatePane", 8],
-			"ctrl-alt-c": [
-				"agent::NewExternalAgentThread",
-				{ "agent": { "custom": { "name": "claude-acp" } } },
-			],
 		},
 	},
 	// {
@@ -100,6 +96,8 @@
 			"ctrl-alt-]": "project_panel::ExpandSelectedEntry",
 			"ctrl-[": "project_panel::CollapseSelectedEntry",
 			"ctrl-]": "project_panel::ExpandSelectedEntry",
+			// copy the absolute path of the selected entry (was alt-c by default)
+			"ctrl-alt-c": "workspace::CopyPath",
 		},
 	},
 	{
