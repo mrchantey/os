@@ -120,6 +120,7 @@
 		],
 		"Shell Script": [".env.*"],
 		"TOML": ["**/.config/hypr/**/*.conf"],
+		"HTML": ["*.rsx", "*.bsx"],
 	},
 	"hard_tabs": true,
 	"indent_guides": {
