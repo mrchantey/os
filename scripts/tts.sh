@@ -9,6 +9,7 @@ set -uo pipefail
 
 PORT=9000
 VOICE=am_michael
+SPEED=1.5   # playback rate, 0.25–4.0 (1.0 = normal)
 runtime="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/tts"
 mkdir -p "$runtime"
 pidfile="$runtime/play.pid"
@@ -50,8 +51,8 @@ fi
 {
 	curl -sS -N -X POST "http://127.0.0.1:${PORT}/v1/audio/speech" \
 		-H "Content-Type: application/json" \
-		-d "$(jq -n --arg t "$text" --arg v "$VOICE" \
-			'{model:"kokoro", input:$t, voice:$v, response_format:"pcm"}')" |
+		-d "$(jq -n --arg t "$text" --arg v "$VOICE" --argjson s "$SPEED" \
+			'{model:"kokoro", input:$t, voice:$v, speed:$s, response_format:"pcm"}')" |
 		pw-play --raw --format=s16 --rate=24000 --channels=1 -
 	rm -f "$pidfile"
 } &
