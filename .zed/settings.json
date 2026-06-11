@@ -3,6 +3,6 @@
 // For a full list of overridable settings, and general information on folder-specific settings,
 // see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
-	"file_scan_inclusions": ["agent/plans", "stow/claude/.claude/CLAUDE.md"],
-	// "file_scan_exclusions": ["./CLAUDE.md"],
+	"file_scan_exclusions": ["CLAUDE.md"],
+	"file_scan_inclusions": [".agents/plans", "stow/claude/.claude/CLAUDE.md"],
 }
