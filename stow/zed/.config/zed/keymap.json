@@ -79,6 +79,9 @@
 			"alt-shift-up": "editor::DuplicateLineUp",
 			"ctrl-shift-up": "editor::SelectUp",
 			"ctrl-shift-down": "editor::SelectDown",
+			// copy the active file's path without switching to the project panel
+			"ctrl-alt-c": "workspace::CopyPath",
+			"ctrl-alt-shift-c": "workspace::CopyRelativePath",
 		},
 	},
 	{
