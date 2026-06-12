@@ -21,6 +21,11 @@ init-rainbow-cat:
 	just init
 	just stow-device rainbow-cat
 	just install-extras
+	just install-rainbow-cat
+
+# rainbow-cat system-level tweaks that need root (e.g. Lightspeed receiver drag fix)
+install-rainbow-cat:
+	bash scripts/rainbow-cat/install.sh
 
 # silver-fox (Dell XPS 15 9500): base + device hypr overrides + gaming/GPU stack
 init-silver-fox:
