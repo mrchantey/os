@@ -145,6 +145,8 @@
 	"languages": {
 		"Rust": {
 			"colorize_brackets": true,
+			"enable_language_server": false,
+			"language_servers": ["!rust-analyzer"],
 		},
 		"Just": {
 			// seems to completely ignore these
