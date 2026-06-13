@@ -6,7 +6,7 @@
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
-				"effort": "default",
+				"effort": "max",
     "model": "opus",
 				"mode": "bypassPermissions",
 			},
@@ -40,7 +40,8 @@
 	},
 	// AGENTS
 	"agent": {
-		"dock": "right",
+		"sidebar_side": "right",
+  "dock": "right",
 		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",

@@ -17,18 +17,31 @@ fi
 # sub-second RF blip) into a null report that releases every held mouse button
 # (logi_dj_recv_forward_null_report in drivers/hid/hid-logitech-dj.c), which
 # drops drags mid-flight. windows rides those blips out, so the same desk setup
-# feels flawless there. blacklisting the module leaves the receiver on plain
-# hid-generic, which forwards reports as-is and keeps buttons held across
-# blips, matching windows. cost: no battery reporting via the receiver.
+# feels flawless there. keeping the receiver on plain hid-generic forwards
+# reports as-is and holds buttons across blips, matching windows. cost: no
+# battery reporting via the receiver.
+#
+# NOTE: a bare `blacklist` line is NOT enough here -- udev still autoloaded
+# hid_logitech_dj at boot via the HID modalias, so the fix evaporated on the
+# next reboot. `install ... /bin/true` makes modprobe refuse to insert the
+# module by ANY path (alias, dependency, or manual), which is what actually
+# sticks. hid_logitech_hidpp is blocked too: without dj there is no Logitech
+# child device for it to bind, and blocking it keeps the receiver firmly on
+# hid-generic.
 CONF=/etc/modprobe.d/no-hid-logitech-dj.conf
 tee "${CONF}" >/dev/null <<'EOF'
 # hid-logitech-dj force-releases all buttons on momentary wireless link loss,
 # which drops G903 drags mid-flight. keep the receiver on hid-generic instead.
+# `install ... /bin/true` (not just `blacklist`) is required: udev autoloads
+# the module via HID modalias at boot, which a bare blacklist does not stop.
 # see ~/me/os/scripts/rainbow-cat/install.sh
+install hid_logitech_dj /bin/true
+install hid_logitech_hidpp /bin/true
 blacklist hid_logitech_dj
+blacklist hid_logitech_hidpp
 EOF
 
-# apply to the running system: unload the driver, then re-enumerate the
+# apply to the running system: unload the drivers, then re-enumerate the
 # receiver so its interfaces rebind to hid-generic (no physical replug needed)
 modprobe -r hid_logitech_hidpp hid_logitech_dj 2>/dev/null || true
 found=
