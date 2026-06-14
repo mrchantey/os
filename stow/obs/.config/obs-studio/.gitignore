@@ -1,3 +1,28 @@
-logs
-.sentinel
-profiler_data
+# OBS is stowed as one folded directory symlink (~/.config/obs-studio points at
+# this dir), so OBS writes its entire runtime state straight into the repo and
+# dirties the tree on every launch: window geometry, dock layout, version
+# markers, auto-downloaded RTMP service lists (~70KB), logs, crash dumps, scene
+# .bak backups, and the websocket server password.
+#
+# So we whitelist: ignore everything, then re-include only the two files that
+# define the actual setup. If you add a new scene collection or profile and want
+# it tracked, add it explicitly below.
+
+/*
+!/.gitignore
+
+# descend into basic/, ignore its contents by default
+!/basic/
+/basic/*
+
+# scene collection: scenes, sources, mixer
+!/basic/scenes/
+/basic/scenes/*
+!/basic/scenes/Untitled.json
+
+# profile: encoder, output, video, audio, hotkeys
+!/basic/profiles/
+/basic/profiles/*
+!/basic/profiles/Untitled/
+/basic/profiles/Untitled/*
+!/basic/profiles/Untitled/basic.ini
