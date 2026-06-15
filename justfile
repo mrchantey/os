@@ -52,6 +52,11 @@ install-silver-fox:
 # auto-selects it here. Runs AFTER stow-symlinks-init so the waybar restart shim
 # (stow/localbin) is active and the theme switch doesn't stack two waybars.
 setup-theme:
+	# Waybar runs as a uwsm scope (app-Hyprland-waybar-*.scope). The Arch waybar
+	# package also ships waybar.service with Restart=on-failure; if anything ever
+	# starts it, omarchy's `pkill -9` + relaunch on theme change trips the restart
+	# AND spawns the scope -> two stacked bars. Mask it so it can never activate.
+	systemctl --user mask waybar.service
 	omarchy theme set "Everforest"
 	# set Firewatch explicitly: `theme set` runs bg-next, which CYCLES past the
 	# current wallpaper if Everforest is already active (idempotent re-runs). The
@@ -345,7 +350,6 @@ stow-symlinks:
 	fcitx5								\
 	ghostty								\
 	hypr 									\
-	localbin							\
 	mimeapps 							\
 	obs										\
 	omarchy 							\
