@@ -6,8 +6,8 @@
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
-				"effort": "max",
-    "model": "opus",
+				"effort": "default",
+				"model": "opus",
 				"mode": "bypassPermissions",
 			},
 			"favorite_config_option_values": {
@@ -41,7 +41,7 @@
 	// AGENTS
 	"agent": {
 		"sidebar_side": "right",
-  "dock": "right",
+		"dock": "right",
 		"default_profile": "write",
 		"inline_assistant_model": {
 			"provider": "copilot_chat",
@@ -147,7 +147,7 @@
 		"Rust": {
 			"colorize_brackets": true,
 			"enable_language_server": false,
-			"language_servers": ["!rust-analyzer"],
+			// "language_servers": ["!rust-analyzer"],
 		},
 		"Just": {
 			// seems to completely ignore these
