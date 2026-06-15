@@ -332,6 +332,7 @@ stow-symlinks:
 	fcitx5								\
 	ghostty								\
 	hypr 									\
+	localbin							\
 	mimeapps 							\
 	obs										\
 	omarchy 							\

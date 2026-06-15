@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Shadows omarchy's omarchy-restart-waybar (~/.local/bin precedes
+# ~/.local/share/omarchy/bin on PATH).
+#
+# Under our uwsm session, waybar runs as the packaged systemd unit
+# waybar.service, which has Restart=on-failure. Omarchy's stock restart does
+# `pkill -9 -x waybar` then relaunches via uwsm-app: the SIGKILL trips
+# Restart=on-failure so systemd respawns the unit, AND the relaunch starts a
+# second instance -> two stacked bars on every theme change.
+#
+# When waybar.service is the manager, bounce it the systemd way (idempotent,
+# always exactly one bar). Otherwise fall back to omarchy's original behavior.
+
+if systemctl --user --quiet is-active waybar.service 2>/dev/null; then
+  systemctl --user restart waybar.service
+else
+  pkill -9 -x waybar
+  setsid uwsm-app -- waybar >/dev/null 2>&1 &
+fi
