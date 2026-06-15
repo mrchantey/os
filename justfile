@@ -47,6 +47,18 @@ init-silver-fox:
 install-silver-fox:
 	bash scripts/silver-fox/install.sh
 
+# apply the default (dark) theme. Firewatch is pinned for both themes via the
+# per-theme user backgrounds dir set up in stow-files-init, so omarchy-theme-bg-next
+# auto-selects it here. Runs AFTER stow-symlinks-init so the waybar restart shim
+# (stow/localbin) is active and the theme switch doesn't stack two waybars.
+setup-theme:
+	omarchy theme set "Everforest"
+	# set Firewatch explicitly: `theme set` runs bg-next, which CYCLES past the
+	# current wallpaper if Everforest is already active (idempotent re-runs). The
+	# runtime toggle always switches themes so it lands on Firewatch via sort
+	# order, but here we pin it directly.
+	omarchy theme bg set ~/.config/omarchy/backgrounds/everforest/firewatch.png
+
 # stow the per-device hypr overrides; idempotent
 stow-device device:
 	rm -f 												\
@@ -64,6 +76,7 @@ init-sudo:
 init-user:
 	just stow-files-init
 	just stow-symlinks-init
+	just setup-theme
 	just install-user-apps-init
 	just pull-repos
 
@@ -347,9 +360,19 @@ stow-symlinks:
 
 # perform cp for assets which cannot be stowed
 stow-files-init:
-	mkdir -p ~/.config/omarchy/themes/everforest/backgrounds
-	curl -fsSL -o ~/.config/omarchy/themes/everforest/backgrounds/firewatch.png \
+	# Solarized Light is a community theme: the light counterpart to Everforest
+	# that the dark/light toggle (Super+Shift+T) and setup-theme depend on.
+	test -d ~/.config/omarchy/themes/solarized-light || \
+	git clone https://github.com/dfrico/omarchy-solarized-light-theme.git ~/.config/omarchy/themes/solarized-light
+	# Pin the Firewatch wallpaper for both the dark and light theme. It lives in
+	# the per-theme USER backgrounds dir (~/.config/omarchy/backgrounds/<theme>/),
+	# which omarchy-theme-bg-next sorts BEFORE a theme's own backgrounds -- so it
+	# is auto-selected on every switch to either theme (see setup-theme).
+	mkdir -p ~/.config/omarchy/backgrounds/everforest ~/.config/omarchy/backgrounds/solarized-light
+	curl -fsSL -o ~/.config/omarchy/backgrounds/everforest/firewatch.png \
 	https://mrchantey-os.s3.us-west-2.amazonaws.com/backgrounds/firewatch.png
+	cp ~/.config/omarchy/backgrounds/everforest/firewatch.png \
+	~/.config/omarchy/backgrounds/solarized-light/firewatch.png
 	@echo "INIT stow-files"
 	just stow-files
 

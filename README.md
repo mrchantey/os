@@ -28,9 +28,6 @@ shared `install-extras` gaming/GPU stack.
 
 Haven't yet found a way to automate these, to be executed post install.
 
-2. Background
-	- `Super + Alt + Space > Style > Theme > Everforest`
-	- `SUPER + CTRL + SPACE`
 3. Bluetooth Mouse
 4. Chrome notifications
 	- `chrome://settings/content/notifications`
