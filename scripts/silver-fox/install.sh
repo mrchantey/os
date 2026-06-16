@@ -23,7 +23,7 @@ fi
 # `keyboard` trigger on so a keypress always wakes the backlight, rather than
 # relying on the driver default surviving across kernel/firmware updates.
 LED=/sys/class/leds/dell::kbd_backlight
-KBD_TIMEOUT=1m
+KBD_TIMEOUT=10m
 KBD_START_TRIGGER=+keyboard
 RULE=/etc/udev/rules.d/99-kbd-backlight.rules
 
