@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# rec-start — capture mic audio and transcribe it for later review.
+# transcribe — capture mic audio and transcribe it for later review.
 #
 # Records 16kHz/mono WAV (the format `voxtype transcribe` expects, so no resampling)
 # to <name>.wav in the current directory, then writes the transcript to <name>.txt.
 #
-#   rec-start          -> out.wav  + out.txt
-#   rec-start myclip    -> myclip.wav + myclip.txt
+#   transcribe          -> out.wav  + out.txt
+#   transcribe myclip    -> myclip.wav + myclip.txt
 #
 # Controls while running:
 #   SPACE  pause / resume
@@ -14,11 +14,17 @@
 # Pause is implemented by recording discrete segments and concatenating them on stop,
 # so the saved clip (and the length reported below) contains only actually-recorded
 # audio — paused time is excluded.
+#
+# GPU note: the voxtype daemon keeps the Whisper model resident on the discrete GPU,
+# and on a 4GB card a second copy won't fit — so a bare `voxtype transcribe` silently
+# falls back to the (much slower) integrated GPU. We briefly stop the daemon to free
+# VRAM, pin the same GPU the daemon uses (read from its systemd drop-in), transcribe,
+# then bring the daemon back.
 
 set -euo pipefail
 
 name="${1:-out}"
-name="${name%.wav}"            # tolerate `rec-start foo.wav`
+name="${name%.wav}"            # tolerate `transcribe foo.wav`
 out="${name}.wav"
 txt="${name}.txt"
 
@@ -27,9 +33,12 @@ segments=()
 seg_index=0
 rec_pid=""
 paused=0
+daemon_stopped=0
 
 cleanup() {
 	[[ -n "$rec_pid" ]] && kill -INT "$rec_pid" 2>/dev/null || true
+	# always bring the daemon back if we were the one who stopped it
+	[[ "$daemon_stopped" -eq 1 ]] && systemctl --user start voxtype.service 2>/dev/null || true
 	rm -rf "$workdir"
 }
 trap cleanup EXIT
@@ -98,6 +107,35 @@ fi
 dur="$(ffprobe -hide_banner -loglevel error -show_entries format=duration -of csv=p=0 "$out")"
 printf 'Saved %s (%.1fs)\n' "$out" "$dur"
 
+# Pin the same GPU the daemon uses (its drop-in is generated per device, so this
+# stays correct across machines). Use exactly ONE selector: GGML_VK_VISIBLE_DEVICES
+# if present, else VOXTYPE_VULKAN_DEVICE. Passing both poisons the CLI's GPU pick and
+# silently drops it to CPU (~15x slower). Empty array => plain `env`, harmless.
+gpu_conf="$HOME/.config/systemd/user/voxtype.service.d/gpu.conf"
+gpu_env=()
+if [[ -f "$gpu_conf" ]]; then
+	ggml="$(sed -n 's/^Environment="\(GGML_VK_VISIBLE_DEVICES=[^"]*\)"$/\1/p' "$gpu_conf" | head -1)"
+	vox="$(sed -n 's/^Environment="\(VOXTYPE_VULKAN_DEVICE=[^"]*\)"$/\1/p' "$gpu_conf" | head -1)"
+	if [[ -n "$ggml" ]]; then
+		gpu_env=("$ggml")
+	elif [[ -n "$vox" ]]; then
+		gpu_env=("$vox")
+	fi
+fi
+
 printf 'Transcribing...\n'
-voxtype -q transcribe "$out" 2>/dev/null | awk 'flag; /^[[:space:]]*$/{flag=1}' > "$txt"
+if systemctl --user is-active --quiet voxtype.service; then
+	systemctl --user stop voxtype.service
+	daemon_stopped=1
+	sleep 0.5                                   # let the driver release VRAM
+fi
+
+env "${gpu_env[@]}" voxtype -q transcribe "$out" 2>/dev/null \
+	| awk 'flag; /^[[:space:]]*$/{flag=1}' > "$txt"
+
+if [[ "$daemon_stopped" -eq 1 ]]; then
+	systemctl --user start voxtype.service
+	daemon_stopped=0
+fi
+
 printf 'Transcript -> %s\n' "$txt"

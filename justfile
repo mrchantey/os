@@ -14,16 +14,16 @@ init:
 	just init-user
 	just install-rust
 	just install-playwright
-	just install-rec
+	just install-transcribe
 	chmod +x scripts/*/startup.sh
 
-# symlink the rec-start capture+transcribe helper onto PATH (~/.local/bin is on PATH).
-# usage from any terminal: `rec-start [name]` -> name.wav + name.txt (default: out)
-install-rec:
-	chmod +x scripts/rec-start.sh
+# symlink the audio capture+transcribe helper onto PATH (~/.local/bin is on PATH).
+# usage from any terminal: `transcribe [name]` -> name.wav + name.txt (default: out)
+install-transcribe:
+	chmod +x scripts/transcribe.sh
 	mkdir -p ~/.local/bin
-	ln -sf ~/me/os/scripts/rec-start.sh ~/.local/bin/rec-start
-	@echo "PASS install-rec"
+	ln -sf ~/me/os/scripts/transcribe.sh ~/.local/bin/transcribe
+	@echo "PASS install-transcribe"
 
 # rainbow-cat (desktop): base + device hypr overrides + gaming/GPU stack
 init-rainbow-cat:

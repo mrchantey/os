@@ -11,3 +11,4 @@ infra/package-lock.json
 
 # audio clips captured by scripts/transcribe.sh
 *.wav
+out.txt
