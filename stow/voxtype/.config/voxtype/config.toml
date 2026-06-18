@@ -48,6 +48,7 @@ icon_theme = "emoji"
 [text.replacements]
 "vox type" = "voxtype"
 "oh marky" = "Omarchy"
+"Omaki" = "Omarchy"
 "on stage" = "unstaged"
 "cape" = "keep"
 "contacts" = "context"
