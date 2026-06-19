@@ -374,7 +374,7 @@ stow-files-init:
 	# is auto-selected on every switch to either theme (see setup-theme).
 	mkdir -p ~/.config/omarchy/backgrounds/everforest ~/.config/omarchy/backgrounds/solarized-light
 	curl -fsSL -o ~/.config/omarchy/backgrounds/everforest/firewatch.png \
-	https://mrchantey-os.s3.us-west-2.amazonaws.com/backgrounds/firewatch.png
+	https://mrchantey-os.s3.us-west-2.amazonaws.com/assets/firewatch.png
 	cp ~/.config/omarchy/backgrounds/everforest/firewatch.png \
 	~/.config/omarchy/backgrounds/solarized-light/firewatch.png
 	@echo "INIT stow-files"

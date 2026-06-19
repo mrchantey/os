@@ -6,7 +6,7 @@
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
-				"effort": "default",
+				"effort": "max",
 				"model": "opus",
 				"mode": "bypassPermissions",
 			},
@@ -316,7 +316,7 @@
 	"tab_size": 2,
 	"theme": {
 		"mode": "system",
-		"light": "Ayu Light",
+		"light": "Gruvbox Light Soft",
 		"dark": "Ayu Mirage",
 	},
 	"terminal": {
