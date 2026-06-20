@@ -6,7 +6,7 @@
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
-				"effort": "max",
+				"effort": "default",
 				"model": "opus",
 				"mode": "bypassPermissions",
 			},
@@ -147,7 +147,6 @@
 		"Rust": {
 			"colorize_brackets": true,
 			"enable_language_server": false,
-			// "language_servers": ["!rust-analyzer"],
 		},
 		"Just": {
 			// seems to completely ignore these
