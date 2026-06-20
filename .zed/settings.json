@@ -3,6 +3,17 @@
 // For a full list of overridable settings, and general information on folder-specific settings,
 // see the documentation: https://zed.dev/docs/configuring-zed#settings-files
 {
-	"file_scan_exclusions": ["CLAUDE.md"],
-	"file_scan_inclusions": [".agents/plans", "stow/claude/.claude/CLAUDE.md"],
+	"file_scan_inclusions": [
+		".agents/plans",
+		"stow/claude/.claude/CLAUDE.md",
+		"stow/cargo/.cargo/.gitignore",
+		"stow/cargo/.cargo/config.toml",
+	],
+	"file_scan_exclusions": [
+		"CLAUDE.md",
+		"stow/cargo/.cargo/registry",
+		"stow/cargo/.cargo/bin",
+		"stow/cargo/.cargo/binstall",
+		"stow/cargo/.cargo/git",
+	],
 }
