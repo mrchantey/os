@@ -66,11 +66,11 @@ setup-theme:
 
 # stow the per-device hypr overrides; idempotent
 stow-device device:
-	rm -f 												\
-	~/.config/hypr/monitors.conf 	\
-	~/.config/hypr/input.conf 		\
-	~/.config/hypr/envs.conf 			\
-	~/.config/hypr/layout.conf
+	rm -f 														\
+	~/.config/hypr/monitors-device.conf 	\
+	~/.config/hypr/input-device.conf 		\
+	~/.config/hypr/envs-device.conf 			\
+	~/.config/hypr/layout-device.conf
 	cd stow && stow -vt ~ hypr-{{device}}
 	@echo "PASS stow-device {{device}}"
 

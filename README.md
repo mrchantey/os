@@ -20,7 +20,7 @@ just init-rainbow-cat # rainbow-cat: the desktop (dual monitor, NVIDIA primary)
 just init-silver-fox  # silver-fox: Dell XPS 15 9500 laptop (Intel compositor, NVIDIA for CUDA/offload)
 ```
 
-A new device gets its own `stow/hypr-<name>` package (monitors/input/envs.conf)
+A new device gets its own `stow/hypr-<name>` package (monitors/input/envs/layout-device.conf)
 plus an `init-<name>` recipe that runs `just init`, `stow-device <name>`, and the
 shared `install-extras` gaming/GPU stack.
 
