@@ -349,6 +349,7 @@ stow-symlinks:
 	claude								\
 	fcitx5								\
 	ghostty								\
+	gtk									\
 	hypr 									\
 	mimeapps 							\
 	obs										\
