@@ -6,7 +6,7 @@
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
-				"effort": "default",
+				"effort": "high",
 				"model": "opus",
 				"mode": "bypassPermissions",
 			},
