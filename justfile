@@ -13,7 +13,7 @@ init:
 	just init-sudo
 	just init-user
 	just install-rust
-	just install-playwright
+	just install-npm-packages
 	just install-transcribe
 	chmod +x scripts/*/startup.sh
 
@@ -154,6 +154,7 @@ install-rust:
 	cargo-generate							\
 	cargo-lambda 								\
 	cargo-watch 								\
+	worker-build								\
 	wasm-opt
 	cargo binstall --no-confirm \
 	wasm-bindgen-cli 						\
@@ -272,14 +273,14 @@ install-user-apps:
 	voxtype-bin
 	@echo "PASS install-user-apps"
 
-# playwright browser-automation CLI (npm). install into the ~/.local prefix, NOT the
-# default global: vite-plus owns the npm prefix and never puts -g bins on PATH, whereas
-# ~/.local/bin is on PATH and node-version-agnostic. we drive the already-installed
-# system Google Chrome via `--channel=chrome`, so we deliberately SKIP `playwright
-# install` and never download a redundant bundled chromium.
-install-playwright:
-	npm install -g --prefix ~/.local playwright
-	@echo "PASS install-playwright"
+# global npm CLIs. install into the ~/.local prefix, NOT the default global: vite-plus
+# owns the npm prefix and never puts -g bins on PATH, whereas ~/.local/bin is on PATH
+# and node-version-agnostic. for playwright we drive the already-installed system Google
+# Chrome via `--channel=chrome`, so we deliberately SKIP `playwright install` and never
+# download a redundant bundled chromium.
+install-npm-packages:
+	npm install -g --prefix ~/.local playwright cf wrangler
+	@echo "PASS install-npm-packages"
 
 # required to run after fresh install or omarchy update
 # this may break hyprland, if so run Menu > System > Rel
