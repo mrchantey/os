@@ -6,7 +6,7 @@
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
-				"effort": "default",
+				"effort": "max",
 				"model": "opus",
 				"mode": "bypassPermissions",
 			},
@@ -44,8 +44,8 @@
 		"dock": "right",
 		"default_profile": "write",
 		"inline_assistant_model": {
-			"provider": "copilot_chat",
-			"model": "claude-haiku-4.5",
+			"provider": "google",
+			"model": "gemini-3.5-flash",
 			"enable_thinking": false,
 		},
 		"default_model": {
