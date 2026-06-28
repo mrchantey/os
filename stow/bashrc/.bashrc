@@ -9,7 +9,13 @@ source ~/.local/share/omarchy/default/bash/rc
 alias hx='helix'
 
 export EDITOR="zed"
-export CARGO_TARGET_DIR="$HOME/.cargo_target"
+# NOTE: deliberately no CARGO_TARGET_DIR. A single shared target dir made every
+# git worktree build into the same place, so parallel agents serialized on the
+# build lock and thrashed each other's fingerprints. Each checkout/worktree now
+# uses its own local ./target (cargo's default). Shared dep builds are recovered
+# via the sccache compile cache below instead.
+export SCCACHE_DIR="$HOME/.cargo_sccache"
+export SCCACHE_CACHE_SIZE="150G"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/home/pete/.local/bin:$PATH"
 

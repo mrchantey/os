@@ -3,6 +3,14 @@
 
 [build]
 jobs = 10
+# Shared compilation cache across all projects and git worktrees. Upstream deps
+# (built once, eg bevy at opt-level 3) become cache hits everywhere instead of
+# being recompiled per worktree; changed workspace crates miss and build into
+# each worktree's own local ./target, so agents never clobber each other.
+# Requires sccache on PATH (cargo binstall sccache) and incremental disabled —
+# sccache and incremental compilation are mutually exclusive.
+rustc-wrapper = "sccache"
+incremental = false
 
 # ie ms surface wsl
 [target.aarch64-unknown-linux-gnu]

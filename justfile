@@ -154,6 +154,7 @@ install-rust:
 	cargo-generate							\
 	cargo-lambda 								\
 	cargo-watch 								\
+	sccache											\
 	worker-build								\
 	wasm-opt
 	cargo binstall --no-confirm \
