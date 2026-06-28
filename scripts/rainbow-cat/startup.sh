@@ -12,17 +12,17 @@ for _ in $(seq 1 50); do
 	wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 0.35 >/dev/null 2>&1 && break
 	sleep 0.2
 done
-sleep 0.1
+sleep 0.5
 hyprctl dispatch workspace 1
 sleep 0.1
 zed ~/me/beet
 # wait for zed
-sleep 1
-hyprctl dispatch workspace 7
-sleep 0.1
-omarchy-launch-webapp "https://music.youtube.com"
-sleep 0.1
+# sleep 1
+# hyprctl dispatch workspace 7
+# sleep 0.1
+# omarchy-launch-webapp "https://music.youtube.com"
+# sleep 0.1
 # not going back to 1?
-hyprctl dispatch workspace 1
-sleep 0.1
-echo "done"
+# hyprctl dispatch workspace 1
+# sleep 0.1
+# echo "done"
