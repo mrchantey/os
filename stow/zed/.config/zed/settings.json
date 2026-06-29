@@ -122,7 +122,7 @@
 		],
 		"Shell Script": [".env.*"],
 		"TOML": ["**/.config/hypr/**/*.conf"],
-		"HTML": ["*.rsx", "*.bsx"],
+		"HTML": ["*.bsx"],
 	},
 	"hard_tabs": true,
 	"indent_guides": {
@@ -144,6 +144,13 @@
 	},
 
 	"languages": {
+		"HTML": {
+			// disabled while bsx piggybacks html lsp
+			// formatter quotes attributes (60. -> "60."), so turn it off.
+			"format_on_save": "off",
+			// "remove_trailing_whitespace_on_save": false,
+			// "ensure_final_newline_on_save": false,
+		},
 		"Rust": {
 			"colorize_brackets": true,
 			"enable_language_server": false,
@@ -161,42 +168,42 @@
 			"show_completions_on_input": false,
 			"edit_predictions_disabled_in": ["rust"],
 		},
-		"JavaScript": {
-			"language_servers": [
-				"deno",
-				"!typescript-language-server",
-				"!vtsls",
-				"!eslint",
-			],
-			"formatter": "language_server",
-		},
-		"TypeScript": {
-			"language_servers": [
-				"deno",
-				"!typescript-language-server",
-				"!vtsls",
-				"!eslint",
-			],
-			"formatter": "language_server",
-		},
-		"TSX": {
-			"language_servers": [
-				"deno",
-				"!typescript-language-server",
-				"!vtsls",
-				"!eslint",
-			],
-			"formatter": "language_server",
-		},
+		// "JavaScript": {
+		// 	"language_servers": [
+		// 		"deno",
+		// 		"!typescript-language-server",
+		// 		"!vtsls",
+		// 		"!eslint",
+		// 	],
+		// 	"formatter": "language_server",
+		// },
+		// "TypeScript": {
+		// 	"language_servers": [
+		// 		"deno",
+		// 		"!typescript-language-server",
+		// 		"!vtsls",
+		// 		"!eslint",
+		// 	],
+		// 	"formatter": "language_server",
+		// },
+		// "TSX": {
+		// 	"language_servers": [
+		// 		"deno",
+		// 		"!typescript-language-server",
+		// 		"!vtsls",
+		// 		"!eslint",
+		// 	],
+		// 	"formatter": "language_server",
+		// },
 	},
 	"lsp": {
-		"deno": {
-			"settings": {
-				"deno": {
-					"enable": true,
-				},
-			},
-		},
+		// "deno": {
+		// 	"settings": {
+		// 		"deno": {
+		// 			"enable": true,
+		// 		},
+		// 	},
+		// },
 		"rust-analyzer": {
 			"enable_lsp_tasks": true,
 			"initialization_options": {
