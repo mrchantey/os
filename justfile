@@ -15,6 +15,7 @@ init:
 	just install-rust
 	just install-npm-packages
 	just install-transcribe
+	just install-tts
 	chmod +x scripts/*/startup.sh
 
 # symlink the audio capture+transcribe helper onto PATH (~/.local/bin is on PATH).
@@ -24,6 +25,14 @@ install-transcribe:
 	mkdir -p ~/.local/bin
 	ln -sf ~/me/os/scripts/transcribe.sh ~/.local/bin/transcribe
 	@echo "PASS install-transcribe"
+
+# symlink the Kokoro text-to-speech helper onto PATH (~/.local/bin is on PATH).
+# usage from any terminal: `tts gday mate` | `echo hi | tts` | `tts stop`
+install-tts:
+	chmod +x scripts/tts.sh
+	mkdir -p ~/.local/bin
+	ln -sf ~/me/os/scripts/tts.sh ~/.local/bin/tts
+	@echo "PASS install-tts"
 
 # rainbow-cat (desktop): base + device hypr overrides + gaming/GPU stack
 init-rainbow-cat:
