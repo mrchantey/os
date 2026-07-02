@@ -134,6 +134,7 @@ install-apps:
 	python-pipx														\
 	rsync																	\
 	stow																	\
+	udiskie																\
 	uv																		\
 	wl-clipboard													\
 	wtype																	\
