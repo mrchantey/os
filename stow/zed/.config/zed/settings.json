@@ -7,7 +7,7 @@
 		"claude-acp": {
 			"default_config_options": {
 				"effort": "default",
-				"model": "opus",
+				"model": "opus[1m]",
 				"mode": "bypassPermissions",
 			},
 			"favorite_config_option_values": {
