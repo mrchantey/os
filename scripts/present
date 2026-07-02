@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# Presentation-mode launcher (global, presentation-agnostic).
+#
+# The Hyprland "presentation" submap binds page/arrow keys to `present next` /
+# `present prev`. This script does not know about any specific talk: it routes
+# those step commands to whichever `present.ts` is currently *armed*. Arm one by
+# running `present arm` from inside a presentation repo (it walks up from the
+# working directory to find `present.ts`), or `present arm /path/to/present.ts`.
+#
+#   present arm [path]     point at a present.ts (default: search upward from cwd)
+#   present disarm         forget the armed presentation
+#   present next|prev      step forward / back
+#   present goto N         jump to step N (0-indexed)
+#   present reset          tear down spawned windows, return to the start
+#   present status         print the current step
+set -euo pipefail
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/present"
+POINTER="$STATE_DIR/active"
+mkdir -p "$STATE_DIR"
+
+notify() {
+	command -v notify-send >/dev/null 2>&1 && notify-send -t 2000 "Presentation" "$1" || true
+}
+
+find_present_ts() {
+	local dir="$PWD"
+	while [ "$dir" != "/" ]; do
+		if [ -f "$dir/present.ts" ]; then
+			printf '%s\n' "$dir/present.ts"
+			return 0
+		fi
+		dir="$(dirname "$dir")"
+	done
+	return 1
+}
+
+cmd="${1:-status}"
+shift || true
+
+case "$cmd" in
+arm)
+	path="${1:-}"
+	if [ -z "$path" ]; then path="$(find_present_ts || true)"; fi
+	if [ -z "$path" ] || [ ! -f "$path" ]; then
+		notify "arm failed: no present.ts found"
+		echo "no present.ts found (pass a path, or run from a presentation repo)" >&2
+		exit 1
+	fi
+	path="$(realpath "$path")"
+	printf '%s\n' "$path" >"$POINTER"
+	deno run -A "$path" reset >/dev/null 2>&1 || true
+	notify "armed: ${path/#$HOME/~}"
+	echo "armed: $path"
+	;;
+disarm)
+	rm -f "$POINTER"
+	notify "disarmed"
+	;;
+notify-enter)
+	if [ -s "$POINTER" ]; then
+		notify "ON — PgDn/→/Space/⏎ next · PgUp/←/⌫ prev · Esc exit"
+	else
+		notify "ON — nothing armed. Run: present arm"
+	fi
+	;;
+notify-exit)
+	notify "OFF"
+	;;
+next | prev | reset | goto | status)
+	if [ ! -s "$POINTER" ]; then
+		notify "no presentation armed — run: present arm"
+		echo "nothing armed; run: present arm" >&2
+		exit 1
+	fi
+	path="$(cat "$POINTER")"
+	if [ ! -f "$path" ]; then
+		notify "armed present.ts is gone: ${path/#$HOME/~}"
+		echo "armed present.ts no longer exists: $path" >&2
+		exit 1
+	fi
+	exec deno run -A "$path" "$cmd" "$@"
+	;;
+*)
+	echo "usage: present {arm [path]|disarm|next|prev|goto N|reset|status}" >&2
+	exit 2
+	;;
+esac

@@ -30,7 +30,7 @@
 	},
 	"disable_ai": false,
 	"diff_view_style": "unified",
-	"agent_buffer_font_size": 20.0,
+	"agent_buffer_font_size": 21.0,
 	"project_panel": {
 		"dock": "left",
 		"hide_hidden": false,
@@ -131,8 +131,8 @@
 		"line_width": 2,
 	},
 	"ui_font_size": 24.0,
-	"agent_ui_font_size": 24.0,
-	"buffer_font_size": 23.0,
+	"agent_ui_font_size": 25.0,
+	"buffer_font_size": 25.0,
 	"colorize_brackets": true,
 	"language_models": {
 		// "bedrock": {

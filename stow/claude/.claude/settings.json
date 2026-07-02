@@ -12,8 +12,9 @@
     ],
     "defaultMode": "bypassPermissions"
   },
+  "model": "opus",
+  "effortLevel": "low",
   "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true,
-  "theme": "dark",
-  "model": "opus"
+  "theme": "dark"
 }
