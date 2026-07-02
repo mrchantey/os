@@ -67,7 +67,7 @@ notify-enter)
 notify-exit)
 	notify "OFF"
 	;;
-next | prev | reset | goto | status)
+next | prev | reset | goto | status | verify)
 	if [ ! -s "$POINTER" ]; then
 		notify "no presentation armed — run: present arm"
 		echo "nothing armed; run: present arm" >&2
@@ -82,7 +82,7 @@ next | prev | reset | goto | status)
 	exec deno run -A "$path" "$cmd" "$@"
 	;;
 *)
-	echo "usage: present {arm [path]|disarm|next|prev|goto N|reset|status}" >&2
+	echo "usage: present {arm [path]|disarm|next|prev|goto N|reset|status|verify [from]}" >&2
 	exit 2
 	;;
 esac
