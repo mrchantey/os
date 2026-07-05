@@ -15,6 +15,6 @@ done
 sleep 0.1
 hyprctl dispatch workspace 1
 sleep 0.1
-zed ~/me/personal
+zed ~/me/beet
 sleep 1
 echo "done"
