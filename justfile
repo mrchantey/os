@@ -448,9 +448,9 @@ remove-infra:
 upload-file src dst:
 	aws s3 cp {{ src }} s3://mrchantey-os/{{ dst }} --region us-west-2
 
-# push local ./assets up to the s3 bucket (local -> remote)
+# push local ./assets up to the s3 bucket (local -> remote, mirrors deletes)
 push-assets:
-	aws s3 sync ./assets s3://mrchantey-os/assets --region us-west-2
+	aws s3 sync ./assets s3://mrchantey-os/assets --region us-west-2 --delete
 	@echo "PASS - push-assets"
 
 # pull ./assets down from the s3 bucket (remote -> local)

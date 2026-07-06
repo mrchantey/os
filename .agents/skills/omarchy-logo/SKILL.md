@@ -29,20 +29,21 @@ image-generation models.
 The white-glyphs-on-transparent template lives at:
 
 ```
-assets/images/omarchy-logo.png
+assets/omarchy-logo/template.png
 ```
 
 It is also mirrored on S3 and auto-downloaded by `generate.sh` if the local file
 is missing:
 
 ```
-https://mrchantey-os.s3.us-west-2.amazonaws.com/assets/images/omarchy-logo.png
+https://mrchantey-os.s3.us-west-2.amazonaws.com/assets/omarchy-logo/template.png
 ```
 
-To (re)publish the base logo after changing it:
+The whole `assets/` tree syncs with the bucket via `just push-assets` /
+`just pull-assets`, so publishing a changed template is just:
 
 ```
-just upload-file assets/images/omarchy-logo.png assets/images/omarchy-logo.png
+just push-assets
 ```
 
 ## Defining a colorway set

@@ -19,11 +19,11 @@ NAME="${1:?usage: generate.sh <name>   (expects <name>.json next to this script)
 CONFIG="$SCRIPT_DIR/$NAME.json"
 [[ -f "$CONFIG" ]] || { echo "error: config not found: $CONFIG" >&2; exit 1; }
 
-LOGO="$REPO_ROOT/assets/images/omarchy-logo.png"
+LOGO="$REPO_ROOT/assets/omarchy-logo/template.png"
 if [[ ! -f "$LOGO" ]]; then
   echo "base logo missing, downloading..."
   mkdir -p "$(dirname "$LOGO")"
-  curl -fsSL "https://mrchantey-os.s3.us-west-2.amazonaws.com/assets/images/omarchy-logo.png" -o "$LOGO"
+  curl -fsSL "https://mrchantey-os.s3.us-west-2.amazonaws.com/assets/omarchy-logo/template.png" -o "$LOGO"
 fi
 
 OUT_DIR="$REPO_ROOT/assets/omarchy-logo"
