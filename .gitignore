@@ -12,3 +12,4 @@ assets
 # audio clips captured by scripts/transcribe.sh
 *.wav
 out.txt
+.env
