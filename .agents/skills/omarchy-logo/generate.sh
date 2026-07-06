@@ -32,7 +32,7 @@ OUT="$OUT_DIR/$NAME.png"
 
 # --- canvas / grid geometry -------------------------------------------------
 CW=3840; CH=2160          # print sheet
-COLS=2;  ROWS=3           # six logos, 2 columns x 3 rows
+COLS=2;  ROWS=4           # eight logos, 2 columns x 4 rows
 PAD=140                   # padding inside each cell
 CELL_W=$((CW / COLS))
 CELL_H=$((CH / ROWS))

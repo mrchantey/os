@@ -1,7 +1,7 @@
 ---
 name: omarchy-logo
 description: >
-  Generate print-ready 3840x2160 PNG sheets of six colorized Omarchy logos.
+  Generate print-ready 3840x2160 PNG sheets of eight colorized Omarchy logos.
   Use when the user wants to make Omarchy logo art for printing (stickers,
   posters), define new logo colorways, or run/edit the logo generator.
   Triggers: "generate omarchy logos", "omarchy logo png", "logo print sheet",
@@ -11,8 +11,8 @@ description: >
 
 # Omarchy Logo Generator
 
-Produces a `3840x2160` transparent PNG containing **six** colorized copies of the
-Omarchy wordmark (2 columns x 3 rows), ready to print. Uses ImageMagick only, no
+Produces a `3840x2160` transparent PNG containing **eight** colorized copies of the
+Omarchy wordmark (2 columns x 4 rows), ready to print. Uses ImageMagick only, no
 image-generation models.
 
 ## Layout
@@ -48,7 +48,7 @@ just push-assets
 
 ## Defining a colorway set
 
-Create `<name>.json` next to `generate.sh`. It is a JSON array of up to six
+Create `<name>.json` next to `generate.sh`. It is a JSON array of up to eight
 variants; each variant is an array of hex colors painted as solid, equal-height
 horizontal bars down the logo (first color = top band, last = bottom). One color
 = a solid fill.
@@ -61,7 +61,7 @@ horizontal bars down the logo (first color = top band, last = bottom). One color
 ]
 ```
 
-Fewer than six variants leaves the remaining grid cells empty. See
+Fewer than eight variants leaves the remaining grid cells empty. See
 `rainbows.json` for a worked example.
 
 ## Generating
@@ -82,7 +82,7 @@ assets/omarchy-logo/<name>.png
 2. For each variant, stack the colors as a 1xN column and nearest-neighbour
    scale it to the logo size (solid, equal-height bars, no blending), then punch
    the glyph mask into it via `CopyOpacity`.
-3. Compose all six onto one transparent canvas in a **single** `magick`
+3. Compose all eight onto one transparent canvas in a **single** `magick`
    invocation.
 
 Gotchas already handled in the script, keep them if you refactor:
