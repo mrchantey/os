@@ -447,6 +447,16 @@ remove-infra:
 # upload a file to the s3 bucket
 upload-file src dst:
 	aws s3 cp {{ src }} s3://mrchantey-os/{{ dst }} --region us-west-2
+
+# push local ./assets up to the s3 bucket (local -> remote)
+push-assets:
+	aws s3 sync ./assets s3://mrchantey-os/assets --region us-west-2
+	@echo "PASS - push-assets"
+
+# pull ./assets down from the s3 bucket (remote -> local)
+pull-assets:
+	aws s3 sync s3://mrchantey-os/assets ./assets --region us-west-2
+	@echo "PASS - pull-assets"
 	@echo "PASS - upload-file"
 
 pre-reset:
