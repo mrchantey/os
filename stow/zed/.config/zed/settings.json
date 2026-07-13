@@ -6,7 +6,7 @@
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
-				"effort": "default",
+				"effort": "max",
 				"model": "opus[1m]",
 				"mode": "bypassPermissions",
 			},
@@ -132,7 +132,7 @@
 	},
 	"ui_font_size": 24.0,
 	"agent_ui_font_size": 25.0,
-	"buffer_font_size": 29.0,
+	"buffer_font_size": 21.0,
 	"colorize_brackets": true,
 	"language_models": {
 		// "bedrock": {
