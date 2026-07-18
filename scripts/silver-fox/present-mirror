@@ -1,0 +1,52 @@
+#!/bin/bash
+# Clean 16:9 1080p presentation mirroring for silver-fox.
+#
+# The laptop panel (eDP-1) is 16:10 native (3840x2400); projectors are 16:9.
+# Hyprland mirroring copies the *source* framebuffer and stretches it to fill the
+# target, so mirroring the 16:10 desktop onto a 16:9 projector squishes the image
+# ~11%. The panel happily accepts a 1080p mode, so instead we run BOTH displays at
+# 1920x1080@60: the projector then shows a pixel-perfect 1:1 16:9 image (the laptop
+# just letterboxes with thin bars top/bottom).
+#
+#   on   -> force eDP-1 + the external to 1920x1080@60 and mirror
+#   off  -> restore eDP-1 to native 4K at the exact scale it had before
+#
+# Driven automatically by mirror-watch.sh on hotplug; safe to bind to a key too.
+# If a projector shows no signal, it may not accept 1920x1080@60 — swap the two
+# "1920x1080@60" mode strings below for "preferred".
+
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/silver-fox-present-mirror"
+INTERNAL="eDP-1"
+
+ext_name()  { hyprctl monitors -j | jq -r --arg m "$INTERNAL" '.[] | select(.name != $m) | .name' | head -n1; }
+int_scale() { hyprctl monitors -j | jq -r --arg m "$INTERNAL" '.[] | select(.name == $m) | .scale'; }
+int_width() { hyprctl monitors -j | jq -r --arg m "$INTERNAL" '.[] | select(.name == $m) | .width'; }
+notify()    { command -v notify-send >/dev/null 2>&1 && notify-send -u low -t 2000 "󰍹  Presentation mirror" "$1"; }
+
+on() {
+  local ext; ext="$(ext_name)"
+  if [[ -z "$ext" ]]; then notify "no external display found"; exit 0; fi
+
+  # Remember the panel's current scale once, so `off` restores it exactly.
+  mkdir -p "$(dirname "$STATE")"
+  [[ -f "$STATE" ]] || int_scale >"$STATE"
+
+  hyprctl --batch "keyword monitor $INTERNAL,1920x1080@60,0x0,1 ; keyword monitor $ext,1920x1080@60,0x0,1,mirror,$INTERNAL" >/dev/null
+  notify "on -> $ext mirroring at 1920x1080"
+}
+
+off() {
+  # Idempotent: if the panel is already at native width, there's nothing to undo.
+  if [[ "$(int_width)" == "3840" ]]; then rm -f "$STATE"; exit 0; fi
+  local scale=2; [[ -f "$STATE" ]] && scale="$(cat "$STATE")"
+  rm -f "$STATE"
+  hyprctl keyword monitor "$INTERNAL,3840x2400@60,0x0,$scale" >/dev/null
+  notify "off -> panel restored to 4K"
+}
+
+case "${1:-toggle}" in
+  on)     on ;;
+  off)    off ;;
+  toggle) if [[ -f "$STATE" ]]; then off; else on; fi ;;
+  *) echo "usage: $(basename "$0") on|off|toggle" >&2; exit 1 ;;
+esac

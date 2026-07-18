@@ -1,5 +1,7 @@
 echo "starting up"
 sleep 0.1
+# Auto clean-16:9 1080p mirroring when an HDMI/projector is plugged in.
+pgrep -f 'silver-fox/mirror-watch.sh' >/dev/null 2>&1 || setsid "$HOME/me/os/scripts/silver-fox/mirror-watch.sh" >/dev/null 2>&1 &
 # the built-in Realtek mic powers on with +30dB "Internal Mic Boost" stacked on
 # +30dB "Capture" gain, saturating the ADC — this clips hard (OSD pegs red) and
 # wrecks voxtype accuracy. amixer can't fix this: WirePlumber owns the mic gain and
