@@ -334,6 +334,8 @@ stow-symlinks-init:
 	~/.config/hypr/hyprsunset.conf	\
 	~/.config/hypr/xdph.conf				\
 	~/.config/fcitx5/conf/keyboard.conf	\
+	~/.config/git/config						\
+	~/.config/git/ignore						\
 	~/.ssh/config										\
 	~/.claude/settings.json
 	@echo "INIT stow-symlinks"
@@ -351,6 +353,9 @@ stow-symlinks:
 	# ensure fcitx5's conf/ exists so stow links keyboard.conf into it rather than
 	# folding (symlinking) the whole dir and hiding fcitx5's app-managed state
 	mkdir -p ~/.config/fcitx5/conf
+	# same folding hazard as ~/.ssh below: keep ~/.config/git a real dir so only
+	# config+ignore are stowed, leaving room for git/gh to write their own state
+	mkdir -p ~/.config/git
 	# ~/.ssh must already exist as a REAL dir, else stow folds the whole thing
 	# into a symlink pointing at this repo -- and the next ssh-keygen would
 	# write a PRIVATE KEY into version control. Only config is ever stowed.
@@ -375,6 +380,7 @@ stow-symlinks:
 	claude								\
 	fcitx5								\
 	ghostty								\
+	git									\
 	gtk									\
 	hypr 									\
 	mimeapps 							\
