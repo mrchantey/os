@@ -45,7 +45,7 @@
 	{
 		"context": "AgentPanel > Editor",
 		"bindings": {
-			"ctrl-u": "agent::ToggleModelSelector",
+			"ctrl-m": "agent::ToggleModelSelector",
 		},
 	},
 	// {
@@ -157,4 +157,13 @@
 			"ctrl-alt-j": null,
 		},
 	},
+ {
+  "context": "AcpThread > Editor",
+  "bindings": {
+   "ctrl-t": "agent::CycleThinkingEffort"
+  },
+  "unbind": {
+   "ctrl-'": "agent::CycleThinkingEffort"
+  }
+ }
 ]
