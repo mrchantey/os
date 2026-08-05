@@ -13,3 +13,8 @@ assets
 *.wav
 out.txt
 .env
+
+# belt and braces: private keys must never land in here. Only stow/ssh/.ssh/config
+# is tracked; keys are generated per device straight into ~/.ssh
+stow/ssh/.ssh/id_*
+!stow/ssh/.ssh/id_*.pub

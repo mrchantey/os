@@ -75,6 +75,12 @@ setup-theme:
 	# order, but here we pin it directly.
 	omarchy theme bg set ~/.config/omarchy/backgrounds/everforest/firewatch.png
 
+# generate this device's SSH key for a git host (default tangled.org) and print
+# the public half to paste into that host's account settings. Run once per
+# device per host; the private key never leaves the machine. Idempotent.
+setup-ssh-key host="tangled.org":
+	bash scripts/setup-ssh-key.sh {{host}}
+
 # stow the per-device hypr overrides; idempotent
 stow-device device:
 	rm -f 														\
@@ -328,6 +334,7 @@ stow-symlinks-init:
 	~/.config/hypr/hyprsunset.conf	\
 	~/.config/hypr/xdph.conf				\
 	~/.config/fcitx5/conf/keyboard.conf	\
+	~/.ssh/config										\
 	~/.claude/settings.json
 	@echo "INIT stow-symlinks"
 	just stow-symlinks
@@ -344,6 +351,11 @@ stow-symlinks:
 	# ensure fcitx5's conf/ exists so stow links keyboard.conf into it rather than
 	# folding (symlinking) the whole dir and hiding fcitx5's app-managed state
 	mkdir -p ~/.config/fcitx5/conf
+	# ~/.ssh must already exist as a REAL dir, else stow folds the whole thing
+	# into a symlink pointing at this repo -- and the next ssh-keygen would
+	# write a PRIVATE KEY into version control. Only config is ever stowed.
+	mkdir -p ~/.ssh
+	chmod 700 ~/.ssh
 	# omarchy's installer pre-creates ~/.agents/skills as a REAL dir (and drops an
 	# `omarchy` skill symlink in it), which blocks stow from folding skills/ -- so
 	# new skills created under ~/.agents/skills would be untracked real dirs. Fold
@@ -369,6 +381,7 @@ stow-symlinks:
 	obs										\
 	omarchy 							\
 	opencode							\
+	ssh									\
 	starship 							\
 	uwsm 									\
 	voxtype								\
