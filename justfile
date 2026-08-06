@@ -370,6 +370,15 @@ stow-symlinks:
 	rm -rf ~/.agents/skills
 	ln -sfn ../me/os/stow/agents/.agents/skills ~/.agents/skills
 	ln -sfn "${OMARCHY_PATH:-$HOME/.local/share/omarchy}/default/omarchy-skill" ~/.agents/skills/omarchy
+	# same folding hazard as ~/.config/git: elephant's other provider configs
+	# (calc.toml, desktopapplications.toml, menus/) are omarchy-managed, so keep
+	# ~/.config/elephant a real dir and stow only symbols.toml into it
+	mkdir -p ~/.config/elephant
+	# opposite call to the above: NOTHING but us writes to ~/.config/walker/themes
+	# (walker's own themes live in /etc/xdg, omarchy's in ~/.local/share/omarchy),
+	# so let stow FOLD the dir and any future theme is tracked automatically.
+	# Safe to rm on re-runs: once folded this is just a symlink into the repo.
+	rm -rf ~/.config/walker/themes
 	cd stow && stow -vt ~ \
 	agents								\
 	alacritty 						\
@@ -377,6 +386,7 @@ stow-symlinks:
 	bashrc 								\
 	cargo 								\
 	claude								\
+	elephant							\
 	fcitx5								\
 	ghostty								\
 	git									\
@@ -390,6 +400,7 @@ stow-symlinks:
 	starship 							\
 	uwsm 									\
 	voxtype								\
+	walker								\
 	waybar 								\
 	xcompose								\
 	zed
