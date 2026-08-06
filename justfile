@@ -105,7 +105,6 @@ init-user:
 install-apps-init:
 	sudo pacman -Rns --noconfirm spotify 				|| true
 	sudo pacman -Rns --noconfirm obsidian 			|| true
-	sudo pacman -Rns --noconfirm signal-desktop || true
 	sudo pacman -Rns --noconfirm typora 				|| true
 	sudo pacman -Rns --noconfirm 1password-cli	|| true
 	sudo pacman -Rns --noconfirm 1password-beta	|| true
