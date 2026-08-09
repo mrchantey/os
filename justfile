@@ -130,6 +130,7 @@ install-apps:
 	aws-cli-v2														\
 	caligula															\
 	deno																	\
+	element-desktop												\
 	espeak-ng															\
 	gtk4-layer-shell											\
 	helix																	\
