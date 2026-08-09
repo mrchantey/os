@@ -8,6 +8,8 @@
 #      speaks stdin. Symlinked onto PATH as `tts` (see `just install-tts`).
 #
 # `tts stop` halts whatever is currently playing.
+# `tts last` speaks the most recent reply from whichever coding agent is running in Zed,
+# no highlighting needed — see scripts/acp-last.sh. Bound to CTRL+PAUSE / CTRL+INSERT.
 #
 # Kokoro streams raw 24kHz mono PCM, which we pipe straight into pw-play so audio
 # starts as soon as the first chunk lands rather than after full synthesis.
@@ -62,6 +64,20 @@ case "$mode" in
 	stop)
 		stop
 		exit 0
+		;;
+	last)
+		# same toggle feel as the selection bind, but the text comes from the agent
+		# transcript instead of the X selection: press to hear the last reply, press
+		# again to shut it up.
+		if playing; then
+			stop
+			exit 0
+		fi
+		text="$("$(dirname "$(readlink -f "$0")")/acp-last.sh" 2>/dev/null)"
+		if [ -z "${text// /}" ]; then
+			notify-send -a TTS "No agent reply" "Nothing captured yet from the Zed agent panel." 2>/dev/null || true
+			exit 0
+		fi
 		;;
 	toggle)
 		# second press while still playing = stop; otherwise read the selection

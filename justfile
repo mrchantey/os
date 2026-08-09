@@ -29,9 +29,11 @@ install-transcribe:
 	@echo "PASS install-transcribe"
 
 # symlink the Kokoro text-to-speech helper onto PATH (~/.local/bin is on PATH).
-# usage from any terminal: `tts gday mate` | `echo hi | tts` | `tts stop`
+# usage from any terminal: `tts gday mate` | `echo hi | tts` | `tts stop` | `tts last`
+# acp-tee.sh wraps the Zed agent (see stow/zed settings) and acp-last.sh reads its tap,
+# which is what `tts last` (CTRL+PAUSE) speaks.
 install-tts:
-	chmod +x scripts/tts.sh
+	chmod +x scripts/tts.sh scripts/acp-tee.sh scripts/acp-last.sh
 	mkdir -p ~/.local/bin
 	ln -sf ~/me/os/scripts/tts.sh ~/.local/bin/tts
 	@echo "PASS install-tts"
@@ -299,6 +301,10 @@ install-user-apps:
 # download a redundant bundled chromium.
 install-npm-packages:
 	npm install -g --prefix ~/.local playwright cf wrangler
+	# ACP adapter for the Zed agent panel. Zed can install this itself, but only for a
+	# "type": "registry" agent — we run it as "type": "custom" behind scripts/acp-tee.sh
+	# so the reply stream can be tapped for read-aloud, which means we own the install.
+	npm install -g --prefix ~/.local @agentclientprotocol/claude-agent-acp
 	@echo "PASS install-npm-packages"
 
 # required to run after fresh install or omarchy update
