@@ -43,6 +43,39 @@ Machine found flat and refusing to start (dead since mid-July, below). Reconstru
 - PD contract on the working boot: **18V / 6.5A max (~117W)** on UCSI connector 001, again not the healthy 20V/6.5A (130W). The degraded-voltage contract persists even in the good state.
 - `UCSI_GET_PDOS failed (-5)` plus `ucsi_acpi: unknown error 0` still fire at boot.
 - All upower history from before this session is gone (hard crashes discard unsaved history), so no drain curves survive from July.
+- **Later the same day: BIOS updated 1.36.1 → 1.40.0** (see Teardown day Step 0). Flash completed without incident. **Observation period starts here** — the open question is whether the EC/PD behaviour changed. Worth re-checking on the next few boots: the PD contract on UCSI connector 001 (was a degraded 18V/6.5A instead of 20V/6.5A), whether `UCSI_GET_PDOS failed (-5)` still fires, and whether the charge latch still needs port-cycling to re-arm. If those clear up, Steps 2-4 of teardown day may be unnecessary.
+- **First post-update boot (17:01, boot 0): both PD markers are UNCHANGED.** The BIOS/EC update did not alter the PD layer at all:
+	- PD contract on connector 001 is still **18V/6.5A (117W)** — `voltage_now: 18000000` while `voltage_max: 20000000`. The port and adapter advertise 20V capability, but the negotiated contract still settles at 18V. Byte-for-byte the same as the pre-update reading earlier the same day.
+	- `ucsi_acpi USBC000:00: unknown error 0` and `UCSI_GET_PDOS failed (-5)` **still fire** at boot (17:01:12).
+	- Machine state otherwise healthy at the time of reading: `AC/online 1`, `BAT0 Full`, 100%, 13.114V. No latch.
+	- The omarchy `omarchy-powerprofiles-set` udev hook still fails with exit code 1 on every ucsi event, so there are still **no working low-battery warnings**. Relevant safety gap before any deliberate crash-trigger testing.
+	- **Reading:** firmware is now largely eliminated as the fix. The degraded contract surviving a BIOS/EC update raises the weight on the adapter/cable (Step 4, needs no teardown) and on the PD controller hardware. Charge-latch behaviour is still unproven post-update, since it has not recurred yet.
+
+### Breakthrough: the adapter offers 20V, the machine declines it
+
+`UCSI_GET_PDOS` fails, but the **partner's advertised PDO list is readable another way**, via the Type-C class rather than the UCSI power-supply class. This was not known in earlier sessions and is the single most useful diagnostic found so far:
+
+```bash
+# port0-partner == the attached charger. Map: typec port0 <-> ucsi-source-psy-USBC000:001
+find /sys/class/usb_power_delivery/pd2/ -type f | sort | while read f; do printf '%s = %s\n' "${f#*/pd2/}" "$(cat $f 2>/dev/null)"; done
+```
+
+First reading, 2026-08-17, post-BIOS-update, with the stock Dell charger attached. Advertised source capabilities:
+
+| PDO | Type | Voltage | Max current | Notes |
+|---|---|---|---|---|
+| 1 | variable | max 50mV, min 26350mV | 3850mA | **Malformed.** Minimum voltage above maximum, and both nonsensical. |
+| 2 | fixed | 5000mV | 1000mA | Low for a 5V rail (3A is typical). |
+| 3 | fixed | 18000mV | 6500mA | 117W. **This is what the machine selects.** |
+| 4 | fixed | 20000mV | 6500mA | 130W. The healthy contract. **Offered, but not taken.** |
+
+**The adapter does advertise the full 20V/6.5A 130W PDO.** The negotiated contract (`voltage_now 18000000`, `current_now 6500000`) matches PDO 3 exactly, so the sink is choosing the 18V rail while a valid 20V rail sits in the list.
+
+This reframes the whole degraded-contract question. It is not "the adapter cannot deliver 20V". It is **the machine declining to request the 20V PDO that is on offer.** Combined with the malformed PDO 1 and the standing `UCSI_GET_PDOS failed (-5)`, the coherent story is that the PD capability data is arriving corrupt, and the sink's PDO selection falls back to 18V rather than trusting the list.
+
+Corruption could still originate in the adapter, its cable, or the machine's PD controller. The charger cross-check (Step 4) now discriminates cleanly between those, see below.
+
+Also resolved incidentally: **typec `port0` maps to `ucsi-source-psy-USBC000:001`**, and `port0-partner` exposes `pd2`. Physical-port identity still needs recording by hand.
 
 ## Session log: 2026-07-18/19 - the crash that started a month of downtime (reconstructed from journal)
 
@@ -106,7 +139,11 @@ Takeaways from the session:
 Goal: run the power-fault isolation tests **and** do general maintenance (clean + repaste). Do the diagnostic tests **before** repasting so a teardown step does not mask the result. Priority order is now charge-input first.
 
 ### Step 0 - Firmware update (no tools, do before teardown day)
-- [ ] Update BIOS 1.36.1 → 1.40.014: `pacman -S fwupd`, then `fwupdmgr refresh && fwupdmgr get-updates && fwupdmgr update`. Fallback if LVFS lacks it: download the .exe from Dell support to a FAT32 USB and flash from the F12 one-time-boot menu ("BIOS Flash Update"), no Windows needed.
+- [x] **DONE 2026-08-17: BIOS 1.36.1 → 1.40.0** (build date 11/26/2025), confirmed via `cat /sys/class/dmi/id/bios_version`. Note `dmidecode` is not installed on this machine; sysfs works without root.
+	- LVFS does **not** carry the XPS 9500 BIOS (`fwupdmgr get-updates` shows System Firmware with no available update), so the fwupd path is out. Used the fallback: `XPS_9500_1.40.0.exe` from Dell support (driver page https://www.dell.com/support/home/en-us/drivers/driversdetails?driverid=w5d4j — must be a real browser, Dell 403s curl/scripts), copied to a FAT32 USB, flashed from the F12 one-time-boot menu ("BIOS Flash Update"). No Windows needed. Flash ran clean.
+	- The latest version is **1.40.0**, not 1.40.014 as an earlier search suggested.
+	- Note for future firmware work: if `sudo` is unavailable, udisks2 handles removable-media formatting via polkit. `udisksctl` in this build has no `format` verb, so call it over D-Bus: `gdbus call --system --dest org.freedesktop.UDisks2 --object-path /org/freedesktop/UDisks2/block_devices/sdXN --method org.freedesktop.UDisks2.Block.Format 'vfat' "{'label': <'BIOSFLASH'>, 'update-partition-type': <true>}"`. Expect a gdbus 25s timeout error on large/slow media even though the format succeeds; verify with `lsblk -f` rather than trusting the exit code.
+- [ ] Optional, still pending: LVFS offers a KIOXIA XG6 SSD firmware update 10604106 → 10604107 (thermal SMART fix, medium urgency, needs AC + reboot): `fwupdmgr update`. Unrelated to the crash hypothesis.
 - [ ] Precondition: battery well charged and charging confirmed healthy (fresh flea-power reset first). A power cut mid-flash is the one way this machine can get worse. The flash runs pre-OS at low steady load, not the load-transient profile that triggers the crashes, so the risk is real but small.
 - [ ] Afterwards, run a normal observation period before doing the teardown tests: if the EC update fixes the latch/crash behaviour, Steps 2-4 may become unnecessary.
 
@@ -136,6 +173,11 @@ Goal: run the power-fault isolation tests **and** do general maintenance (clean 
 ### Step 4 — Charger / cable cross-check
 - [ ] Try a different known-good 130W USB-C PD charger and cable. The persistent `UCSI_GET_PDOS failed (-5)` and the degraded-contract behaviour both hint at PD-path flakiness.
 - [ ] This needs no teardown; do it as soon as a second charger is available. The 08-17 good-state contract was still 18V instead of 20V, which keeps adapter/cable on the suspect list.
+- [ ] **The discriminating test (highest value, zero risk).** Any standards-compliant USB-C PD charger works for this, it does **not** need to be 130W. An Apple 96W is fine. Attach it, then dump the partner PDO list (`/sys/class/usb_power_delivery/pd2/`, command in the 08-17 log above) and read what comes back:
+	- **List parses clean, no malformed PDO, and the machine selects the top rail →** the sink's PD logic is healthy and the stock Dell adapter/cable is producing the corrupt capability data. Cheapest possible fix: replace the adapter.
+	- **List still contains malformed/garbled PDOs →** the corruption is in the machine's PD controller / EC read path, independent of what is plugged in. That is a motherboard-level fault, matching the community precedent in the hypothesis section, and it makes the repair-vs-refund call urgent.
+	- Note the expected side effects of an under-spec adapter so they are not misread as faults: a Dell POST warning about adapter wattage, and CPU/GPU throttling under load.
+	- **Do not run the crash-trigger tests on an under-spec adapter.** A crash on a 96W supply proves nothing, since insufficient headroom would plausibly cause the same rail sag being investigated. This test is for PD negotiation only.
 - [ ] While testing, map physical ports to UCSI connectors (plug into each port, see which `ucsi-source-psy-USBC000:00X` reports online). If the no-charge state recurs, note whether left (motherboard) and right (IO board) ports behave differently; that localises the fault for the repair-vs-refund call.
 
 ### Step 5 — Maintenance (only after the tests above)
