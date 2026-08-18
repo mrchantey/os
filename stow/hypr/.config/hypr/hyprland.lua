@@ -20,6 +20,9 @@ require("default.hypr.omarchy")
 -- stowed yet still gets a working session instead of a hard config error.
 local require_optional = require("default.hypr.require_optional")
 
+-- Cursor theme/size, shared across devices.
+require("hypr.envs")
+
 -- Monitors, GDK_SCALE, and workspace pinning are entirely per-device.
 require_optional.module("hypr.monitors")
 

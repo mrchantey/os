@@ -21,6 +21,7 @@ init:
 	just install-rust
 	just install-transcribe
 	just install-tts
+	just install-cursor-theme
 	chmod +x scripts/*/startup.sh
 
 # symlink the audio capture+transcribe helper onto PATH (~/.local/bin is on PATH).
@@ -40,6 +41,20 @@ install-tts:
 	mkdir -p ~/.local/bin
 	ln -sf ~/me/os/scripts/tts.sh ~/.local/bin/tts
 	@echo "PASS install-tts"
+
+# build the Never-Lost Rainbow cursor theme from the Windows .ani set in
+# neverlost/ and install it to ~/.local/share/icons (see neverlost/readme.md).
+# Hyprland and XWayland pick it up from stow/hypr/.config/hypr/envs.lua on
+# reload; gsettings is the channel GTK apps read. Safe to re-run.
+# Also puts the on/off toggle on PATH: `cursor-toggle` from any terminal.
+install-cursor-theme:
+	python3 scripts/install-cursor-theme.py
+	chmod +x scripts/cursor-toggle.sh
+	mkdir -p ~/.local/bin
+	ln -sf ~/me/os/scripts/cursor-toggle.sh ~/.local/bin/cursor-toggle
+	# turn it on through the toggle, so install and toggle share one apply path
+	scripts/cursor-toggle.sh on
+	@echo "PASS install-cursor-theme"
 
 # rainbow-cat (desktop): base + device hypr overrides + gaming/GPU stack
 init-rainbow-cat:
