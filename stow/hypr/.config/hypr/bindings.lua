@@ -12,7 +12,6 @@
 -- .conf files, re-binding a key does NOT silently replace the default -- both
 -- binds would fire -- so each conflict has to be unbound first.
 
-local terminal = "uwsm app -- $TERMINAL"
 local browser = "omarchy-launch-browser"
 local editor = "uwsm app -- $EDITOR"
 
@@ -78,11 +77,11 @@ o.bind("SUPER + Page_Down", "Previous workspace", hl.dsp.focus({ workspace = "e-
 --------------------------------------------------------------------------------
 -- APPLICATIONS (SUPER CTRL)
 --------------------------------------------------------------------------------
--- Quattro's default terminal binding already opens in the active terminal's cwd
--- (omarchy-launch-terminal wraps xdg-terminal-exec --dir), but it resolves the
--- terminal through xdg-terminals.list rather than $TERMINAL, so keep ours.
-hl.unbind("SUPER + RETURN") -- was: Terminal (via xdg-terminal-exec)
-o.bind("SUPER + RETURN", "Terminal", terminal .. " --working-directory=$(omarchy-cmd-terminal-cwd)")
+-- SUPER + RETURN is left on the Omarchy default: omarchy-launch-terminal already
+-- opens in the active terminal's cwd (it wraps xdg-terminal-exec --dir), which is
+-- the only reason we used to override it. Which terminal it picks is declared in
+-- xdg-terminals.list (stowed by the ghostty package), NOT $TERMINAL -- without
+-- that file it silently falls back to foot.
 
 hl.unbind("SUPER + F") -- was: Full screen
 o.bind("SUPER + F", "File manager", "uwsm app -- nautilus --new-window")

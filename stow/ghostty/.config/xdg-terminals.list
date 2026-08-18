@@ -1,0 +1,9 @@
+# Terminal emulator preference order for xdg-terminal-exec
+# The first found and valid terminal will be used.
+#
+# This is what SUPER+RETURN (omarchy-launch-terminal) resolves through, so it is
+# the source of truth for "my terminal" -- $TERMINAL in uwsm/default only covers
+# things that read that env var. With no list at all, xdg-terminal-exec scans for
+# TerminalEmulator desktop entries and lands on foot.
+com.mitchellh.ghostty.desktop
+Alacritty.desktop
