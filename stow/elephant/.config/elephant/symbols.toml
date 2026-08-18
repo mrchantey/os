@@ -1,2 +1,0 @@
-command = 'wl-copy && hyprctl dispatch sendshortcut "SHIFT,Insert,activewindow"'
-history_when_empty = true

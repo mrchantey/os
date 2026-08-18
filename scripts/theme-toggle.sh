@@ -7,7 +7,9 @@
 DARK_THEME="Everforest"
 LIGHT_THEME="Solarized Light"
 
-if [[ -f ~/.config/omarchy/current/theme/light.mode ]]; then
+# quattro moved generated theme state from ~/.config/omarchy/current to
+# ~/.local/state/omarchy/current (XDG state, since it is regenerated not authored).
+if [[ -f ~/.local/state/omarchy/current/theme/light.mode ]]; then
   omarchy theme set "$DARK_THEME"
 else
   omarchy theme set "$LIGHT_THEME"
