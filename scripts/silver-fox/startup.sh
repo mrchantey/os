@@ -15,7 +15,8 @@ for _ in $(seq 1 50); do
 	sleep 0.2
 done
 sleep 0.1
-hyprctl dispatch workspace 1
+# quattro's hyprctl takes Lua, not the old bare-word dispatcher syntax.
+hyprctl dispatch "hl.dsp.focus({ workspace = '1' })"
 sleep 0.1
 zed ~/me/beet
 sleep 1

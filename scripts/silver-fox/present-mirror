@@ -31,7 +31,8 @@ on() {
   mkdir -p "$(dirname "$STATE")"
   [[ -f "$STATE" ]] || int_scale >"$STATE"
 
-  hyprctl --batch "keyword monitor $INTERNAL,1920x1080@60,0x0,1 ; keyword monitor $ext,1920x1080@60,0x0,1,mirror,$INTERNAL" >/dev/null
+  # quattro removed `hyprctl keyword`; `eval` runs a Lua snippet instead.
+  hyprctl eval "hl.monitor({ output = '$INTERNAL', mode = '1920x1080@60', position = '0x0', scale = 1 }) hl.monitor({ output = '$ext', mode = '1920x1080@60', position = '0x0', scale = 1, mirror = '$INTERNAL' })" >/dev/null
   notify "on -> $ext mirroring at 1920x1080"
 }
 
@@ -40,7 +41,7 @@ off() {
   if [[ "$(int_width)" == "3840" ]]; then rm -f "$STATE"; exit 0; fi
   local scale=2; [[ -f "$STATE" ]] && scale="$(cat "$STATE")"
   rm -f "$STATE"
-  hyprctl keyword monitor "$INTERNAL,3840x2400@60,0x0,$scale" >/dev/null
+  hyprctl eval "hl.monitor({ output = '$INTERNAL', mode = '3840x2400@60', position = '0x0', scale = $scale })" >/dev/null
   notify "off -> panel restored to 4K"
 }
 

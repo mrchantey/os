@@ -11,8 +11,10 @@
 # It applies globally, so switching between your pre-set workspaces keeps the
 # clean look. Toggle with SUPER ALT SHIFT P.
 #
-# Enter uses runtime `hyprctl keyword` overrides; exit restores every
+# Enter uses runtime `hyprctl eval` overrides; exit restores every
 # config-defined value with a single `hyprctl reload`.
+# (quattro removed `hyprctl keyword` -- it "can't work with non-legacy parsers"
+# now that Hyprland is configured in Lua. `eval` runs a Lua snippet instead.)
 #
 # The bar is part of the long-running Omarchy shell (Quickshell) since quattro,
 # so it is hidden by flag rather than by killing a process the way waybar was.
@@ -36,7 +38,7 @@ else
   # --- enter ---
   mkdir -p "$(dirname "$STATE")"
   touch "$STATE"
-  hyprctl --batch "keyword general:border_size 0; keyword general:gaps_in 0; keyword general:gaps_out 0; keyword decoration:rounding 0" >/dev/null 2>&1
+  hyprctl eval "hl.config({ general = { border_size = 0, gaps_in = 0, gaps_out = 0 }, decoration = { rounding = 0 } })" >/dev/null 2>&1
   omarchy-toggle bar-off on        # hide the bar
   notify "on"
 fi
