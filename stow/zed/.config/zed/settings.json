@@ -3,18 +3,31 @@
 {
 	// "show_completions_on_input": false,
 	"git_commit_buffer_font_size": 20.0,
+	// Agents run behind ~/me/os/scripts/acp-tee.sh, which taps the ACP stream on its way
+	// to Zed so CTRL+PAUSE can read the last reply aloud (see scripts/acp-last.sh). The
+	// tap is protocol-level, so the same wrapper fits any agent listed here.
+	//
+	// Cost of "type": "custom" is that Zed no longer installs or updates the adapter;
+	// `just install-npm-packages` owns it now. To hand it back, delete the command/args/env
+	// lines and set "type": "registry".
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
-				"effort": "max",
-				"model": "opus[1m]",
+				"fast": false,
+    "effort": "max",
+				"model": "claude-fable-5[1m]",
 				"mode": "bypassPermissions",
 			},
 			"favorite_config_option_values": {
 				"mode": ["auto", "bypassPermissions"],
 			},
-			"type": "registry",
+			"type": "custom",
+			"command": "/home/pete/me/os/scripts/acp-tee.sh",
+			"args": ["/home/pete/.local/bin/claude-agent-acp"],
+			"env": { "ACP_TEE_NAME": "claude" },
 		},
+		// To tap this one too, same treatment: "type": "custom", command acp-tee.sh,
+		// args pointing at opencode's own ACP entry point.
 		"opencode": {
 			"type": "registry",
 		},
@@ -153,7 +166,7 @@
 		},
 		"Rust": {
 			"colorize_brackets": true,
-			"enable_language_server": false,
+			// "enable_language_server": false,
 		},
 		"Just": {
 			// seems to completely ignore these
