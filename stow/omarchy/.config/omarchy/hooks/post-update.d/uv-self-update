@@ -1,0 +1,18 @@
+#!/bin/bash
+# Keep uv current on `omarchy update`.
+#
+# uv comes from astral's install script (run by `omarchy-install-dev-env python`), which
+# drops it in ~/.local/bin outside both pacman and mise. That means nothing in omarchy's
+# update path touches it: omarchy-update refreshes system packages, AUR packages and mise
+# tools, and uv is none of the three, so it would sit at whatever version first landed.
+# `uv self update` is the supported way to move that kind of install forward.
+#
+# This is the one thing we lost by moving uv off pacman, where `omarchy update`'s system
+# package step kept it fresh for free. The hook buys it back using omarchy's own
+# extension point rather than by keeping a second uv around.
+#
+# omarchy-hook treats a non-zero exit as non-fatal (it prints "Hook failed" and carries
+# on), so nothing here can break an update. The guard is for machines that never ran the
+# python dev-env, and pacman-installed uv refuses `self update` on its own anyway.
+command -v uv >/dev/null || exit 0
+uv self update

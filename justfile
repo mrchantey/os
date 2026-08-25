@@ -11,11 +11,14 @@ restart-tts:
 	systemctl --user restart kokoro-tts.service
 
 # device-agnostic base; run this once per install (or a device recipe below)
+# install-mise-tools comes BEFORE init-user on purpose: it is what installs uv (via the
+# omarchy python dev-env), and init-user reaches setup-tts, which builds the kokoro venv
+# with uv. Reverse the two and a fresh install dies there with `uv: command not found`.
 init:
 	just init-sudo
+	just install-mise-tools
 	just init-user
 	just install-rust
-	just install-mise-tools
 	just install-transcribe
 	just install-tts
 	chmod +x scripts/*/startup.sh
@@ -122,9 +125,10 @@ install-apps-init:
 	@echo "INIT install-apps"
 	just install-apps
 
-# note: python already installed
 # libnotify, gtk4-layer-shell,wl-clipboard, wtype dependencies of voxtype
-# espeak-ng (phonemizer), uv (venv runner), jq (json) for kokoro tts (see setup-tts)
+# espeak-ng (phonemizer), jq (json) for kokoro tts (see setup-tts)
+# python, uv, pip and pipx are deliberately NOT here: they come from install-mise-tools
+# the omarchy way. pip and pipx were never used by anything in this repo anyway.
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
@@ -136,13 +140,10 @@ install-apps:
 	jq																		\
 	libnotify															\
 	opentofu															\
-	python-pip														\
 	podman																\
-	python-pipx														\
 	rsync																	\
 	stow																	\
 	udiskie																\
-	uv																		\
 	wl-clipboard													\
 	wtype
 	curl -f https://zed.dev/install.sh | sh
@@ -295,6 +296,7 @@ install-user-apps:
 # opencode, playwright, ...) in install/user/mise.sh, so this only adds what it does not
 # ship. Idempotent; `omarchy update` (or the `mup` alias) upgrades everything here.
 install-mise-tools:
+	mkdir -p ~/.local/bin
 	# Vite+ used to own node/npm/npx and shadowed mise's node from every terminal that
 	# read .bashrc, while GUI apps and ssh got mise's. Removed so there is one node.
 	# The other two are the orphans left behind by the old npm --prefix ~/.local installs.
@@ -306,6 +308,14 @@ install-mise-tools:
 	omarchy-install-dev-env node
 	omarchy-install-dev-env deno
 	omarchy-install-dev-env zig
+	# python installs a mise interpreter AND astral's uv. The mise interpreter is the
+	# point: Arch's /usr/bin/python rolls minor versions and takes every venv built
+	# against it with it, which is the actual reason python hurts on this distro.
+	# Nothing here uses the system python, so shadowing it costs us nothing.
+	# UV_NO_MODIFY_PATH stops astral's installer appending a `. ~/.local/bin/env` line to
+	# our STOWED .bashrc, i.e. editing a tracked file on every run. That line only
+	# prepends ~/.local/bin, which .bashrc already does for itself.
+	UV_NO_MODIFY_PATH=1 omarchy-install-dev-env python
 	# Self-updating ~/.local/bin wrappers, the same mechanism omarchy uses for claude and
 	# codex: each run does `mise use -g` then `mise x`, so the tool upgrades itself.
 	# `cf` must be spelled `npm:cf` -- mise's bare `cf` in the registry is Cloud Foundry,
@@ -359,6 +369,7 @@ stow-symlinks-init:
 	~/.config/git/config						\
 	~/.config/git/ignore						\
 	~/.ssh/config										\
+	~/.config/omarchy/hooks/post-update.d/uv-self-update	\
 	~/.claude/settings.json
 	@echo "INIT stow-symlinks"
 	just stow-symlinks
@@ -378,6 +389,9 @@ stow-symlinks:
 	# same folding hazard as ~/.ssh below: keep ~/.config/git a real dir so only
 	# config+ignore are stowed, leaving room for git/gh to write their own state
 	mkdir -p ~/.config/git
+	# and again: post-update.d already holds omarchy's own hooks, so it must stay a real
+	# dir and take only our uv-self-update link rather than being folded wholesale
+	mkdir -p ~/.config/omarchy/hooks/post-update.d
 	# ~/.ssh must already exist as a REAL dir, else stow folds the whole thing
 	# into a symlink pointing at this repo -- and the next ssh-keygen would
 	# write a PRIVATE KEY into version control. Only config is ever stowed.
