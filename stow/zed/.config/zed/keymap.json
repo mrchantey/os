@@ -160,7 +160,7 @@
  {
   "context": "AcpThread > Editor",
   "bindings": {
-   "ctrl-t": "agent::ToggleThinkingEffortMenu"
+   "ctrl-e": "agent::ToggleThinkingEffortMenu"
   },
   "unbind": {
    "ctrl-'": "agent::CycleThinkingEffort"

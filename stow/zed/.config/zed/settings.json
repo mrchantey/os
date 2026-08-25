@@ -14,8 +14,8 @@
 		"claude-acp": {
 			"default_config_options": {
 				"fast": false,
-    "effort": "default",
-				"model": "opus[1m]",
+    "effort": "medium",
+				"model": "sonnet",
 				"mode": "bypassPermissions",
 			},
 			"favorite_config_option_values": {
