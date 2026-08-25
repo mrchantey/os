@@ -12,7 +12,13 @@
 -- .conf files, re-binding a key does NOT silently replace the default -- both
 -- binds would fire -- so each conflict has to be unbound first.
 
-local browser = "omarchy-launch-browser"
+-- Chrome is launched directly rather than through `omarchy-launch-browser`. That
+-- script treats any argument as a URL (the check is just "not --private"), so our
+-- --profile-directory flag makes it follow the launch with omarchy-hyprland-focus-app,
+-- which focuses the FIRST matching window in `hyprctl clients` -- an already-open
+-- Chrome on another workspace -- yanking us over there. We always want the new
+-- window here, on the current workspace.
+local browser = "uwsm app -- google-chrome-stable --new-window"
 local editor = "uwsm app -- $EDITOR"
 
 --------------------------------------------------------------------------------
