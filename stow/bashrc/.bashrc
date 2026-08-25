@@ -43,5 +43,9 @@ fi
 # add Pulumi to the PATH
 export PATH=$PATH:/home/pete/.pulumi/bin
 
-# Vite+ bin (https://viteplus.dev)
-. "$HOME/.vite-plus/env"
+# NOTE: Vite+ (https://viteplus.dev) used to be sourced here and is deliberately gone.
+# Its env prepends ~/.vite-plus/bin, whose node/npm/npx are shims into its own bundled
+# Node, so it silently shadowed the mise-managed node that omarchy installs -- but only
+# in shells that read this file. GUI apps and `ssh host cmd` never source .bashrc, so
+# they kept getting mise's node: two different runtimes depending on how a process was
+# started. mise is the single node now (see `just install-mise-tools`).

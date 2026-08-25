@@ -15,7 +15,7 @@ init:
 	just init-sudo
 	just init-user
 	just install-rust
-	just install-npm-packages
+	just install-mise-tools
 	just install-transcribe
 	just install-tts
 	chmod +x scripts/*/startup.sh
@@ -129,7 +129,6 @@ install-apps:
 	sudo pacman -S --noconfirm --needed 	\
 	aws-cli-v2														\
 	caligula															\
-	deno																	\
 	element-desktop												\
 	espeak-ng															\
 	gtk4-layer-shell											\
@@ -145,15 +144,15 @@ install-apps:
 	udiskie																\
 	uv																		\
 	wl-clipboard													\
-	wtype																	\
-	zig
+	wtype
 	curl -f https://zed.dev/install.sh | sh
-	curl -fsSL https://vite.plus | sh
 	@echo "PASS install-apps"
 
+# Rust is the one runtime omarchy does NOT put behind mise -- its Menu > Install >
+# Development > Rust runs the rustup.rs installer and guards on ~/.rustup. We use the
+# pacman `rustup` instead (same toolchain manager, but tracked by pacman and already
+# on PATH via /usr/lib/rustup/bin), so we are aligned with omarchy in substance.
 install-rust:
-	# uninstall omarchy rust, it has no rustup
-	sudo pacman -Rns --noconfirm rust	|| true
 	# pacman for cargo-binstall so we dont build from source
 	sudo pacman -S --noconfirm --needed \
 	rustup cargo-binstall
@@ -287,23 +286,41 @@ install-user-apps:
 	yay -S --noconfirm --needed		\
 	ghostty												\
 	google-chrome									\
-	opencode-bin									\
 	visual-studio-code-bin				\
 	voxtype-bin
 	@echo "PASS install-user-apps"
 
-# global npm CLIs. install into the ~/.local prefix, NOT the default global: vite-plus
-# owns the npm prefix and never puts -g bins on PATH, whereas ~/.local/bin is on PATH
-# and node-version-agnostic. for playwright we drive the already-installed system Google
-# Chrome via `--channel=chrome`, so we deliberately SKIP `playwright install` and never
-# download a redundant bundled chromium.
-install-npm-packages:
-	npm install -g --prefix ~/.local playwright cf wrangler
+# Dev runtimes and global CLIs, all via mise -- the omarchy quattro model (see AGENTS.md).
+# Omarchy's own installer already covers node plus the agent CLIs (claude, codex, gh,
+# opencode, playwright, ...) in install/user/mise.sh, so this only adds what it does not
+# ship. Idempotent; `omarchy update` (or the `mup` alias) upgrades everything here.
+install-mise-tools:
+	# Vite+ used to own node/npm/npx and shadowed mise's node from every terminal that
+	# read .bashrc, while GUI apps and ssh got mise's. Removed so there is one node.
+	# The other two are the orphans left behind by the old npm --prefix ~/.local installs.
+	rm -rf ~/.vite-plus ~/.local/wrangler-install ~/.local/lib/node_modules/playwright
+	rm -f ~/.cargo/bin/wrangler
+	# runtimes omarchy offers under Menu > Install > Development but does not preinstall.
+	# `omarchy-install-dev-env` is the same entry point that menu uses; node is listed
+	# explicitly because the npm-backed wrappers below need a node to run under.
+	omarchy-install-dev-env node
+	omarchy-install-dev-env deno
+	omarchy-install-dev-env zig
+	# Self-updating ~/.local/bin wrappers, the same mechanism omarchy uses for claude and
+	# codex: each run does `mise use -g` then `mise x`, so the tool upgrades itself.
+	# `cf` must be spelled `npm:cf` -- mise's bare `cf` in the registry is Cloud Foundry,
+	# not Cloudflare.
+	omarchy-mise-install npm:wrangler wrangler
+	omarchy-mise-install npm:cf cf
 	# ACP adapter for the Zed agent panel. Zed can install this itself, but only for a
 	# "type": "registry" agent — we run it as "type": "custom" behind scripts/acp-tee.sh
 	# so the reply stream can be tapped for read-aloud, which means we own the install.
-	npm install -g --prefix ~/.local @agentclientprotocol/claude-agent-acp
-	@echo "PASS install-npm-packages"
+	# NOT omarchy-mise-install: its wrapper leaks a "mise ... tools:" line onto stdout on
+	# every run, and here stdout is Zed's JSON-RPC channel. scripts/claude-agent-acp.sh is
+	# the same wrapper with that line redirected to stderr; it explains itself in full.
+	chmod +x scripts/claude-agent-acp.sh
+	ln -sf ~/me/os/scripts/claude-agent-acp.sh ~/.local/bin/claude-agent-acp
+	@echo "PASS install-mise-tools"
 
 # required to run after fresh install or omarchy update
 # this may break hyprland, if so run Menu > System > Rel

@@ -8,13 +8,13 @@
 	// tap is protocol-level, so the same wrapper fits any agent listed here.
 	//
 	// Cost of "type": "custom" is that Zed no longer installs or updates the adapter;
-	// `just install-npm-packages` owns it now. To hand it back, delete the command/args/env
+	// `just install-mise-tools` owns it now. To hand it back, delete the command/args/env
 	// lines and set "type": "registry".
 	"agent_servers": {
 		"claude-acp": {
 			"default_config_options": {
 				"fast": false,
-    "effort": "max",
+    "effort": "high",
 				"model": "claude-fable-5[1m]",
 				"mode": "bypassPermissions",
 			},

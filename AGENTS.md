@@ -35,6 +35,23 @@ Input is split: shared settings (keyboard, scroll speed, trackball) live in the 
 
 `monitors.lua` also owns `GDK_SCALE` and workspace-to-monitor pinning (`hl.workspace_rule`). There is no `envs-device.lua`: Omarchy detects the NVIDIA GPU and sets `NVD_BACKEND` / `LIBVA_DRIVER_NAME` / `__GLX_VENDOR_LIBRARY_NAME` itself (see `default/hypr/nvidia.lua`).
 
+## Dev tooling goes through mise
+
+Quattro made mise (pacman package, `/usr/bin/mise`) the backbone for language runtimes and CLI tools. Two distinct mechanisms, don't mix them up:
+
+- **Runtimes** are plain global mise installs: `omarchy-install-dev-env <node|deno|zig|go|python|bun|java|ruby|elixir|dotnet|clojure|scala>`, which is the same entry point as Menu > Install > Development. It boils down to `mise use -g <tool>@latest`.
+- **CLI tools** are `omarchy-mise-install <package> [command] [bin]`, which writes a four-line wrapper into `~/.local/bin/<command>`. Every invocation runs `mise use -g <package>` then `mise x`, so the tool installs on first use and self-updates thereafter. `MISE_MINIMUM_RELEASE_AGE=0` is exported inside the wrapper to bypass mise's release cooldown. Omarchy ships a fleet of these in `install/user/mise.sh`: claude, codex, gemini, crush, copilot, opencode, gh, playwright, pi, omp, grok, ghui, hunk. Never install those a second way, `omarchy-mise-install` starts by `rm -f`-ing the target path, so a competing pacman/AUR/npm install just becomes shadowed dead weight.
+
+**Gotcha: those wrappers write to stdout.** `mise use -g` prints `mise <config> tools: <pkg>@<version>` on stdout every run, not just on an install, so every `omarchy-mise-install` tool prepends a junk line to its own output. Harmless for a TUI, not harmless when the output is piped or parsed: `gh api ... | jq` gets a bad first line. If a tool's stdout is a data channel, do not use `omarchy-mise-install` for it. `scripts/claude-agent-acp.sh` is the worked example, a hand-rolled copy of the wrapper with the `mise use` line redirected to stderr, because Zed speaks JSON-RPC to it over stdio. Don't reach for `MISE_QUIET=1` as a global fix, it also silences install progress, so a first run that downloads 100MB looks like a hang.
+
+Not everything is mise. Rust is rustup (we take pacman's `rustup` rather than omarchy's rustup.rs curl installer, same toolchain manager either way), PHP is pacman, OCaml is opam, uv is pacman for us and an astral curl installer for omarchy.
+
+Our additions live in `just install-mise-tools`: the deno/zig/node runtimes, plus `wrangler`, `cf` and the Zed ACP adapter as wrappers. Anything that needs a global CLI belongs there, not in an `npm install -g`.
+
+PATH is assembled by `/usr/share/omarchy/default/bash/env-bootstrap`, which appends `~/.local/share/mise/shims` then `~/.local/bin`; `default/bash/init` adds `mise activate bash` for interactive shells, and a `PATH` line in `/etc/security/pam_env.conf` covers `ssh host cmd`, which runs no shell setup at all. Because that all happens outside `.bashrc`, anything prepended in `stow/bashrc/.bashrc` wins over mise for terminals only, and GUI-launched apps keep getting the mise version. That split is exactly what removing Vite+ fixed, so think twice before putting another runtime ahead of the shims there.
+
+Updates flow through `omarchy update`, which calls `omarchy-update-mise` (`MISE_MINIMUM_RELEASE_AGE=0 mise up`). The `mup` alias is the same thing by hand.
+
 ## The bar, launcher, and idle are one Quickshell process
 
 Quattro replaced waybar (bar), walker + elephant (launcher), mako (notifications), swayosd (OSD), and hypridle + hyprlock (idle/lock) with a single long-running Quickshell process, `omarchy-shell`. All of those packages are uninstalled and their stow packages are deleted.
