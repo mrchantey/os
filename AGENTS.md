@@ -53,6 +53,13 @@ Our additions live in `just install-mise-tools`: the node/deno/zig/python runtim
 PATH is assembled by `/usr/share/omarchy/default/bash/env-bootstrap`, which appends `~/.local/share/mise/shims` then `~/.local/bin`; `default/bash/init` adds `mise activate bash` for interactive shells, and a `PATH` line in `/etc/security/pam_env.conf` covers `ssh host cmd`, which runs no shell setup at all. Because that all happens outside `.bashrc`, anything prepended in `stow/bashrc/.bashrc` wins over mise for terminals only, and GUI-launched apps keep getting the mise version. That split is exactly what removing Vite+ fixed, so think twice before putting another runtime ahead of the shims there.
 
 Updates flow through `omarchy update`, which calls `omarchy-update-mise` (`MISE_MINIMUM_RELEASE_AGE=0 mise up`). The `mup` alias is the same thing by hand.
+## Cursor theme
+
+The pointer is Never-Lost Rainbow, converted from the Windows `.ani` set in `neverlost/` (see its readme for what the conversion changes). `just install-cursor-theme` runs `scripts/install-cursor-theme.py`, which builds the XCursor theme into `~/.local/share/icons/Never-Lost-Rainbow`. That script also owns the Windows-role-to-X11-name mapping, so it is the file to edit to change which cursor plays which role.
+
+`cursor-toggle` (on PATH, from `scripts/cursor-toggle.sh`) turns it on and off, falling back to the system default theme. State is the flag file `~/.local/state/cursor-off`, on the same pattern as `presentation-mode`.
+
+`XCURSOR_THEME` and `XCURSOR_SIZE` are set in the shared `hypr/envs.lua`, which is required from `hyprland.lua` after Omarchy's defaults so it overrides their size of 24. It reads the same flag the toggle writes, which is what makes the choice survive a reload. Both branches assign every variable, because `hyprctl reload` can overwrite an env var but never unsets one. GTK apps read the theme from gsettings instead, which the toggle sets.
 
 ## The bar, launcher, and idle are one Quickshell process
 
