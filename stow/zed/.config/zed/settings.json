@@ -15,7 +15,7 @@
 			"default_config_options": {
 				"fast": false,
     "effort": "medium",
-				"model": "sonnet",
+				"model": "opus[1m]",
 				"mode": "bypassPermissions",
 			},
 			"favorite_config_option_values": {
@@ -145,7 +145,7 @@
 	},
 	"ui_font_size": 24.0,
 	"agent_ui_font_size": 25.0,
-	"buffer_font_size": 21.0,
+	"buffer_font_size": 19.0,
 	"colorize_brackets": true,
 	"language_models": {
 		// "bedrock": {
