@@ -18,6 +18,8 @@
 -- which focuses the FIRST matching window in `hyprctl clients` -- an already-open
 -- Chrome on another workspace -- yanking us over there. We always want the new
 -- window here, on the current workspace.
+-- Note this is focus stealing, NOT the placement bug that scripts/launch-here.sh
+-- handles for clicked links: the launch itself was always correct. See AGENTS.md.
 local browser = "uwsm app -- google-chrome-stable --new-window"
 local editor = "uwsm app -- $EDITOR"
 

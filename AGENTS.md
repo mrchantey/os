@@ -15,9 +15,10 @@ Quattro replaced the `*.conf` + `source =` chain with native Lua. `~/.config/hyp
 
 Reference for the API: type stubs at `/usr/share/hypr/stubs/hl.meta.lua` (wired up for the LSP by `hypr/.luarc.json`), and Omarchy's own defaults in `/usr/share/omarchy/default/hypr/`.
 
-Two gotchas that differ from the old `.conf` files:
+Three gotchas that differ from the old `.conf` files:
 
 - **Re-binding a key does not replace the old bind, both fire.** Call `hl.unbind("SUPER + F")` before `o.bind(...)`. Every unbind in `bindings.lua` names the default it displaces.
+- **`hyprctl dispatch` also takes Lua now, not bare words.** `hyprctl dispatch workspace 4` and `hyprctl dispatch focuswindow address:0x...` both fail with a Lua parse error; the working forms are `hyprctl dispatch 'hl.dsp.focus({ window = "address:0x..." })'` and `hl.dsp.window.close({ ... })`. The dispatcher namespace is enumerated under `HL.DspNamespace` in the stubs. This bites scripts, not config, and it fails loudly on stdout, so a script that redirects to `/dev/null` looks like it worked.
 - **Keysyms must match xkbcommon exactly.** `Page_Up`/`Page_Down`, not `PAGEUP`/`PAGEDOWN`; `comma`, not `COMMA`. The old parser was forgiving, the Lua binder is not. Validate with `hyprctl reload && hyprctl configerrors`, which reports these.
 
 Only `hyprsunset.conf` and `xdph.conf` are still `.conf`: they are read by separate processes, not Hyprland, so `hyprctl` neither applies nor validates them.
@@ -61,6 +62,26 @@ The pointer is Never-Lost Rainbow, converted from the Windows `.ani` set in `nev
 `cursor-toggle` (on PATH, from `scripts/cursor-toggle.sh`) turns it on and off, falling back to the system default theme. State is the flag file `~/.local/state/cursor-off`, on the same pattern as `presentation-mode`.
 
 `XCURSOR_THEME` and `XCURSOR_SIZE` are set in the shared `hypr/envs.lua`, which is required from `hyprland.lua` after Omarchy's defaults so it overrides their size of 24. It reads the same flag the toggle writes, which is what makes the choice survive a reload. Both branches assign every variable, because `hyprctl reload` can overwrite an env var but never unsets one. GTK apps read the theme from gsettings instead, which the toggle sets.
+
+## Keeping single-instance apps on the current workspace
+
+Chrome, Zed, Nautilus and Element all hand a second invocation to the already-running process over an IPC socket instead of starting fresh. That process places the payload (a URL, a file, a folder) in whichever of its windows was activated last, which is routinely on a workspace you cannot see. Hyprland cannot fix this: no window is created, so there is no event for a window rule to match on. It has to be handled at the launch site.
+
+`scripts/launch-here.sh` is the shared helper:
+
+```
+launch-here <class-regex> <new-window-flag> <command> [args...]
+```
+
+It focuses the most recently focused matching window on the *active* workspace, making it the one the app considers last-activated, then hands the payload over. With no match here it falls back to `<new-window-flag>`, so a fresh window opens on this workspace instead of joining one elsewhere. Invocations with no payload (`--help`, `--incognito` from `omarchy-launch-browser`) pass straight through, so nothing that merely launches an app is affected.
+
+Anchor the class regex. `^google-chrome$` deliberately excludes Chrome PWA windows, whose class is `chrome-<appid>-Default`. Matching follows `omarchy-hyprland-focus-app` in checking `.class` then `.initialClass`.
+
+Only Chrome is wired up so far, via `stow/mimeapps/.local/share/applications/google-chrome.desktop`, which **shadows** the packaged entry. Reusing the `google-chrome.desktop` ID rather than adding a new one is deliberate: `mimeapps.list` already points at that ID, and Chrome's own default-browser check compares against it, so a differently-named wrapper would make Chrome nag on every launch. The cost is that the shadowing copy is a hand-trimmed subset of the packaged file, so a Chrome release that adds a field will not reach us until it is copied across. Adding another app is one more shadowing `.desktop` with a different `Exec` line; Zed is the obvious next candidate, since files opened from elsewhere land in an arbitrary one of its windows.
+
+### The related Super+B bug is a different failure mode
+
+`bindings.lua` bypasses `omarchy-launch-browser` for a problem that looks the same but is not. There the launch was always correct, `--new-window` opens here; the damage came afterwards from `omarchy-hyprland-focus-app`, which picks `first(...)` in `hyprctl clients` order with no regard for workspace and yanked focus away. That is focus stealing, fixed by not calling the focuser, so those bindings stay as plain `--new-window` launches and do not route through `launch-here`, which in that mode would add indirection and no behaviour change.
 
 ## The bar, launcher, and idle are one Quickshell process
 

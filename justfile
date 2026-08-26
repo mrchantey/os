@@ -449,6 +449,10 @@ stow-symlinks:
 	voxtype								\
 	xcompose								\
 	zed
+	# the mimeapps package also stows a google-chrome.desktop that shadows the
+	# packaged one (see scripts/launch-here.sh); rebuild the cache so the desktop
+	# database picks up the override rather than the /usr copy.
+	update-desktop-database ~/.local/share/applications
 	@echo "PASS stow-symlinks"
 
 # perform cp for assets which cannot be stowed
