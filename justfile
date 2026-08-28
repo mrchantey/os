@@ -158,6 +158,7 @@ install-apps:
 	podman																\
 	rsync																	\
 	stow																	\
+	thunderbird														\
 	udiskie																\
 	wl-clipboard													\
 	wtype
