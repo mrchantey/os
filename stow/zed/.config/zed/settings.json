@@ -14,7 +14,7 @@
 		"claude-acp": {
 			"default_config_options": {
 				"fast": false,
-    "effort": "medium",
+    "effort": "high",
 				"model": "opus[1m]",
 				"mode": "bypassPermissions",
 			},

@@ -20,7 +20,11 @@
 # excludes Chrome PWA windows, whose class is `chrome-<appid>-Default`.
 #
 # Callers:
-#   stow/mimeapps/.local/share/applications/google-chrome.desktop  (link clicks)
+#   scripts/chrome-here.sh, which bakes in chrome's arguments and is what
+#   stow/mimeapps/.local/share/applications/google-chrome.desktop actually
+#   execs. Nothing points Exec= here directly: omarchy-launch-webapp and
+#   omarchy-launch-browser call the first Exec token with chrome's own flags,
+#   which do not fit this script's signature.
 
 set -euo pipefail
 

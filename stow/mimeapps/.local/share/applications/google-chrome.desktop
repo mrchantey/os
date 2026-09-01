@@ -1,5 +1,8 @@
 # Shadows /usr/share/applications/google-chrome.desktop so every link click routes
-# through scripts/launch-here.sh, which keeps the new tab on the current workspace.
+# through scripts/chrome-here.sh -> launch-here.sh, which keeps the new tab on the
+# current workspace. Exec must start with that chrome-shaped shim, not with
+# launch-here.sh itself: omarchy-launch-webapp and omarchy-launch-browser read
+# the first Exec token and call it with chrome flags.
 #
 # It deliberately reuses the google-chrome.desktop ID rather than adding a new
 # entry: mimeapps.list already points at that ID, and Chrome's own "am I the
@@ -13,7 +16,7 @@ Version=1.0
 Name=Google Chrome
 GenericName=Web Browser
 Comment=Access the Internet
-Exec=/home/pete/me/os/scripts/launch-here.sh ^google-chrome$ --new-window /usr/bin/google-chrome-stable %U
+Exec=/home/pete/me/os/scripts/chrome-here.sh %U
 StartupNotify=true
 StartupWMClass=google-chrome
 Terminal=false
