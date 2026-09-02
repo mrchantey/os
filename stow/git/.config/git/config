@@ -25,7 +25,10 @@
 	sort = -version:refname  # Sort version numbers as you would expect
 [rerere]
 	enabled = true           # Record and reuse conflict resolutions
-	autoupdate = true        # Apply stored conflict resolutions automatically
+	# autoupdate stays off: an auto-applied resolution is staged with no conflict
+	# left in the tree, so a wrong one silently re-applies itself on every future
+	# merge. Off, git still replays it but leaves it unstaged for review.
+	autoupdate = false       # Stage replayed resolutions by hand
 [user]
 	name = Peter Hayman
 	email = peteyhayman@gmail.com
