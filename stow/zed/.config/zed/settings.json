@@ -14,7 +14,7 @@
 		"claude-acp": {
 			"default_config_options": {
 				"fast": false,
-    "effort": "high",
+    "effort": "xhigh",
 				"model": "opus[1m]",
 				"mode": "bypassPermissions",
 			},
@@ -62,26 +62,44 @@
 			"enable_thinking": false,
 		},
 		"default_model": {
-			"effort": "medium",
-			"provider": "google",
-			"model": "gemini-3.5-flash",
+			"effort": "low",
+			"provider": "openai-subscribed",
+			"model": "gpt-5.6-sol",
 			"enable_thinking": true,
 		},
 
 		"favorite_models": [
-			{
-				"effort": "high",
-				"provider": "copilot_chat",
-				"model": "claude-sonnet-4.6",
-				"enable_thinking": true,
-			},
-			{
-				"effort": "high",
-				"provider": "anthropic",
-				"model": "claude-opus-4.6",
-				"enable_thinking": true,
-			},
-		],
+   {
+    "provider": "copilot_chat",
+    "model": "claude-sonnet-4.6",
+    "enable_thinking": true,
+    "effort": "high"
+   },
+   {
+    "provider": "anthropic",
+    "model": "claude-opus-4.6",
+    "enable_thinking": true,
+    "effort": "high"
+   },
+   {
+    "provider": "openai-subscribed",
+    "model": "gpt-5.6-sol",
+    "enable_thinking": true,
+    "effort": "low"
+   },
+   {
+    "provider": "openai-subscribed",
+    "model": "gpt-6-astra",
+    "enable_thinking": true,
+    "effort": "low"
+   },
+   {
+    "provider": "openai-subscribed",
+    "model": "gpt-5.6-terra",
+    "enable_thinking": true,
+    "effort": "medium"
+   }
+  ],
 		"model_parameters": [],
 		"tool_permissions": {
 			"default": "allow",
