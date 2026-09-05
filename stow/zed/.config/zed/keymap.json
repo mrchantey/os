@@ -19,6 +19,10 @@
 			"ctrl-0": ["zed::ResetBufferFontSize", { "persist": true }],
 			// open the git worktree picker (default: alt-ctrl-shift-w)
 			"ctrl-shift-w": "git::Worktree",
+			// Unlike agent::ToggleFocus, this always starts a native Zed Agent thread
+			// instead of reopening whichever external ACP thread was active last.
+			// "ctrl-?": "agent::NewThread",
+			"ctrl-shift-?": "agent::ToggleFocus",
 			"esc": "workspace::ClearAllNotifications",
 			"ctrl-shift-e": "project_panel::ToggleFocus",
 			"ctrl-r": "projects::OpenRecent",

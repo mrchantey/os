@@ -35,7 +35,7 @@
 	"restore_on_startup": "empty_tab",
 	"cli_default_open_behavior": "new_window",
 	"git_panel": {
-		"sort_by_path": true,
+		"sort_by":"path",
 		"dock": "left",
 	},
 	"session": {
@@ -53,7 +53,10 @@
 	},
 	// AGENTS
 	"agent": {
-		"sidebar_side": "right",
+		"sandbox_permissions": {
+   "allow_unsandboxed": true
+  },
+  "sidebar_side": "right",
 		"dock": "right",
 		"default_profile": "write",
 		"inline_assistant_model": {
@@ -103,21 +106,6 @@
 		"model_parameters": [],
 		"tool_permissions": {
 			"default": "allow",
-			"tools": {
-				"terminal": {
-					"default": "allow",
-					"always_confirm": [
-						// Destructive git operations
-						{ "pattern": "git\\s+(reset|clean)\\s+--hard" },
-						{ "pattern": "git\\s+push\\s+(-f|--force)" },
-					],
-					"always_allow": [
-						{
-							"pattern": "^cargo\\s+check(\\s|$)",
-						},
-					],
-				},
-			},
 		},
 	},
 	// "completions": {
