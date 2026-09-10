@@ -14,7 +14,7 @@ description: >
 # os-update
 
 Update Omarchy, then bring `~/me/os` back into alignment with the new defaults and
-migrations — without leaving broken symlinks or silently losing customizations.
+migrations, without leaving broken symlinks or silently losing customizations.
 
 ## Read this first: quattro moved everything
 
@@ -62,13 +62,13 @@ only exist post-update.
 Check whether one is even needed: `omarchy-update-available`.
 
 There is no useful pre-update migration preview any more. Migrations ship *inside*
-the package, so they do not exist locally until the update installs them — the old
+the package, so they do not exist locally until the update installs them. The old
 `git diff HEAD origin/master -- migrations/` trick is dead along with the git repo.
 
 ## Why reconciliation is needed at all
 
 Every tracked dotfile is a stow symlink into `~/me/os`. A migration that *appends*
-(`>>`) or *reads* follows the symlink and lands in the repo — harmless, shows up as
+(`>>`) or *reads* follows the symlink and lands in the repo. Harmless, and it shows up as
 a normal `git diff`. Three things are not harmless:
 
 1. **`sed -i` does not follow symlinks.** It writes a temp file and renames it over
@@ -105,7 +105,7 @@ for f in hyprland bindings input looknfeel windows autostart envs \
 done
 ```
 
-Also check the two files that are still `.conf` (`hyprsunset.conf`, `xdph.conf` —
+Also check the two files that are still `.conf` (`hyprsunset.conf`, `xdph.conf`,
 read by separate processes, not Hyprland) and `~/.config/omarchy/shell.json`.
 
 ### 3. Diff each broken file against its stow source
@@ -132,7 +132,7 @@ cd ~/me/os && just stow-symlinks
 ```
 
 Re-stowing no-ops already-correct links. **Do not run the `-init` recipes to fix a
-few links** — they `rm -rf` a great deal first.
+few links**, they `rm -rf` a great deal first.
 
 If stow reports a conflict, fix the conflict; do not delete blindly. **One conflict
 aborts the entire invocation**, so a single stray regular file silently leaves
@@ -158,7 +158,7 @@ omarchy-restart-shell                     # bar / launcher / notifications / idl
 systemctl --user restart voxtype.service  # only if voxtype config changed
 ```
 
-`hyprctl configerrors` is the real check — the Lua binder is far stricter than the
+`hyprctl configerrors` is the real check, because the Lua binder is far stricter than the
 old `.conf` parser about keysyms and dispatcher syntax.
 
 ### 7. Review, don't commit
@@ -167,9 +167,9 @@ Show the full `git diff` in `~/me/os` and summarize. **Do not commit unless aske
 
 ## Don'ts
 
-- Never edit `/usr/share/omarchy/` — package-owned, replaced on update.
+- Never edit `/usr/share/omarchy/`, it is package-owned and replaced on update.
 - Don't run the update non-interactively in the background hoping sudo passes.
 - Don't pre-create migration skip-markers for migrations that also do package work.
 - Don't pre-align stow sources to files that only land during the update.
-- Don't `rm` a file just because stow calls it a conflict — check `readlink` first;
+- Don't `rm` a file just because stow calls it a conflict, check `readlink` first;
   under a folded directory symlink that "plain file" is the repo's own file.

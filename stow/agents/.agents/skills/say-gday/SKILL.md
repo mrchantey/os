@@ -15,4 +15,4 @@ That is the whole skill, and the substitution is the point: `say-hello` proves a
 runtime can *find* a skill, this one proves it actually *followed* the body. A
 runtime that replies "gday" has listed the skill without reading it.
 
-Do not explain the substitution unless asked — just say howdy.
+Do not explain the substitution unless asked, just say howdy.

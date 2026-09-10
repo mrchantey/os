@@ -43,9 +43,9 @@ Quattro made mise (pacman package, `/usr/bin/mise`) the backbone for language ru
 - **Runtimes** are plain global mise installs: `omarchy-install-dev-env <node|deno|zig|go|python|bun|java|ruby|elixir|dotnet|clojure|scala>`, which is the same entry point as Menu > Install > Development. It boils down to `mise use -g <tool>@latest`.
 - **CLI tools** are `omarchy-mise-install <package> [command] [bin]`, which writes a four-line wrapper into `~/.local/bin/<command>`. Every invocation runs `mise use -g <package>` then `mise x`, so the tool installs on first use and self-updates thereafter. `MISE_MINIMUM_RELEASE_AGE=0` is exported inside the wrapper to bypass mise's release cooldown. Omarchy ships a fleet of these in `install/user/mise.sh`: claude, codex, gemini, crush, copilot, opencode, gh, playwright, pi, omp, grok, ghui, hunk. Never install those a second way, `omarchy-mise-install` starts by `rm -f`-ing the target path, so a competing pacman/AUR/npm install just becomes shadowed dead weight.
 
-**Former gotcha, now fixed upstream: those wrappers used to write to stdout.** `mise use -g` prints `mise <config> tools: <pkg>@<version>` on stdout every run, not just on an install, so every `omarchy-mise-install` tool prepended a junk line to its own output — harmless for a TUI, not harmless when the output is piped or parsed (`gh api ... | jq` got a bad first line). As of the omarchy on this machine (4.0.0.alpha, checked 2026-09-10) `omarchy-mise-install` writes `mise use -g --quiet`, which silences that line while leaving install progress visible, so the wrappers are stdout-clean. Verified directly: `gh --version` through the wrapper, and `gh auth git-credential get` (whose stdout git itself parses), both emit only their own output.
+**Former gotcha, now fixed upstream: those wrappers used to write to stdout.** `mise use -g` prints `mise <config> tools: <pkg>@<version>` on stdout every run, not just on an install, so every `omarchy-mise-install` tool prepended a junk line to its own output, which is harmless for a TUI but not when the output is piped or parsed (`gh api ... | jq` got a bad first line). As of the omarchy on this machine (`omarchy-version` reports 4.0.3-1, checked 2026-09-10) `omarchy-mise-install` writes `mise use -g --quiet`, which silences that line while leaving install progress visible, so the wrappers are stdout-clean. Verified directly: `gh --version` through the wrapper, and `gh auth git-credential get` (whose stdout git itself parses), both emit only their own output.
 
-Re-check `omarchy-mise-install` before relying on this. If a version ever drops `--quiet`, the rule returns: do not front a tool whose stdout is a data channel with it. `scripts/claude-agent-acp.sh` is the worked example from when that mattered — a hand-rolled copy of the wrapper with the `mise use` line redirected to stderr, because Zed speaks JSON-RPC to it over stdio. It is belt-and-braces now rather than load-bearing, and is kept because it costs nothing. Don't reach for `MISE_QUIET=1` as a global fix, it also silences install progress, so a first run that downloads 100MB looks like a hang.
+Re-check `omarchy-mise-install` before relying on this. If a version ever drops `--quiet`, the rule returns: do not front a tool whose stdout is a data channel with it. `scripts/claude-agent-acp.sh` is the worked example from when that mattered: a hand-rolled copy of the wrapper with the `mise use` line redirected to stderr, because Zed speaks JSON-RPC to it over stdio. It is belt-and-braces now rather than load-bearing, and is kept because it costs nothing. Don't reach for `MISE_QUIET=1` as a global fix, it also silences install progress, so a first run that downloads 100MB looks like a hang.
 
 Not everything is mise. Rust is rustup (we take pacman's `rustup` rather than omarchy's rustup.rs curl installer, same toolchain manager either way), PHP is pacman, OCaml is opam, and uv comes from astral's install script, which `omarchy-install-dev-env python` runs alongside the mise interpreter.
 
@@ -104,10 +104,13 @@ To customize a built-in widget, never edit `/usr/share/omarchy/shell/plugins/`; 
 	  is dead and gone). Full record: the `info-silver-fox` skill.
 	- i7-11850H (8c/16t, Tiger Lake-H), 64GB RAM
 	- NVIDIA RTX A2000 Mobile, 4GB of GDDR6 VRAM + Intel UHD iGPU (drives eDP-1)
-	- internal panel is 1920x1080 16:9 at scale 1 — NOT the XPS's 4K 16:10 panel,
+	- internal panel is 1920x1080 16:9 at scale 1, NOT the XPS's 4K 16:10 panel,
 	  so `GDK_SCALE` is 1 here and omarchy's `scale = "auto"` is deliberately not used
 	- unlike the XPS, the dGPU drives real outputs: HDMI + mDP are on the NVIDIA
 	  card, eDP-1 and the USB-C DP-alt ports are on the Intel one
+	- **no camera and no working microphone** (camera-less SKU; the array mics live
+	  in that module). A capture source still enumerates and hears nothing, so
+	  voxtype needs a USB mic or a headset. See the `info-silver-fox` skill.
 
 `rainbow-cat`
 	- desktop, NVIDIA (primary GPU)

@@ -14,14 +14,20 @@ restart-tts:
 # install-mise-tools comes BEFORE init-user on purpose: it is what installs uv (via the
 # omarchy python dev-env), and init-user reaches setup-tts, which builds the kokoro venv
 # with uv. Reverse the two and a fresh install dies there with `uv: command not found`.
+#
+# Wrapped in scripts/sudo-keepalive.sh so the sudo password is asked for once, at
+# the start, and the hour that follows never re-prompts. Nesting is harmless: the
+# device recipes below wrap this too, and the inner `sudo -v` is a no-op while the
+# outer one's timestamp is still being refreshed.
 init:
-	just init-sudo
-	just install-mise-tools
-	just init-user
-	just install-rust
-	just install-transcribe
-	just install-tts
-	just install-cursor-theme
+	bash scripts/sudo-keepalive.sh just \
+	init-sudo				\
+	install-mise-tools	\
+	init-user					\
+	install-rust			\
+	install-transcribe	\
+	install-tts				\
+	install-cursor-theme
 	chmod +x scripts/*/startup.sh
 
 # symlink the audio capture+transcribe helper onto PATH (~/.local/bin is on PATH).
@@ -58,10 +64,11 @@ install-cursor-theme:
 
 # rainbow-cat (desktop): base + device hypr overrides + gaming/GPU stack
 init-rainbow-cat:
-	just init
-	just stow-device rainbow-cat
-	just install-extras
-	just install-rainbow-cat
+	bash scripts/sudo-keepalive.sh just \
+	init												\
+	stow-device rainbow-cat	\
+	install-extras					\
+	install-rainbow-cat
 
 # rainbow-cat system-level tweaks that need root (e.g. Lightspeed receiver drag fix)
 install-rainbow-cat:
@@ -69,22 +76,29 @@ install-rainbow-cat:
 
 # silver-fox (Dell Precision 7560): base + device hypr overrides + gaming/GPU stack
 init-silver-fox:
-	just init
-	just stow-device silver-fox
-	just install-extras
-	just install-silver-fox
+	bash scripts/sudo-keepalive.sh just \
+	init											\
+	stow-device silver-fox	\
+	install-extras				\
+	install-silver-fox
 
 # silver-fox system-level tweaks that need root (e.g. keyboard backlight timeout)
 install-silver-fox:
 	bash scripts/silver-fox/install.sh
 
-# `sudo -v` up front makes this ONE password prompt (a pacman/yay step that outruns
-# the 5-minute sudo timestamp may ask again).
+# Every root-requiring step of `init-silver-fox`, in the same order, and nothing
+# else -- the sudo-free half (stow, mise, theme, tts, cursor, repos) is skipped
+# because it will already have completed. Use plain `just init-silver-fox` on a
+# machine that has never been set up.
 #
-# This is every root-requiring step of `init-silver-fox`, in the same order, and
-# nothing else -- the sudo-free half (stow, mise, theme, tts, cursor, repos) is
-# skipped because it will already have completed. Use plain `just init-silver-fox`
-# on a machine that has never been set up.
+# The whole run goes through scripts/sudo-keepalive.sh, so the password is asked
+# for ONCE, at the very start, and never again. A bare `sudo -v` here is not
+# enough: sudo forgets after five minutes, and this takes about an hour, so it
+# used to stop dead at `install-rust` with `sudo: timed out reading password`
+# once the user had walked away. Read that script before changing this line.
+#
+# Ordering that matters: setup-voxtype needs the binary install-user-apps brings
+# in, and install-extras ends in setup-voxtype-gpu, so it has to follow both.
 #
 # Safe to re-run on a fully-configured machine: pacman and yay take --needed, the
 # package removals are `|| true`, rustup/cargo-binstall no-op when current, and
@@ -92,16 +106,13 @@ install-silver-fox:
 #
 # Finish a silver-fox install that ran without a sudo password: one command, one prompt
 init-silver-fox-sudo:
-	# prompt once, here, instead of six minutes into a pacman run
-	sudo -v
-	just install-apps-init
-	just install-user-apps
-	# needs the voxtype binary, which install-user-apps just brought in
-	just setup-voxtype
-	just install-rust
-	# install-extras ends in setup-voxtype-gpu, so it must follow setup-voxtype
-	just install-extras
-	just install-silver-fox
+	bash scripts/sudo-keepalive.sh just \
+	install-apps-init	\
+	install-user-apps	\
+	setup-voxtype		\
+	install-rust		\
+	install-extras		\
+	install-silver-fox
 	@echo "PASS init-silver-fox-sudo"
 
 # apply the default (dark) theme. Firewatch is pinned for both themes via the
