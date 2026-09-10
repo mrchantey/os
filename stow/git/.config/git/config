@@ -32,9 +32,26 @@
 [user]
 	name = Peter Hayman
 	email = peteyhayman@gmail.com
+# Authenticate https:// pushes and clones of private repos through `gh auth`,
+# so nothing has to keep a token on disk. The empty first `helper =` is the
+# documented way to clear any helper inherited from a lower-priority config.
+#
+# `gh` is deliberately BARE, not the absolute path that `gh auth setup-git`
+# writes. That command bakes in wherever it found gh on the machine of the day,
+# and under omarchy quattro that answer moves: gh is no longer pacman's
+# /usr/bin/gh but an `omarchy-mise-install` wrapper in ~/.local/bin, fronted by
+# ~/.local/share/mise/shims. The stale /usr/bin/gh path silently failed on the
+# 2026-09-10 Precision rebuild -- git fell back to prompting for a username and
+# `just pull-repos` could not clone the private beet-draft or beetmash.
+#
+# A credential helper's stdout is a data channel that git parses, which is
+# normally a reason NOT to front a tool with a mise wrapper (see AGENTS.md).
+# It is safe here: omarchy-mise-install now writes `mise use -g --quiet`, and
+# both the shim and the wrapper were verified to emit nothing but the four
+# credential lines.
 [credential "https://github.com"]
 	helper = 
-	helper = !/usr/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !/usr/bin/gh auth git-credential
+	helper = !gh auth git-credential

@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
-# silver-fox (Dell XPS 15 9500) system-level setup that needs root.
-# Idempotent and safe to run anywhere: it no-ops on hardware without the
-# Dell keyboard-backlight LED, so a stray call on another device does nothing.
+# silver-fox (Dell Precision 7560) system-level setup that needs root.
+# Idempotent and safe to run anywhere: every block below is guarded on the sysfs
+# node it writes to, so a stray call on other hardware just prints and skips.
+#
+# HEADS UP: as of the 2026-09-10 rebuild onto the Precision, BOTH blocks below
+# skip on this machine. They were written for the retired XPS 15 9500 and are
+# kept because each records a real, hard-won fix and each is one firmware change
+# away from applying again -- not because either currently does anything here.
+# See the per-block notes. `just install-silver-fox` is therefore a no-op today.
 #
 # Run directly (`bash scripts/silver-fox/install.sh`) or via `just install-silver-fox`.
 set -euo pipefail
@@ -12,6 +18,11 @@ if [[ ${EUID} -ne 0 ]]; then
 fi
 
 ### keyboard backlight: stop the Dell driver from auto-dimming the keys.
+# INERT ON THE PRECISION 7560. dell_laptop is loaded (so this is not a missing
+# module) but it exports no dell::kbd_backlight LED here -- /sys/class/leds holds
+# only the input lock LEDs and platform::micmute. The 7560's keyboard backlight is
+# owned by the EC, with its own timeout in the BIOS under System Configuration >
+# Keyboard Backlight, which is where to change it on this machine.
 # the dell-laptop driver dims the backlight after `stop_timeout` of no
 # keyboard/touchpad input (ships at 10s). raise it so the keys stay lit while
 # working. the firmware rejects long units (1d fails on this machine, 1h is
@@ -42,10 +53,17 @@ EOF
 	echo "${KBD_START_TRIGGER}" > "${LED}/start_triggers" || echo "kbd_backlight: live start_triggers write rejected (udev rule still persists it)"
 	echo "kbd_backlight: stop_timeout = $(cat "${LED}/stop_timeout"), start_triggers = $(cat "${LED}/start_triggers")"
 else
-	echo "kbd_backlight: ${LED} not present, skipping (not a Dell laptop?)"
+	echo "kbd_backlight: ${LED} not present, skipping (expected on the Precision 7560 -- EC-owned, set it in the BIOS)"
 fi
 
 ### suspend mode: force S3 deep sleep instead of s2idle (modern standby).
+# INERT ON THE PRECISION 7560 as shipped: /sys/power/mem_sleep reads [s2idle] with
+# no `deep`, so the guard below skips. The fix is retained rather than deleted for
+# two reasons. The BIOS can expose S3 again (Power Management > Sleep Mode, if
+# this firmware offers it), and the failure it addresses has NOT been ruled out on
+# this machine -- suspend/resume is simply untested here. If the Precision starts
+# hard-resetting on resume, flip that BIOS setting and re-run this script; the
+# block will then take effect with no further edits.
 # this machine reliably hard-resets on resume from sleep (Dell bootloader
 # reappears, journal logs an unclean shutdown on the next boot). the crash hits
 # at the GPU/ACPI power-state handover on resume (NVRM "Failed to handle ACPI
@@ -70,7 +88,7 @@ EOF
 	echo deep > /sys/power/mem_sleep
 	echo "mem_sleep: $(cat /sys/power/mem_sleep) (brackets = active)"
 else
-	echo "mem_sleep: 'deep'/S3 not offered by firmware, skipping (not silver-fox?)"
+	echo "mem_sleep: 'deep'/S3 not offered by firmware, skipping (expected on the Precision 7560 -- s2idle only unless the BIOS exposes S3)"
 fi
 
 echo "PASS install-silver-fox"
