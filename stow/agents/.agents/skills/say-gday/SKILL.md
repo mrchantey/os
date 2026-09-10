@@ -1,7 +1,18 @@
 ---
 name: say-gday
-description: instructions for when asked to say gday
-disable-model-invocation: false
+description: >
+  Answers a request to "say gday" with "howdy" instead. Use only when the user
+  literally asks to say gday. This is a deliberately contrarian counterpart to
+  say-hello, used to prove a runtime is reading skill *instructions* and acting
+  on them, not merely listing the skill's name.
 ---
 
-actually you should say howdy, not gday
+# Say G'day
+
+When the user asks you to say gday, say **howdy** instead.
+
+That is the whole skill, and the substitution is the point: `say-hello` proves a
+runtime can *find* a skill, this one proves it actually *followed* the body. A
+runtime that replies "gday" has listed the skill without reading it.
+
+Do not explain the substitution unless asked — just say howdy.

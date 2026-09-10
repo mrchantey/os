@@ -78,6 +78,32 @@ init-silver-fox:
 install-silver-fox:
 	bash scripts/silver-fox/install.sh
 
+# `sudo -v` up front makes this ONE password prompt (a pacman/yay step that outruns
+# the 5-minute sudo timestamp may ask again).
+#
+# This is every root-requiring step of `init-silver-fox`, in the same order, and
+# nothing else -- the sudo-free half (stow, mise, theme, tts, cursor, repos) is
+# skipped because it will already have completed. Use plain `just init-silver-fox`
+# on a machine that has never been set up.
+#
+# Safe to re-run on a fully-configured machine: pacman and yay take --needed, the
+# package removals are `|| true`, rustup/cargo-binstall no-op when current, and
+# scripts/silver-fox/install.sh guards on the sysfs nodes it writes.
+#
+# Finish a silver-fox install that ran without a sudo password: one command, one prompt
+init-silver-fox-sudo:
+	# prompt once, here, instead of six minutes into a pacman run
+	sudo -v
+	just install-apps-init
+	just install-user-apps
+	# needs the voxtype binary, which install-user-apps just brought in
+	just setup-voxtype
+	just install-rust
+	# install-extras ends in setup-voxtype-gpu, so it must follow setup-voxtype
+	just install-extras
+	just install-silver-fox
+	@echo "PASS init-silver-fox-sudo"
+
 # apply the default (dark) theme. Firewatch is pinned for both themes via the
 # per-theme user backgrounds dir set up in stow-files-init, so omarchy-theme-bg-next
 # auto-selects it here.
@@ -496,21 +522,30 @@ pull-files:
 	cp ~/.config/omarchy/shell.json files/omarchy/shell.json
 	@echo "PASS pull-files"
 
+# Every entry below was checked against the GitHub API on 2026-09-10 and resolves
+# to itself -- no renames, no redirects. Keep it that way: `git clone` follows
+# GitHub's rename redirect silently, so a stale name works right up until someone
+# re-creates the old one, and then a fresh machine clones a stranger's repo. Four
+# entries were wrong at that check:
+#   mrchantey/notes      -> gone entirely, dropped
+#   mrchantey/beet-draft -> renamed to mrchantey/personal
+#   basecamp/omarchy     -> moved to omacom/omarchy
+#   badlogic/pi-mono     -> moved to earendil-works/pi
+# Re-verify with: gh api repos/<owner>/<name> -q .full_name
 write_repositories := "
 mrchantey/beet
-mrchantey/beet-draft
 mrchantey/beetmash
 mrchantey/os
-mrchantey/notes
+mrchantey/personal
 bevyengine/bevy
 "
 # when unlikely to edit, pulled with --depth=1
 read_repositories := "
 alexjg/samod
-basecamp/omarchy
+omacom/omarchy
 ratatui/bevy_ratatui
 openclaw/openclaw
-badlogic/pi-mono
+earendil-works/pi
 "
 
 pull-repos:

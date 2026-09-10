@@ -1,133 +1,175 @@
 ---
 name: os-update
 description: >
-  Update Omarchy on this machine and reconcile the ~/me/os stow config afterward.
-  Use when the user says omarchy is "ready for an update" / "update omarchy", or asks to
-  realign / re-sync stowed config with a new omarchy version, or reports that hypr/waybar
-  stow symlinks broke after an update. Covers: omarchy-update, broken stow symlinks from
-  `sed -i` migrations, folded directory symlinks, refresh-clobbered configs (hypridle),
-  renamed omarchy commands, and restoring symlinks via the justfile stow recipes.
-  This is specific to the ~/me/os GNU stow dotfiles repo. For ordinary one-off config
-  edits (themes, keybindings, single tweaks) use the `omarchy` skill instead.
+  Update Omarchy on this machine and reconcile the ~/me/os stow config afterwards.
+  Use when the user says omarchy is "ready for an update" / "update omarchy", asks
+  to re-sync stowed config with a new omarchy version, or reports that hypr or
+  shell config broke after an update. Covers running the update, spotting stow
+  symlinks that a migration replaced with regular files, merging clobbered
+  configs, and relinking via the justfile recipes. Specific to the ~/me/os GNU
+  stow dotfiles repo -- for ordinary one-off config edits (themes, keybindings,
+  single tweaks) use the `omarchy` skill instead.
 ---
 
 # os-update
 
-Update Omarchy and bring the `~/me/os` stow config back into alignment with the new
-defaults/migrations — without leaving broken symlinks or losing customizations.
+Update Omarchy, then bring `~/me/os` back into alignment with the new defaults and
+migrations — without leaving broken symlinks or silently losing customizations.
 
-## System layout (this machine)
+## Read this first: quattro moved everything
 
-- **Config repo:** `~/me/os`, GNU stow packages under `stow/`. Git-tracked = source of truth.
-- **Omarchy install:** `~/.local/share/omarchy` (READ-ONLY; reading is fine). Version: `omarchy-version`.
-- **Migrations:** `~/.local/share/omarchy/migrations/*.sh`; applied-markers in
-  `~/.local/state/omarchy/migrations/` (empty file per applied migration; `skipped/` subdir for skips).
-- **Device packages:** `hypr-rainbow-cat`, `hypr-silver-fox` hold ONLY `monitors-device.conf`,
-  `input-device.conf`, `envs-device.conf`, `layout-device.conf` (`*-device.conf` = per-device;
-  `*.conf`, including the shared `input.conf`, is the common `hypr` package).
-  Detect device: `readlink ~/.config/hypr/monitors-device.conf` (→ `hypr-<device>`), or `hostname`.
-- **Stow recipes** (`~/me/os/justfile`): `stow-symlinks` (common pkgs), `stow-device <name>`
-  (device hypr overrides), `init-<device>`. Re-link manually with:
-  `cd ~/me/os/stow && stow -vt ~ hypr hypr-<device>`.
+Omarchy 4 ("quattro") invalidated most pre-4.0 update lore. If a note predates it,
+distrust it:
 
-## Two symlink styles — this is the crux
+| Then | Now |
+| --- | --- |
+| `~/.local/share/omarchy`, a **git repo** you could `git fetch` | `/usr/share/omarchy`, a **read-only pacman package** (`omarchy-version` → e.g. `4.0.3-1`). `~/.local/share/omarchy` is a back-compat symlink. |
+| Hyprland `*.conf` + `source =` chain | native **Lua** modules (`hyprland.lua` and friends) |
+| waybar, walker/elephant, mako, swayosd, hypridle/hyprlock | one Quickshell process, `omarchy-shell`, configured by `~/.config/omarchy/shell.json` |
+| `omarchy-refresh-<thing>` per config | one `omarchy-refresh-config <path-relative-to-.config>` |
+| `~/.config/omarchy/current/...` | `~/.local/state/omarchy/` (themes, toggles, migration markers) |
 
-1. **Folded directory symlinks**: `~/.config/waybar`, `~/.config/voxtype`, `~/.config/autostart`
-   are whole-directory symlinks into the stow source. Migration edits (`sed -i`, `cp`, `>>`)
-   resolve THROUGH the dir link and land **directly in the stow source** → they just show up
-   as normal `git diff` in `~/me/os`. No relinking needed; only review/keep.
-2. **File-level symlinks**: `~/.config/hypr/*` — because `~/.config/hypr` is a REAL directory
-   (shared by the common + device packages and the special `hyprland.conf` handling), each
-   file is individually symlinked.
+**Never edit `/usr/share/omarchy/`.** It is package-owned and replaced wholesale.
 
-**The hazard:** GNU `sed -i` does NOT follow symlinks — it writes a temp file and renames it
-over the path, **replacing the symlink with a regular file** (edit applied), leaving the stow
-source stale and the link broken. This hits file-level symlinks (`hypr/*`) only.
-Contrast:
-- `echo >>` / `cat >>` (append) **follow** the symlink → write to the stow source (link survives).
-- `cp -f default → ~/.config/x` (used by `omarchy-refresh-*`): if the link is still intact,
-  follows it and **overwrites the stow SOURCE with the stock default** (clobbers customizations);
-  if an earlier `sed -i` already broke the link, it just overwrites the regular `~/.config` file
-  (source preserved). Either way the user's customization survives in git history + a
-  `*.bak.<timestamp>` left in the same dir.
+## Layout
 
-## Blocker: the update itself needs interactive sudo
+- **Config repo:** `~/me/os`, stow packages under `stow/`. Git-tracked = source of truth.
+- **Migrations:** `/usr/share/omarchy/migrations/*.sh`; one empty marker per applied
+  migration in `~/.local/state/omarchy/migrations/`.
+- **Device packages:** `stow/hypr-<host>/` holds only `monitors.lua`,
+  `input-device.lua`, `layout-device.lua`. Everything else is the shared `hypr`
+  package. Detect the device with `hostname`, or
+  `readlink ~/.config/hypr/monitors.lua` (→ `hypr-<device>`).
+- **Recipes:** `just stow-symlinks` (common packages), `just stow-device <name>`,
+  `just stow-files` (the copied, non-stowed files).
 
-`omarchy-update` runs `pacman -Syu`, `yay`, and migrations that call `sudo`; sudo here requires
-a password the agent can't supply (`sudo -n true` fails). **The user must run `omarchy-update`
-in their terminal.** Order matters — update FIRST (the pull brings new default files like
-`default/waybar/weather.sh` and installs packages), reconcile AFTER. Do NOT pre-edit stow
-sources to reference files that only exist post-update.
+## The update itself needs interactive sudo
 
-`omarchy-update` is also interactive by design (gum confirm). If asked to drive it, explain the
-sudo limitation rather than trying `-y` in the background (the password prompt and migration gum
-prompts will still block).
+`omarchy update` runs `pacman -Syu`, `yay`, and migrations that call `sudo`. An
+agent cannot supply the password (`sudo -n true` fails). **Ask the user to run it
+in their terminal.** It also takes a Snapper snapshot first and logs the whole run
+to `/tmp/omarchy-update.log`, which is worth reading afterwards.
 
-## Pre-update analysis (optional but valued)
-
-Before the user runs it, you can preview impact:
 ```bash
-cd ~/.local/share/omarchy && git fetch --tags
-# new migrations the pull will add:
-git diff --name-status HEAD origin/master -- migrations/ | awk '$1=="A"{print $2}'
-# read the ones touching stowed config:
-git show origin/master:migrations/<ts>.sh   # grep for hypr|waybar|bindings|monitors|.config
+omarchy update        # interactive, confirms first
+omarchy update -y     # unattended; steps that would prompt report and skip instead
 ```
-Flag which stowed files each migration edits, and which use plain `sed -i` (→ will break
-file-level symlinks) vs `>>`/`cp`/refresh.
 
-## Reconciliation workflow (after the user runs the update)
+Order matters: **update first, reconcile after.** The update is what brings in new
+default files and packages. Do not pre-edit stow sources to reference files that
+only exist post-update.
 
-1. **State check:**
-   ```bash
-   omarchy-version
-   ls ~/.local/state/omarchy/migrations/skipped/      # any skipped (e.g. sudo timeout)?
-   cd ~/me/os && git status -s                          # folded-dir edits show here automatically
-   ```
-2. **Find broken symlinks** — any stowed `~/.config/hypr/*` that is now a regular file:
-   ```bash
-   for f in bindings autostart hypridle hyprlock hyprsunset looknfeel windows xdph hyprland \
-            monitors input envs layout; do
-     p=~/.config/hypr/$f.conf
-     [[ -L $p ]] && echo "LINK    $f" || { [[ -f $p ]] && echo "REGULAR $f (broken)" || echo "MISSING $f"; }
-   done
-   ```
-3. **Diff each broken file vs its stow source** (`stow/hypr/...` or `stow/hypr-<device>/...`):
-   - **Identical** → migration rewrote it but no net change for this user → just relink (step 5).
-   - **Differs** → real change. Decide source-of-truth per case (see "Merge cases").
-4. **Merge cases** — write the reconciled content into the **stow SOURCE**, not `~/.config`:
-   - **Refresh-clobbered** (e.g. `hypridle.conf` via `omarchy-refresh-hypridle`): the live file is
-     the stock default; the user's customization is in the stow source and/or git/`.bak`. Merge:
-     adopt the new omarchy commands/structure, **preserve the user's tuning** (e.g. hypridle's
-     long idle timeouts, the dpms screen-off listener).
-   - **Renamed commands**: verify referenced commands still exist (`which omarchy-lock-screen` →
-     gone, now `omarchy-system-lock`/`omarchy-system-wake`). Update the stow source even where the
-     migration's grep-guard didn't match the user's custom file (the user's file may still call the
-     dead name).
-5. **Restore symlinks:**
-   ```bash
-   rm -f ~/.config/hypr/{<broken files>}.conf
-   cd ~/me/os/stow && stow -vt ~ hypr hypr-<device>
-   ```
-   (Re-stowing no-ops already-correct links and recreates the removed ones. Don't run the `-init`
-   justfile recipes — they `rm -rf` lots of things.)
-6. **Verify & apply:**
-   ```bash
-   # all should be LINK again (repeat step 2 check)
-   hyprctl reload
-   omarchy-restart-hypridle && pgrep -ax hypridle      # pgrep right after restart can race; recheck
-   omarchy-restart-waybar
-   ```
-   To validate a hypridle config parses: `timeout 2 hypridle -c <conf>` shows registered rules —
-   but it spawns a SECOND instance, so kill it (the `timeout` does) and confirm only one remains.
-   For new waybar modules (e.g. weather) confirm the referenced script exists
-   (`ls ~/.local/share/omarchy/default/waybar/weather.sh`).
-7. **Review, don't commit:** show the full `git diff` in `~/me/os` and summarize. Do NOT commit
-   unless the user asks.
+Check whether one is even needed: `omarchy-update-available`.
+
+There is no useful pre-update migration preview any more. Migrations ship *inside*
+the package, so they do not exist locally until the update installs them — the old
+`git diff HEAD origin/master -- migrations/` trick is dead along with the git repo.
+
+## Why reconciliation is needed at all
+
+Every tracked dotfile is a stow symlink into `~/me/os`. A migration that *appends*
+(`>>`) or *reads* follows the symlink and lands in the repo — harmless, shows up as
+a normal `git diff`. Three things are not harmless:
+
+1. **`sed -i` does not follow symlinks.** It writes a temp file and renames it over
+   the path, **replacing the symlink with a regular file**. The edit applies to a
+   detached copy; the stow source goes stale. This is the main damage, and it hits
+   the file-level symlinks under `~/.config/hypr/` (that directory is real, so each
+   file is linked individually).
+2. **`omarchy-refresh-config <path>` copies a shipped default over `~/.config/<path>`.**
+   If the symlink is intact it follows it and **overwrites the stow source with the
+   stock default**, clobbering customizations. It leaves a `*.bak.<timestamp>`
+   alongside, and git history has the rest.
+3. **Quattro drops stock `*.lua` files next to ours.** They are plain files, so the
+   next `stow` run conflicts on them. `just stow-symlinks-init` clears the known
+   ones; a new stock filename means adding it to that `rm -f` list.
+
+## Reconciliation workflow
+
+### 1. State check
+
+```bash
+omarchy-version
+ls ~/.local/state/omarchy/migrations/            # applied markers
+ls ~/.local/state/omarchy/migrations/skipped/ 2>/dev/null   # anything skipped, e.g. sudo timeout
+cd ~/me/os && git status -s                      # folded-dir edits already show up here
+```
+
+### 2. Find symlinks a migration turned back into regular files
+
+```bash
+for f in hyprland bindings input looknfeel windows autostart envs \
+         monitors input-device layout-device; do
+  p=~/.config/hypr/$f.lua
+  [[ -L $p ]] && echo "LINK    $f" || { [[ -f $p ]] && echo "REGULAR $f (broken)" || echo "MISSING $f"; }
+done
+```
+
+Also check the two files that are still `.conf` (`hyprsunset.conf`, `xdph.conf` —
+read by separate processes, not Hyprland) and `~/.config/omarchy/shell.json`.
+
+### 3. Diff each broken file against its stow source
+
+`stow/hypr/.config/hypr/<f>.lua`, or `stow/hypr-<device>/...` for the three device
+modules.
+
+- **Identical** → the migration rewrote it to the same bytes. Just relink.
+- **Differs** → a real change. Merge deliberately, writing the result into the
+  **stow source**, never into `~/.config`:
+  - *Refresh-clobbered*: the live file is the stock default and the user's version
+    is in git (and a `.bak.<timestamp>`). Adopt the new structure, **preserve the
+    user's tuning**.
+  - *Renamed commands*: confirm anything referenced still exists (`command -v ...`).
+    Omarchy renames commands between versions, and a migration's grep-guard often
+    will not match a customized file, so the dead name survives in our copy.
+
+### 4. Relink
+
+```bash
+rm -f ~/.config/hypr/<broken>.lua
+cd ~/me/os && just stow-symlinks
+[ -d "stow/hypr-$(hostname)" ] && just stow-device "$(hostname)"
+```
+
+Re-stowing no-ops already-correct links. **Do not run the `-init` recipes to fix a
+few links** — they `rm -rf` a great deal first.
+
+If stow reports a conflict, fix the conflict; do not delete blindly. **One conflict
+aborts the entire invocation**, so a single stray regular file silently leaves
+*every* package unstowed.
+
+### 5. Reconcile the copied files
+
+`files/omarchy/shell.json` is **copied, not stowed**, because `omarchy-shell-config`
+writes it with `mktemp` + `mv` and would replace a symlink. So it needs manual
+direction after an update:
+
+```bash
+diff -u files/omarchy/shell.json ~/.config/omarchy/shell.json
+just stow-files    # repo -> live  (push our version)
+just pull-files    # live -> repo  (capture an update's or the GUI's changes)
+```
+
+### 6. Verify
+
+```bash
+hyprctl reload && hyprctl configerrors    # empty output = clean
+omarchy-restart-shell                     # bar / launcher / notifications / idle
+systemctl --user restart voxtype.service  # only if voxtype config changed
+```
+
+`hyprctl configerrors` is the real check — the Lua binder is far stricter than the
+old `.conf` parser about keysyms and dispatcher syntax.
+
+### 7. Review, don't commit
+
+Show the full `git diff` in `~/me/os` and summarize. **Do not commit unless asked.**
 
 ## Don'ts
 
-- Never edit `~/.local/share/omarchy/` (lost on next update).
-- Don't run the system update non-interactively / with `-y` in the background (sudo will hang).
-- Don't pre-create migration skip-markers for migrations that also do package/system work.
-- Don't pre-align stow sources to reference files that only land during the update.
+- Never edit `/usr/share/omarchy/` — package-owned, replaced on update.
+- Don't run the update non-interactively in the background hoping sudo passes.
+- Don't pre-create migration skip-markers for migrations that also do package work.
+- Don't pre-align stow sources to files that only land during the update.
+- Don't `rm` a file just because stow calls it a conflict — check `readlink` first;
+  under a folded directory symlink that "plain file" is the repo's own file.

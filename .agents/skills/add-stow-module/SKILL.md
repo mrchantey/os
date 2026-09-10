@@ -103,7 +103,8 @@ Then exercise the app to confirm it still reads the file.
 ## Gotchas
 
 - **Stow folding**: if a stow source dir contains only stowable files and the target dir doesn't exist, stow symlinks the *whole directory*. If the target already exists, stow walks in and symlinks individual files instead. This is why preserving the target dir's existence (step 1) matters when state must coexist.
-- **Symlinks already inside the target** (e.g. `~/.claude/skills/omarchy` → omarchy install): stow handles these fine, but `rm -rf` would destroy them. Another reason to prefer fine-grained removal.
+- **Symlinks already inside the target** (e.g. `~/.agents/skills/omarchy` → the omarchy install): stow handles these fine, but `rm -rf` would destroy them. Another reason to prefer fine-grained removal.
+- **One conflict aborts the whole `stow` run.** If any single target path is a regular file stow won't overwrite, it prints `All operations aborted.` and stows *nothing* — every other module included. In `stow-symlinks-init`, where the `rm` block runs first, that means the old config is already deleted and the new links never appear. This actually happened: a fresh Omarchy ships `~/.config/gtk-3.0/bookmarks` as a real file, it was missing from the removal list, and a whole `just init` silently ended with `~/.bashrc` gone and no packages stowed. **Always add the removal line in the same change as the module.**
 - **Don't reintroduce root-`.gitignore` entries** when migrating an existing module. The pattern this repo uses now is *local* `.gitignore` per stow module.
 - **`**/*.bak.**`** is gitignored repo-wide (omarchy update naming). Single-extension `.bak` files are NOT ignored — useful for taking a manual snapshot before moving a file.
 

@@ -101,14 +101,13 @@ To customize a built-in widget, never edit `/usr/share/omarchy/shell/plugins/`; 
 
 `silver-fox`
 	- Dell Precision 7560 laptop (replaced the XPS 15 9500 on 2026-09-10; the XPS
-	  is dead and gone, see `silver-fox-handover.md`)
+	  is dead and gone). Full record: the `info-silver-fox` skill.
 	- i7-11850H (8c/16t, Tiger Lake-H), 64GB RAM
 	- NVIDIA RTX A2000 Mobile, 4GB of GDDR6 VRAM + Intel UHD iGPU (drives eDP-1)
 	- internal panel is 1920x1080 16:9 at scale 1 — NOT the XPS's 4K 16:10 panel,
 	  so `GDK_SCALE` is 1 here and omarchy's `scale = "auto"` is deliberately not used
 	- unlike the XPS, the dGPU drives real outputs: HDMI + mDP are on the NVIDIA
 	  card, eDP-1 and the USB-C DP-alt ports are on the Intel one
-	- has a trackpoint (`dell0a69:00-0488:120a-mouse`) as well as a touchpad
 
 `rainbow-cat`
 	- desktop, NVIDIA (primary GPU)
