@@ -33,8 +33,8 @@ key off it.
 | iGPU | Intel TigerLake-H UHD `8086:9a60` |
 | Panel | BOE 0x08CF on eDP-1, **1920x1080**, 340x190mm, ~143 DPI, 16:9 |
 | Audio | Realtek **ALC289** on HDA Intel PCH (card 0), driven by `snd_hda_intel` |
-| Microphone | **none that works**, see below |
-| Camera | **none**, no `/dev/video*` at all |
+| Microphone | Logitech **Brio 100** over USB (added 2026-09-11); the chassis has **none that works**, see below |
+| Camera | the same Brio 100; the chassis has **none**, no `/dev/video*` without it |
 | Pointing | touchpad only, **no pointing stick** |
 
 The panel is the FHD SKU. Its only modes are 1920x1080@60 and @48, so there is no
@@ -121,10 +121,9 @@ Both of its root-level fixes are inert on this hardware, and both are kept anywa
   setting away. If this machine starts hard-resetting on resume, look for
   Power Management > Sleep Mode in the BIOS, then re-run the script.
 
-### There is no working microphone
+### There is no working internal microphone
 
-Tested on 2026-09-10 and worth knowing before debugging dictation for an hour.
-The machine exposes a capture source and it is not muted, but it hears nothing.
+Tested on 2026-09-10 and worth knowing before debugging dictation for an hour. The machine exposes a capture source and it is not muted, but it hears nothing. Dictation works through the Brio 100 instead, next section.
 
 What is there: PipeWire lists `alsa_input.pci-0000_00_1f.3.analog-stereo`, the
 ALC289 declares an internal mic pin (`0xb7a60130`, Fixed / Mic at Oth Mobile-In),
@@ -148,32 +147,30 @@ card0 is `PCH` under `snd_hda_intel` with a single `ALC289 Analog` capture PCM
 and no DMIC devices, so the codec's analog input is the only capture path there
 is.
 
-**Consequence: voxtype dictation cannot work on the internal hardware**, even
-though the service installs, enables and runs. A USB mic or a headset on the
-3.5mm combo jack would fix it, since `Headset Mic` is a separate, currently-`[off]`
-input on the same codec.
+**Consequence: voxtype dictation cannot work on the internal hardware**, even though the service installs, enables and runs. A headset on the 3.5mm combo jack would also work, since `Headset Mic` is a separate, currently-`[off]` input on the same codec, but the Brio 100 is what is actually in use.
 
-To re-test after plugging something in:
+### Logitech Brio 100: the camera and the dictation mic
+
+Plugged in 2026-09-11, USB `046d:094c`, on `usb-0000:00:14.0-11`. Plain UVC plus USB audio class, so nothing to install. It enumerates as ALSA card `B100` (card 2), PipeWire node `alsa_input.usb-046d_Brio_100_<serial>.mono-fallback` ("Brio 100 Mono", 16-bit mono), and `/dev/video0` + `/dev/video1`, which PipeWire also exposes as a V4L2 source. WirePlumber makes it the default source on its own (`priority.session` 2100 beats the internal codec), so voxtype's `device = "default"` needs no change.
+
+**Its mic powers on at maximum gain and clips.** The one mixer control, `Mic Capture Volume`, runs 0..6144 raw for +6dB..+30dB and ships at 6144. Measured at +30dB, the empty room alone is -22 to -27dBFS RMS with peaks near -9dBFS, so there is no headroom left for a voice. `scripts/silver-fox/startup.sh` sets it to **wpctl 0.4** through WirePlumber, which resolves the node by name via `pw-dump` + `jq` (wpctl only takes IDs) and polls in the background so a login without the camera does not stall startup. WirePlumber then persists the value per device in `~/.local/state/wireplumber/default-routes`, so it also survives replug; the startup line is the reassert and the written record.
+
+The mapping, verified against the mixer: total gain = 30 + 60·log10(vol) dB. 0.7 = +21dB, 0.5 = +12dB, **0.4 = +6dB, the hardware floor**. Below 0.4 WirePlumber pins the hardware at +6dB and attenuates in software, which scales the noise floor down with the voice and improves nothing, so 0.4 is the lowest value worth setting. It is a 24dB cut from power-on, picked from the ambient measurement and then confirmed clean with real voxtype dictation the same day. To re-check after a change of room, distance or unit:
 
 ```bash
-ffmpeg -f pulse -i default -t 4 -ar 48000 -ac 1 /tmp/mic.wav -y
-ffmpeg -i /tmp/mic.wav -af volumedetect -f null - 2>&1 | grep volume
+# talk normally for the 8 seconds, then read the peak. Aim for max around -12 to -6dBFS;
+# -0.0 means clipping (lower vol), below -25 means room to go up. -ss 0.5 skips the
+# stream-open pop: the first ~100ms of every capture is a -11dBFS transient even in silence.
+id="$(pw-dump | jq -r '.[] | select(.info.props["node.name"] // "" | test("^alsa_input\\.usb-046d_Brio_100_")) | .id')"
+pw-record --target "$id" --rate 16000 --channels 1 --format s16 /tmp/mic.wav & sleep 8; kill -INT $!
+ffmpeg -ss 0.5 -i /tmp/mic.wav -af volumedetect -f null - 2>&1 | grep -E '(mean|max)_volume'
 ```
 
-### The mic gain line in startup.sh
+If it needs adjusting, change the `0.4` in `startup.sh` and apply it live with `wpctl set-volume "$id" <vol>`; each 0.1 step above 0.4 is worth roughly 5 to 6dB.
 
-`scripts/silver-fox/startup.sh` still sets
-`wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 0.13`. It was calibrated on the XPS,
-whose codec powered on with `Capture` at 63/+30dB stacked on `Internal Mic Boost`
-at 3/+30dB and saturated the ADC. The ALC289 here behaves identically and 0.13
-lands on the same +6.75dB with boost off, so the line is *correct*, it is just
-pointless, because there is no mic behind it.
+### The old mic gain line in startup.sh is gone
 
-Left in place deliberately, but note the trap: it targets
-`@DEFAULT_AUDIO_SOURCE@`, so an external mic present **at login** would be turned
-down to 0.13 as well, which is not necessarily the right level for a different
-device. If an external mic becomes the normal setup, revisit this line rather
-than fighting a quiet input.
+Until 2026-09-11 `scripts/silver-fox/startup.sh` set `wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 0.13`, the XPS-era calibration for the internal Realtek (Capture +6.75dB, boost off). It was correct for that codec and pointless here, because nothing is behind it. With the Brio plugged in it became actively wrong: the Brio is now the default source, and 0.13 on its curve is -23dB total, 29dB below its own hardware floor, all of it software attenuation. The line was replaced by the name-targeted Brio one above rather than kept alongside it. If a 3.5mm headset ever becomes the mic, it is a separate WirePlumber route (`analog-input-headset-mic`) with its own persisted volume, so the old 0.13 would not have carried over to it anyway.
 
 ## State as of 2026-09-10
 
@@ -189,8 +186,7 @@ including private repos.
 **Root half done** via `just init-silver-fox-sudo`: ghostty, google-chrome,
 visual-studio-code-bin, voxtype-bin, rustup + cargo-binstall, cuda, steam,
 element-desktop, thunderbird, helix, podman are all installed, and
-`voxtype.service` is enabled and active (though see the microphone section, since it
-has nothing to listen to).
+`voxtype.service` is enabled and active, listening through the Brio 100 since 2026-09-11 (the internal codec has nothing behind it, see the microphone section).
 
 That recipe now runs under `scripts/sudo-keepalive.sh`. The first attempt died
 halfway through at `install-rust` with `sudo: timed out reading password`,
@@ -206,9 +202,8 @@ run, so it asks once at the start and never again. `just init`,
   machine's record was deliberately deleted in commit `3a0a0ec`; do not restore
   it, and do not carry its facts forward.
 - **`hyprctl devices` shows two mice for one touchpad.** Not a trackpoint.
-- **There is a capture source but no microphone.** Don't take the presence of
-  `alsa_input...analog-stereo`, an unmuted `Internal Mic` control, or a running
-  `voxtype.service` as evidence that dictation can work here.
+- **The internal capture source is not a microphone.** Don't take the presence of `alsa_input...analog-stereo`, an unmuted `Internal Mic` control, or a running `voxtype.service` as evidence that dictation can work without the Brio 100 plugged in.
+- **The Brio 100 mic clips at its power-on gain.** If dictation goes to garbage after a fresh install or a wiped `~/.local/state/wireplumber`, check `wpctl get-volume` on the Brio source reads 0.40, not 1.00.
 - **Long installs need `scripts/sudo-keepalive.sh`.** A bare `sudo -v` lapses
   after five minutes and the run dies mid-way once nobody is at the keyboard.
 - **The old drive is `nvme0n1`, the live one is `nvme1n1`.** Lower number is the

@@ -108,9 +108,12 @@ To customize a built-in widget, never edit `/usr/share/omarchy/shell/plugins/`; 
 	  so `GDK_SCALE` is 1 here and omarchy's `scale = "auto"` is deliberately not used
 	- unlike the XPS, the dGPU drives real outputs: HDMI + mDP are on the NVIDIA
 	  card, eDP-1 and the USB-C DP-alt ports are on the Intel one
-	- **no camera and no working microphone** (camera-less SKU; the array mics live
-	  in that module). A capture source still enumerates and hears nothing, so
-	  voxtype needs a USB mic or a headset. See the `info-silver-fox` skill.
+	- **no built-in camera and no working built-in microphone** (camera-less SKU;
+	  the array mics live in that module). A capture source still enumerates and
+	  hears nothing. A Logitech Brio 100 (USB) provides both since 2026-09-11 and
+	  is the voxtype mic; it powers on at +30dB and clips, so
+	  `scripts/silver-fox/startup.sh` sets it to wpctl 0.4 (the +6dB hardware
+	  floor) by node name. Calibration and re-tune in the `info-silver-fox` skill.
 
 `rainbow-cat`
 	- desktop, NVIDIA (primary GPU)
