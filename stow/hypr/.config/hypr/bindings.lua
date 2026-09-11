@@ -21,7 +21,13 @@
 -- Note this is focus stealing, NOT the placement bug that scripts/launch-here.sh
 -- handles for clicked links: the launch itself was always correct. See AGENTS.md.
 local browser = "uwsm app -- google-chrome-stable --new-window"
-local editor = "uwsm app -- $EDITOR"
+
+-- Not `uwsm app -- $EDITOR`: in the Hyprland session $EDITOR is omarchy's own
+-- `omarchy-launch-editor --inline` (our .bashrc's EDITOR=zed only reaches
+-- interactive shells), so that expanded to the same script anyway, and it
+-- already does its own uwsm-app wrapping. Which editor it opens comes from
+-- ~/.local/state/omarchy/defaults/editor, written by `just setup-editor`.
+local editor = "omarchy-launch-editor"
 
 --------------------------------------------------------------------------------
 -- OS (SUPER SHIFT)

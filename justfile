@@ -129,6 +129,16 @@ setup-theme:
 	# order, but here we pin it directly.
 	omarchy theme bg set ~/.config/omarchy/backgrounds/everforest/firewatch.png
 
+# Tell omarchy-launch-editor (and so $EDITOR, SUDO_EDITOR, SUPER+N, and every
+# editor bind in hypr/bindings.lua) to open Zed. Without this file it falls back
+# to nvim, and `--inline` nvim under `uwsm app` has no terminal, so the binds
+# silently do nothing. Written by hand rather than via `omarchy default editor
+# zed` because that writes `zeditor` (the pacman package's binary name) and our
+# Zed comes from zed.dev's installer as plain `zed` (see install-user-apps).
+setup-editor:
+	mkdir -p ~/.local/state/omarchy/defaults
+	printf 'zed\n' > ~/.local/state/omarchy/defaults/editor
+
 # generate this device's SSH key for a git host (default tangled.org) and print
 # the public half to paste into that host's account settings. Run once per
 # device per host; the private key never leaves the machine. Idempotent.
@@ -154,6 +164,7 @@ init-user:
 	just stow-files-init
 	just stow-symlinks-init
 	just setup-theme
+	just setup-editor
 	just install-user-apps-init
 	just pull-repos
 
