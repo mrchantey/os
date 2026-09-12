@@ -49,3 +49,17 @@ hl.device({
   sensitivity = -0.7,
   left_handed = true,
 })
+
+-- Logitech MX Ergo (thumb trackball, 320 DPI): same treatment as the Orbit.
+-- The adaptive profile is what makes it feel wild, a thumb flick spins the ball
+-- fast enough to trip the acceleration curve, so flat matters more than the
+-- factor. -0.6 lands the effective DPI near the Orbit's; tune to taste.
+-- Right-hand-only shape, so no left_handed swap.
+
+-- Bluetooth (the Unifying dongle enumerates under a different name; add a
+-- second block for it if that ever gets used, same as the Orbit above)
+hl.device({
+  name = "mx-ergo-mouse",
+  accel_profile = "flat",
+  sensitivity = 0.5
+})
