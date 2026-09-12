@@ -15,7 +15,7 @@
 			"default_config_options": {
 				"fast": false,
     "effort": "xhigh",
-				"model": "opus[1m]",
+				"model": "claude-fable-5-1[1m]",
 				"mode": "bypassPermissions",
 			},
 			"favorite_config_option_values": {
@@ -65,9 +65,9 @@
 			"enable_thinking": false,
 		},
 		"default_model": {
-			"effort": "low",
-			"provider": "openai-subscribed",
-			"model": "gpt-5.6-sol",
+			"effort": "medium",
+			"provider": "google",
+			"model": "gemini-3.7-flash",
 			"enable_thinking": true,
 		},
 
@@ -88,13 +88,13 @@
     "provider": "openai-subscribed",
     "model": "gpt-5.6-sol",
     "enable_thinking": true,
-    "effort": "low"
+    "effort": "high"
    },
    {
     "provider": "openai-subscribed",
     "model": "gpt-6-astra",
     "enable_thinking": true,
-    "effort": "low"
+    "effort": "high"
    },
    {
     "provider": "openai-subscribed",
