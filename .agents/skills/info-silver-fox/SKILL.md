@@ -15,9 +15,7 @@ description: >
 # silver-fox: Dell Precision 7560
 
 Rebuilt from a fresh Omarchy install on **2026-09-10**, replacing a Dell XPS 15
-9500 of the same name that died of a motherboard power fault. The hostname is
-unchanged deliberately: `stow/hypr-silver-fox` and `just init-silver-fox` both
-key off it.
+9500 of the same name that died of a motherboard power fault, then reinstalled onto the 1TB drive on **2026-09-14** (see Disks). The hostname is unchanged deliberately: `stow/hypr-silver-fox` and `just init-silver-fox` both key off it.
 
 **Everything below was measured on the machine, not read off a spec sheet.**
 
@@ -65,18 +63,18 @@ detects the hybrid setup and sets the render env itself, so there is no
 
 ## Disks
 
-Two NVMes are fitted. **The running system is on the SMALLER, HIGHER-numbered
-one**, which is exactly the trap to watch for:
+Two NVMes are fitted and the OS lives on the **larger** one. Omarchy was reinstalled onto the KIOXIA on 2026-09-14 so that OS and home share one drive, the same layout as rainbow-cat, and this repo carries no storage scripts.
 
-| Node | Device | Size | Role |
+| Device | Size | Slot | Role |
 | --- | --- | --- | --- |
-| `nvme1n1` | SK hynix BC711, serial `CY12N087910403351` | 238.5G | **live system**, LUKS + btrfs |
-| `nvme0n1` | KIOXIA KXG60ZNV1T02, serial `X93ZZ00TK84L` | 953.9G | transplanted from the XPS, still LUKS, **untouched** |
+| KIOXIA KXG60ZNV1T02, serial `X93ZZ00TK84L` | 953.9G | chipset port `00:1d.0`, Gen3 x4 | **live system**, LUKS + btrfs. The ex-XPS drive. |
+| SK hynix BC711, serial `CY12N087910403351` | 238.5G | CPU port `00:06.0`, Gen4-capable | **blank spare**. The drive the Precision shipped with. |
 
-The KIOXIA is slated to be wiped and reused as blank storage. That has not been
-started. Node numbering is not stable across boots, so see `old-drive.md` for the
-identification table and the wipe procedure, and read it before touching either
-disk.
+Node numbering (`nvme0n1` / `nvme1n1`) is not stable across boots, so match on serial or use `/dev/disk/by-id/`, never a node.
+
+The slot split looks backwards and is not. Both drives are Gen3 x4 parts and both link at full Gen3 x4, so the CPU-attached slot buys nothing today. It is the slot to use if a Gen4 drive is ever fitted. Opening the chassis to swap them was considered and rejected for that reason.
+
+The alternative that was built and then abandoned (unstaged, never applied) kept the OS on the 256G drive and mounted the KIOXIA at `~/me`: a serial-guarded setup script, a keyfile in crypttab, a chicken-and-egg clone on every reinstall, and a boot-time mount that 42 home symlinks depended on. It also moved the wrong thing. `~/me` was 1.6G, while the sccache dir (capped at 150GiB), `~/.cache` and `~/.local` all stayed on the small drive. Do not rebuild it. If the spare is ever wanted, mount it at a neutral path and point only disposable, growing things at it (sccache, Steam, media), never `~/me`.
 
 ## Per-device config, and why
 
@@ -206,9 +204,4 @@ run, so it asks once at the start and never again. `just init`,
 - **The Brio 100 mic clips at its power-on gain.** If dictation goes to garbage after a fresh install or a wiped `~/.local/state/wireplumber`, check `wpctl get-volume` on the Brio source reads 0.40, not 1.00.
 - **Long installs need `scripts/sudo-keepalive.sh`.** A bare `sudo -v` lapses
   after five minutes and the run dies mid-way once nobody is at the keyboard.
-- **The old drive is `nvme0n1`, the live one is `nvme1n1`.** Lower number is the
-  one to destroy. Match on serial every time, never on node.
-
-## Files
-
-- `old-drive.md`: identifying and wiping the transplanted KIOXIA, and what is lost with it
+- **Never address a disk by node.** `nvme0n1` and `nvme1n1` swap between boots. Match on serial or `/dev/disk/by-id/`: the system KIOXIA is `X93ZZ00TK84L`, the spare SK hynix is `CY12N087910403351`.

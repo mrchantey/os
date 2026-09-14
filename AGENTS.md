@@ -114,6 +114,7 @@ To customize a built-in widget, never edit `/usr/share/omarchy/shell/plugins/`; 
 	  is the voxtype mic; it powers on at +30dB and clips, so
 	  `scripts/silver-fox/startup.sh` sets it to wpctl 0.4 (the +6dB hardware
 	  floor) by node name. Calibration and re-tune in the `info-silver-fox` skill.
+	- OS and home are on the 1TB KIOXIA NVMe (one drive, like rainbow-cat); the 256GB SK hynix it shipped with is a blank spare in the CPU-attached, Gen4-capable M.2 slot. Never address either by node number. See the `info-silver-fox` skill.
 
 `rainbow-cat`
 	- desktop, NVIDIA (primary GPU)

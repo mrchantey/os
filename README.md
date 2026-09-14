@@ -20,8 +20,8 @@ just init-rainbow-cat # rainbow-cat: the desktop (dual monitor, NVIDIA primary)
 just init-silver-fox  # silver-fox: Dell Precision 7560 laptop (Intel compositor, NVIDIA for CUDA/offload)
 ```
 
-A new device gets its own `stow/hypr-<name>` package (monitors/input/envs/layout-device.conf)
-plus an `init-<name>` recipe that runs `just init`, `stow-device <name>`, and the
+A new device gets its own `stow/hypr-<name>` package (`monitors.lua`, `input-device.lua`,
+`layout-device.lua`) plus an `init-<name>` recipe that runs `just init`, `stow-device <name>`, and the
 shared `install-extras` gaming/GPU stack.
 
 # Additional Steps
