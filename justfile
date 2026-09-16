@@ -145,6 +145,13 @@ setup-editor:
 setup-ssh-key host="tangled.org":
 	bash scripts/setup-ssh-key.sh {{host}}
 
+# put this person's age identity at ~/.config/beet/age/keys.txt: restored from a
+# passphrase-encrypted backup (every machine after the first), else generated.
+# It is per PERSON not per device, decrypts every beet vault, and is never stowed.
+# Idempotent. See scripts/setup-age-identity.sh.
+setup-age-identity backup="":
+	bash scripts/setup-age-identity.sh {{backup}}
+
 # stow the per-device hypr overrides; idempotent
 # quattro moved Hyprland config to Lua, so these are *.lua now. envs-device is
 # gone entirely: omarchy detects the NVIDIA GPU and sets the render env itself.
@@ -194,6 +201,7 @@ install-apps-init:
 # the omarchy way. pip and pipx were never used by anything in this repo anyway.
 install-apps:
 	sudo pacman -S --noconfirm --needed 	\
+	age															\
 	aws-cli-v2														\
 	caligula															\
 	element-desktop												\
@@ -622,6 +630,7 @@ pre-reset:
 	@echo "PASS pre-reset"
 	@echo "You are almost ready to reset your machine: \
 	- ensure assets directories have been pushed: beet, beetmash \
+	- your age identity ~/.config/beet/age/keys.txt is in NO repo: confirm the USB backup restores (just setup-age-identity <backup> on another machine) before wiping \
 	"
 
 @pre-reset-repo repo:
