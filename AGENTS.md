@@ -7,7 +7,7 @@ This is my omarchy config, located at `~/me/os`.
 Omarchy 4 ("quattro") installs to `/usr/share/omarchy` (read-only, never edit; `~/.local/share/omarchy` is a back-compat symlink to it), and to `~/.config`, some of which is overridden via stow.
 Generated state (current theme, toggles, workspace layouts) lives in `~/.local/state/omarchy`, which is where `current/theme/...` moved to from `~/.config/omarchy/current`.
 
-When asked to make changes use these files as reference to understand the system.
+When asked to make changes use these files as reference to understand the system, and ensure install scripts are updated so the changes are reflected in a fresh install.
 
 ## Hyprland is configured in Lua
 
