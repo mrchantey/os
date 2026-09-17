@@ -30,3 +30,112 @@ video/x-theora+ogg=mpv.desktop
 application/ogg=mpv.desktop
 x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop
+# Text goes to Zed. Omarchy's /usr/share/applications/mimeapps.list points the
+# first block below at nvim.desktop, and this file is the user layer that
+# overrides it. Two resolvers read this file and they differ. gio (Nautilus,
+# GTK) types files by shared-mime-info glob and walks the type's ancestry, so
+# text/plain alone would catch json, python and friends there, but a registered
+# app for a specific type beats the parent's default, which is why
+# text/markdown (omawrite) and xml (chrome) are spelled out. xdg-open on
+# Hyprland takes xdg-utils' generic path: it types files with libmagic (`file
+# --mime-type`), whose names differ from freedesktop's (text/x-script.python,
+# text/x-shellscript), and it does NOT walk ancestry, so an unlisted type falls
+# through to $BROWSER. Hence the second block (freedesktop names, for gio and
+# for future apps that register them) and the third (libmagic names, for
+# xdg-open). Deliberately not Zed: text/csv (Calc), text/html (browser), and
+# the documents, playlists, certificates and svg that are technically
+# text/plain subclasses but have a real viewer registered.
+text/plain=dev.zed.Zed.desktop
+text/english=dev.zed.Zed.desktop
+text/markdown=dev.zed.Zed.desktop
+text/x-markdown=dev.zed.Zed.desktop
+text/x-makefile=dev.zed.Zed.desktop
+text/x-c=dev.zed.Zed.desktop
+text/x-c++=dev.zed.Zed.desktop
+text/x-chdr=dev.zed.Zed.desktop
+text/x-csrc=dev.zed.Zed.desktop
+text/x-c++hdr=dev.zed.Zed.desktop
+text/x-c++src=dev.zed.Zed.desktop
+text/x-java=dev.zed.Zed.desktop
+text/x-moc=dev.zed.Zed.desktop
+text/x-pascal=dev.zed.Zed.desktop
+text/x-tcl=dev.zed.Zed.desktop
+text/x-tex=dev.zed.Zed.desktop
+text/xml=dev.zed.Zed.desktop
+application/xml=dev.zed.Zed.desktop
+application/x-shellscript=dev.zed.Zed.desktop
+application/json=dev.zed.Zed.desktop
+application/ld+json=dev.zed.Zed.desktop
+application/schema+json=dev.zed.Zed.desktop
+application/yaml=dev.zed.Zed.desktop
+application/toml=dev.zed.Zed.desktop
+application/sql=dev.zed.Zed.desktop
+application/x-desktop=dev.zed.Zed.desktop
+application/x-cmakecache=dev.zed.Zed.desktop
+application/x-perl=dev.zed.Zed.desktop
+application/x-php=dev.zed.Zed.desktop
+application/x-ruby=dev.zed.Zed.desktop
+text/css=dev.zed.Zed.desktop
+text/x-scss=dev.zed.Zed.desktop
+text/x-sass=dev.zed.Zed.desktop
+text/javascript=dev.zed.Zed.desktop
+text/rust=dev.zed.Zed.desktop
+text/x-go=dev.zed.Zed.desktop
+text/x-python=dev.zed.Zed.desktop
+text/x-python3=dev.zed.Zed.desktop
+text/x-lua=dev.zed.Zed.desktop
+text/x-csharp=dev.zed.Zed.desktop
+text/x-kotlin=dev.zed.Zed.desktop
+text/x-scala=dev.zed.Zed.desktop
+text/x-groovy=dev.zed.Zed.desktop
+text/x-haskell=dev.zed.Zed.desktop
+text/x-ocaml=dev.zed.Zed.desktop
+text/x-elixir=dev.zed.Zed.desktop
+text/x-erlang=dev.zed.Zed.desktop
+text/x-scheme=dev.zed.Zed.desktop
+text/x-emacs-lisp=dev.zed.Zed.desktop
+text/x-nix=dev.zed.Zed.desktop
+text/x-nim=dev.zed.Zed.desktop
+text/x-crystal=dev.zed.Zed.desktop
+text/x-qml=dev.zed.Zed.desktop
+text/x-cmake=dev.zed.Zed.desktop
+text/x-meson=dev.zed.Zed.desktop
+text/x-dockerfile=dev.zed.Zed.desktop
+text/x-systemd-unit=dev.zed.Zed.desktop
+text/x-patch=dev.zed.Zed.desktop
+text/x-log=dev.zed.Zed.desktop
+text/x-readme=dev.zed.Zed.desktop
+text/x-changelog=dev.zed.Zed.desktop
+text/x-authors=dev.zed.Zed.desktop
+text/x-copying=dev.zed.Zed.desktop
+text/x-credits=dev.zed.Zed.desktop
+text/x-install=dev.zed.Zed.desktop
+text/x-bibtex=dev.zed.Zed.desktop
+text/x-gettext-translation=dev.zed.Zed.desktop
+text/vnd.graphviz=dev.zed.Zed.desktop
+text/x-shellscript=dev.zed.Zed.desktop
+text/x-script.python=dev.zed.Zed.desktop
+text/x-perl=dev.zed.Zed.desktop
+text/x-raku=dev.zed.Zed.desktop
+text/x-ruby=dev.zed.Zed.desktop
+text/x-php=dev.zed.Zed.desktop
+text/x-diff=dev.zed.Zed.desktop
+text/x-lisp=dev.zed.Zed.desktop
+text/x-clojure=dev.zed.Zed.desktop
+text/x-objective-c=dev.zed.Zed.desktop
+text/x-fortran=dev.zed.Zed.desktop
+text/x-forth=dev.zed.Zed.desktop
+text/x-asm=dev.zed.Zed.desktop
+text/x-awk=dev.zed.Zed.desktop
+text/x-gawk=dev.zed.Zed.desktop
+text/x-nawk=dev.zed.Zed.desktop
+text/x-m4=dev.zed.Zed.desktop
+text/x-po=dev.zed.Zed.desktop
+text/x-msdos-batch=dev.zed.Zed.desktop
+text/x-execline=dev.zed.Zed.desktop
+text/x-modulefile=dev.zed.Zed.desktop
+text/x-systemtap=dev.zed.Zed.desktop
+text/x-info=dev.zed.Zed.desktop
+text/x-texinfo=dev.zed.Zed.desktop
+text/x-luatex=dev.zed.Zed.desktop
+text/vnd.typst=dev.zed.Zed.desktop

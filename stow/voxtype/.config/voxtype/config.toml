@@ -46,6 +46,8 @@ icon_theme = "emoji"
 
 
 [text.replacements]
+"that proto" = "ATProto"
+"AppRoto" = "ATProto"
 "vox type" = "voxtype"
 "oh marky" = "Omarchy"
 "Omaki" = "Omarchy"
