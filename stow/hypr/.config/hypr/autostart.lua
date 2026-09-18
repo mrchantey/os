@@ -5,6 +5,6 @@
 -- (see $OMARCHY_PATH/default/hypr/autostart.lua), so a second copy just raced.
 
 -- Run the per-device startup script (scripts/silver-fox or scripts/rainbow-cat)
-o.exec_on_start("~/me/os/scripts/$(hostname)/startup.sh")
+o.exec_on_start("~/me/arch-config/scripts/$(hostname)/startup.sh")
 
 -- o.launch_on_start("my-service")

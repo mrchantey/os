@@ -1,7 +1,7 @@
 ---
 name: add-stow-module
 description: >
-  Use when adding a new app's config to the ~/me/os stow system. Triggers:
+  Use when adding a new app's config to the ~/me/arch-config stow system. Triggers:
   "add X to stow", "stow X config", "track X dotfiles in os repo", or when
   the user wants to start version-controlling files under ~/.config/<app>,
   ~/.<app>, or similar. Covers preserving existing state, local .gitignore
@@ -10,7 +10,7 @@ description: >
 
 # Add a Stow Module
 
-This repo (`~/me/os`) manages dotfiles via [GNU Stow](https://www.gnu.org/software/stow/). Each subdir of `stow/` is one "module" whose tree mirrors `~`. `just stow-symlinks` links them all into the home directory.
+This repo (`~/me/arch-config`) manages dotfiles via [GNU Stow](https://www.gnu.org/software/stow/). Each subdir of `stow/` is one "module" whose tree mirrors `~`. `just stow-symlinks` links them all into the home directory.
 
 Use this skill any time you're bringing a new app under that system.
 
@@ -90,7 +90,7 @@ b) **`stow-symlinks`** — add the module name (alphabetical, with the trailing 
 ```sh
 # from repo root
 just stow-symlinks
-ls -la ~/<path>/<file>   # should now be a symlink into ~/me/os/stow/<name>/...
+ls -la ~/<path>/<file>   # should now be a symlink into ~/me/arch-config/stow/<name>/...
 readlink ~/<path>/<file>
 ```
 

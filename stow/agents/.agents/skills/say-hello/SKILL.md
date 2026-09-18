@@ -11,7 +11,7 @@ description: >
 # Say Hello
 
 A runtime-agnostic smoke test. `~/.agents/skills` is a symlink into
-`~/me/os/stow/agents/.agents/skills`, so this skill being reachable proves two
+`~/me/arch-config/stow/agents/.agents/skills`, so this skill being reachable proves two
 things at once: the stow link is intact, and the runtime under test reads that
 directory.
 
@@ -24,9 +24,9 @@ Then say which runtime you are, so the user knows *which* tool passed the test.
 If the user is instead debugging why skills are **not** loading, check in order:
 
 ```bash
-readlink ~/.agents/skills          # -> ../me/os/stow/agents/.agents/skills
+readlink ~/.agents/skills          # -> ../me/arch-config/stow/agents/.agents/skills
 ls ~/.agents/skills                # the skill directories
 cat ~/.agents/skills/say-hello/SKILL.md
 ```
 
-A broken first link is repaired by `just stow-symlinks` in `~/me/os`.
+A broken first link is repaired by `just stow-symlinks` in `~/me/arch-config`.

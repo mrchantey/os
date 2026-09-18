@@ -1,19 +1,19 @@
 ---
 name: os-update
 description: >
-  Update Omarchy on this machine and reconcile the ~/me/os stow config afterwards.
+  Update Omarchy on this machine and reconcile the ~/me/arch-config stow config afterwards.
   Use when the user says omarchy is "ready for an update" / "update omarchy", asks
   to re-sync stowed config with a new omarchy version, or reports that hypr or
   shell config broke after an update. Covers running the update, spotting stow
   symlinks that a migration replaced with regular files, merging clobbered
-  configs, and relinking via the justfile recipes. Specific to the ~/me/os GNU
+  configs, and relinking via the justfile recipes. Specific to the ~/me/arch-config GNU
   stow dotfiles repo -- for ordinary one-off config edits (themes, keybindings,
   single tweaks) use the `omarchy` skill instead.
 ---
 
 # os-update
 
-Update Omarchy, then bring `~/me/os` back into alignment with the new defaults and
+Update Omarchy, then bring `~/me/arch-config` back into alignment with the new defaults and
 migrations, without leaving broken symlinks or silently losing customizations.
 
 ## Read this first: quattro moved everything
@@ -33,7 +33,7 @@ distrust it:
 
 ## Layout
 
-- **Config repo:** `~/me/os`, stow packages under `stow/`. Git-tracked = source of truth.
+- **Config repo:** `~/me/arch-config`, stow packages under `stow/`. Git-tracked = source of truth.
 - **Migrations:** `/usr/share/omarchy/migrations/*.sh`; one empty marker per applied
   migration in `~/.local/state/omarchy/migrations/`.
 - **Device packages:** `stow/hypr-<host>/` holds only `monitors.lua`,
@@ -67,7 +67,7 @@ the package, so they do not exist locally until the update installs them. The ol
 
 ## Why reconciliation is needed at all
 
-Every tracked dotfile is a stow symlink into `~/me/os`. A migration that *appends*
+Every tracked dotfile is a stow symlink into `~/me/arch-config`. A migration that *appends*
 (`>>`) or *reads* follows the symlink and lands in the repo. Harmless, and it shows up as
 a normal `git diff`. Three things are not harmless:
 
@@ -92,7 +92,7 @@ a normal `git diff`. Three things are not harmless:
 omarchy-version
 ls ~/.local/state/omarchy/migrations/            # applied markers
 ls ~/.local/state/omarchy/migrations/skipped/ 2>/dev/null   # anything skipped, e.g. sudo timeout
-cd ~/me/os && git status -s                      # folded-dir edits already show up here
+cd ~/me/arch-config && git status -s                      # folded-dir edits already show up here
 ```
 
 ### 2. Find symlinks a migration turned back into regular files
@@ -127,7 +127,7 @@ modules.
 
 ```bash
 rm -f ~/.config/hypr/<broken>.lua
-cd ~/me/os && just stow-symlinks
+cd ~/me/arch-config && just stow-symlinks
 [ -d "stow/hypr-$(hostname)" ] && just stow-device "$(hostname)"
 ```
 
@@ -163,7 +163,7 @@ old `.conf` parser about keysyms and dispatcher syntax.
 
 ### 7. Review, don't commit
 
-Show the full `git diff` in `~/me/os` and summarize. **Do not commit unless asked.**
+Show the full `git diff` in `~/me/arch-config` and summarize. **Do not commit unless asked.**
 
 ## Don'ts
 

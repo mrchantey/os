@@ -35,7 +35,7 @@ init:
 install-transcribe:
 	chmod +x scripts/transcribe.sh
 	mkdir -p ~/.local/bin
-	ln -sf ~/me/os/scripts/transcribe.sh ~/.local/bin/transcribe
+	ln -sf ~/me/arch-config/scripts/transcribe.sh ~/.local/bin/transcribe
 	@echo "PASS install-transcribe"
 
 # symlink the Kokoro text-to-speech helper onto PATH (~/.local/bin is on PATH).
@@ -45,7 +45,7 @@ install-transcribe:
 install-tts:
 	chmod +x scripts/tts.sh scripts/acp-tee.sh scripts/acp-last.sh
 	mkdir -p ~/.local/bin
-	ln -sf ~/me/os/scripts/tts.sh ~/.local/bin/tts
+	ln -sf ~/me/arch-config/scripts/tts.sh ~/.local/bin/tts
 	@echo "PASS install-tts"
 
 # build the Never-Lost Rainbow cursor theme from the Windows .ani set in
@@ -57,7 +57,7 @@ install-cursor-theme:
 	python3 scripts/install-cursor-theme.py
 	chmod +x scripts/cursor-toggle.sh
 	mkdir -p ~/.local/bin
-	ln -sf ~/me/os/scripts/cursor-toggle.sh ~/.local/bin/cursor-toggle
+	ln -sf ~/me/arch-config/scripts/cursor-toggle.sh ~/.local/bin/cursor-toggle
 	# turn it on through the toggle, so install and toggle share one apply path
 	scripts/cursor-toggle.sh on
 	@echo "PASS install-cursor-theme"
@@ -274,7 +274,7 @@ setup-voxtype:
 setup-voxtype-isolation:
 	chmod +x scripts/voxtype-render-config.sh
 	mkdir -p ~/.config/systemd/user/voxtype.service.d
-	printf '[Service]\nExecStartPre=%%h/me/os/scripts/voxtype-render-config.sh\nExecStart=\nExecStart=/usr/bin/voxtype -c %%t/voxtype/config.toml daemon\n' > ~/.config/systemd/user/voxtype.service.d/battery-isolation.conf
+	printf '[Service]\nExecStartPre=%%h/me/arch-config/scripts/voxtype-render-config.sh\nExecStart=\nExecStart=/usr/bin/voxtype -c %%t/voxtype/config.toml daemon\n' > ~/.config/systemd/user/voxtype.service.d/battery-isolation.conf
 	systemctl --user daemon-reload || true
 	systemctl --user restart voxtype.service || true
 	@echo "PASS setup-voxtype-isolation"
@@ -326,7 +326,7 @@ setup-tts:
 	uv pip install -e ".[gpu]"
 	uv run --no-sync python docker/scripts/download_model.py --output api/src/models/v1_0
 	mkdir -p ~/.config/systemd/user
-	printf '[Unit]\nDescription=Kokoro TTS (FastAPI)\nAfter=graphical-session.target\n\n[Service]\nExecStart=%%h/me/os/scripts/tts-server.sh\nRestart=on-failure\nRestartSec=2\n\n[Install]\nWantedBy=default.target\n' > ~/.config/systemd/user/kokoro-tts.service
+	printf '[Unit]\nDescription=Kokoro TTS (FastAPI)\nAfter=graphical-session.target\n\n[Service]\nExecStart=%%h/me/arch-config/scripts/tts-server.sh\nRestart=on-failure\nRestartSec=2\n\n[Install]\nWantedBy=default.target\n' > ~/.config/systemd/user/kokoro-tts.service
 	systemctl --user daemon-reload || true
 	systemctl --user enable --now kokoro-tts.service || true
 	echo "PASS setup-tts"
@@ -401,7 +401,7 @@ install-mise-tools:
 	# every run, and here stdout is Zed's JSON-RPC channel. scripts/claude-agent-acp.sh is
 	# the same wrapper with that line redirected to stderr; it explains itself in full.
 	chmod +x scripts/claude-agent-acp.sh
-	ln -sf ~/me/os/scripts/claude-agent-acp.sh ~/.local/bin/claude-agent-acp
+	ln -sf ~/me/arch-config/scripts/claude-agent-acp.sh ~/.local/bin/claude-agent-acp
 	@echo "PASS install-mise-tools"
 
 # required to run after fresh install or omarchy update
@@ -460,7 +460,7 @@ stow-symlinks:
 	# the file is never absent and stow treats it as already-stowed. Without this,
 	# `just init-*` fails when run from inside a running Hyprland session.
 	mkdir -p ~/.config/hypr
-	ln -sfn ../../me/os/stow/hypr/.config/hypr/hyprland.lua ~/.config/hypr/hyprland.lua
+	ln -sfn ../../me/arch-config/stow/hypr/.config/hypr/hyprland.lua ~/.config/hypr/hyprland.lua
 	# ensure fcitx5's conf/ exists so stow links keyboard.conf into it rather than
 	# folding (symlinking) the whole dir and hiding fcitx5's app-managed state
 	mkdir -p ~/.config/fcitx5/conf
@@ -483,7 +483,7 @@ stow-symlinks:
 	# then re-drop omarchy's link (it now lands in the repo via the fold; gitignored).
 	mkdir -p ~/.agents
 	rm -rf ~/.agents/skills
-	ln -sfn ../me/os/stow/agents/.agents/skills ~/.agents/skills
+	ln -sfn ../me/arch-config/stow/agents/.agents/skills ~/.agents/skills
 	ln -sfn "${OMARCHY_PATH:-/usr/share/omarchy}/default/omarchy-skill" ~/.agents/skills/omarchy
 	# NOTE: the walker + elephant + waybar packages are gone with quattro. walker
 	# (launcher) and elephant (its providers) were replaced by the Quickshell menu,
@@ -565,7 +565,7 @@ pull-files:
 write_repositories := "
 mrchantey/beet
 mrchantey/beetmash
-mrchantey/os
+mrchantey/arch-config
 mrchantey/personal
 bevyengine/bevy
 "

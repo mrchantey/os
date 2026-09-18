@@ -34,7 +34,7 @@ tee "${CONF}" >/dev/null <<'EOF'
 # which drops G903 drags mid-flight. keep the receiver on hid-generic instead.
 # `install ... /bin/true` (not just `blacklist`) is required: udev autoloads
 # the module via HID modalias at boot, which a bare blacklist does not stop.
-# see ~/me/os/scripts/rainbow-cat/install.sh
+# see ~/me/arch-config/scripts/rainbow-cat/install.sh
 install hid_logitech_dj /bin/true
 install hid_logitech_hidpp /bin/true
 blacklist hid_logitech_dj

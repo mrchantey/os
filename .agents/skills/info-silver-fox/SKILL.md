@@ -2,7 +2,7 @@
 name: info-silver-fox
 description: >
   The standing record of `silver-fox`, the Dell Precision 7560 laptop that this
-  ~/me/os config runs on: measured hardware inventory, the per-device config
+  ~/me/arch-config config runs on: measured hardware inventory, the per-device config
   decisions and why they were made, what is installed versus still pending, and
   the machine-specific traps. Read this before changing anything under
   stow/hypr-silver-fox/ or scripts/silver-fox/, before answering "what hardware

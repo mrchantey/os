@@ -1,13 +1,13 @@
-# OS
+# arch-config
 
 My [Omarchy](https://omarchy.org/) config.
 
 ## Quickstart
 
-pull this repo into `~/me/os`, cd into it and install just.
+pull this repo into `~/me/arch-config`, cd into it and install just.
 
 ```sh
-mkdir ~/me && cd ~/me && git clone https://github.com/mrchantey/os.git && cd os && sudo pacman -S --noconfirm just
+mkdir ~/me && cd ~/me && git clone https://github.com/mrchantey/arch-config.git && cd arch-config && sudo pacman -S --noconfirm just
 ```
 
 

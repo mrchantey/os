@@ -2,7 +2,7 @@
 -- Shared across all devices. https://wiki.hypr.land/Configuring/Environment-variables/
 
 -- Never-Lost Rainbow cursors, converted from the Windows .ani set in
--- ~/me/os/neverlost and installed by `just install-cursor-theme`.
+-- ~/me/arch-config/neverlost and installed by `just install-cursor-theme`.
 --
 -- The `cursor-off` flag is written by `cursor-toggle`; reading it here (rather
 -- than only calling hyprctl setcursor in the toggle) is what makes the choice

@@ -29,4 +29,4 @@ o.window({ tag = "default-opacity" }, { opacity = "1.0 1.0" })
 
 -- Master-layout orientation is device-specific (centered column on the ultrawide,
 -- full-screen on the laptop) and lives in the per-device hypr-<device>/layout-device.lua,
--- required after this file. See ~/me/os/CLAUDE.md.
+-- required after this file. See ~/me/arch-config/CLAUDE.md.

@@ -114,7 +114,7 @@ o.bind("SUPER + CTRL + M", "Beetmash Repo", editor .. " ~/me/beetmash")
 hl.unbind("SUPER + CTRL + P") -- was: Power panel
 o.bind("SUPER + CTRL + P", "Personal Repo", editor .. " ~/me/personal")
 hl.unbind("SUPER + CTRL + O") -- was: Toggle menu
-o.bind("SUPER + CTRL + O", "OS Repo", editor .. " ~/me/os")
+o.bind("SUPER + CTRL + O", "Arch Config Repo", editor .. " ~/me/arch-config")
 hl.unbind("SUPER + CTRL + S") -- was: Share
 o.bind("SUPER + CTRL + S", "Scratchpad Repo", editor .. " ~/me/scratch")
 hl.unbind("SUPER + CTRL + V") -- was: Clipboard manager
@@ -162,46 +162,46 @@ hl.unbind("SUPER + CTRL + ALT + Z")
 -- Quattro adds its own voxtype defaults (F9 push-to-talk, SUPER + CTRL + X toggle).
 -- They don't collide with these, so they're left in place as extra entry points.
 for _, key in ipairs({ "PAUSE", "INSERT" }) do
-  o.bind(key, "Start dictation (push-to-talk)", "~/me/os/scripts/tts.sh stop; voxtype record start")
+  o.bind(key, "Start dictation (push-to-talk)", "~/me/arch-config/scripts/tts.sh stop; voxtype record start")
   o.bind(key, "Stop dictation (push-to-talk)", "voxtype record stop", { release = true })
 
   -- TEXT-TO-SPEECH (kokoro) — the reverse of dictation.
   -- Toggle: read the highlighted selection aloud; press again to stop.
   -- SHIFT + the dictation keys, so speak/listen sit on the same fingers.
-  o.bind("SHIFT + " .. key, "Read selection aloud", "~/me/os/scripts/tts.sh toggle")
+  o.bind("SHIFT + " .. key, "Read selection aloud", "~/me/arch-config/scripts/tts.sh toggle")
 
   -- CTRL + the same keys reads the last reply from the coding agent in Zed, no highlighting.
   -- Provider-agnostic: it reads the ACP stream tapped by scripts/acp-tee.sh, so it works for
   -- whichever agent the panel is running. Press again to stop.
-  o.bind("CTRL + " .. key, "Read last agent reply aloud", "~/me/os/scripts/tts.sh last")
+  o.bind("CTRL + " .. key, "Read last agent reply aloud", "~/me/arch-config/scripts/tts.sh last")
 end
 
 --------------------------------------------------------------------------------
 -- THEME — toggle between dark (Everforest) and light (Solarized Light)
 --------------------------------------------------------------------------------
-o.bind("SUPER + SHIFT + T", "Toggle light/dark theme", "~/me/os/scripts/theme-toggle.sh")
+o.bind("SUPER + SHIFT + T", "Toggle light/dark theme", "~/me/arch-config/scripts/theme-toggle.sh")
 
 --------------------------------------------------------------------------------
 -- PRESENTATION (SUPER ALT P) — modal step-through for demos
 --------------------------------------------------------------------------------
 -- Enter a submap where page/arrow keys drive the *armed* presentation via
--- ~/me/os/scripts/present (arm one first with `present arm` in a talk's repo).
+-- ~/me/arch-config/scripts/present (arm one first with `present arm` in a talk's repo).
 -- The map is presentation-agnostic; the repo supplies its own present.ts.
 -- While in the submap plain Enter/Space/Backspace are captured, so you cannot
 -- type: press Esc (or Super+Alt+P again) to leave and type freely.
 local function leave_presentation()
-  hl.exec_cmd("~/me/os/scripts/present notify-exit")
+  hl.exec_cmd("~/me/arch-config/scripts/present notify-exit")
   hl.dispatch(hl.dsp.submap("reset"))
 end
 
 hl.define_submap("presentation", function()
   -- next
   for _, key in ipairs({ "Page_Down", "RIGHT", "RETURN", "SPACE" }) do
-    hl.bind(key, hl.dsp.exec_cmd("~/me/os/scripts/present next"), { description = "Next slide" })
+    hl.bind(key, hl.dsp.exec_cmd("~/me/arch-config/scripts/present next"), { description = "Next slide" })
   end
   -- prev
   for _, key in ipairs({ "Page_Up", "LEFT", "BACKSPACE" }) do
-    hl.bind(key, hl.dsp.exec_cmd("~/me/os/scripts/present prev"), { description = "Previous slide" })
+    hl.bind(key, hl.dsp.exec_cmd("~/me/arch-config/scripts/present prev"), { description = "Previous slide" })
   end
   -- exit presentation mode
   hl.bind("ESCAPE", leave_presentation, { description = "Exit presentation" })
@@ -209,7 +209,7 @@ hl.define_submap("presentation", function()
 end)
 
 o.bind("SUPER + ALT + P", "Presentation step-through", function()
-  hl.exec_cmd("~/me/os/scripts/present notify-enter")
+  hl.exec_cmd("~/me/arch-config/scripts/present notify-enter")
   hl.dispatch(hl.dsp.submap("presentation"))
 end)
 
@@ -219,4 +219,4 @@ end)
 -- The *visual* counterpart to the `present` step-through above: hides the blue
 -- window border, zeroes gaps/rounding, and hides the bar so pre-set workspaces
 -- read edge-to-edge on a projector. Applies globally; toggle to restore.
-o.bind("SUPER + ALT + SHIFT + P", "Presentation mode (chromeless)", "~/me/os/scripts/presentation-mode.sh")
+o.bind("SUPER + ALT + SHIFT + P", "Presentation mode (chromeless)", "~/me/arch-config/scripts/presentation-mode.sh")

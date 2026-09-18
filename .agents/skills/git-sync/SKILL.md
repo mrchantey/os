@@ -1,12 +1,12 @@
 ---
 name: git-sync
 description: >
-  Use to synchronize this machine with the ~/me/os dotfiles repo: commit and push local changes ("our own") and pull the latest from origin, then patch the live OS so it actually matches the repo. Triggers: "sync the os repo", "git sync", "/git-sync", "pull and push my dotfiles", "update this machine from the repo", "bring this box up to date". Covers committing local work, rebasing onto origin, and re-applying stow/services/hyprland after the pull.
+  Use to synchronize this machine with the ~/me/arch-config dotfiles repo: commit and push local changes ("our own") and pull the latest from origin, then patch the live OS so it actually matches the repo. Triggers: "sync the arch-config repo", "git sync", "/git-sync", "pull and push my dotfiles", "update this machine from the repo", "bring this box up to date". Covers committing local work, rebasing onto origin, and re-applying stow/services/hyprland after the pull.
 ---
 
 # Git Sync
 
-Synchronize `~/me/os` (the omarchy dotfiles repo) in both directions and then **make the running OS match the repo**.
+Synchronize `~/me/arch-config` (the omarchy dotfiles repo) in both directions and then **make the running OS match the repo**.
 
 The repo is just config — the box only changes when something re-reads that config. Most of the time that's automatic, but not always, so a sync is two jobs:
 
@@ -15,7 +15,7 @@ The repo is just config — the box only changes when something re-reads that co
 
 ## The mental model (why "patch" is needed at all)
 
-Every tracked dotfile is a **stow symlink pointing into this repo** (`~/.config/zed/settings.json` → `~/me/os/stow/zed/...`). So when `git pull` rewrites a file's *contents*, the change is **already live** — the symlink points at the new bytes. No action needed for plain content edits.
+Every tracked dotfile is a **stow symlink pointing into this repo** (`~/.config/zed/settings.json` → `~/me/arch-config/stow/zed/...`). So when `git pull` rewrites a file's *contents*, the change is **already live** — the symlink points at the new bytes. No action needed for plain content edits.
 
 You only need to patch when the pull changed something *structural*:
 
@@ -32,9 +32,9 @@ So: do the git half, diff what landed, and apply *only* the matching patches.
 ### 1. Preflight
 
 ```sh
-cd ~/me/os
+cd ~/me/arch-config
 git status -sb        # confirm branch tracks origin/main, see what's dirty
-git remote -v         # expect origin = github.com/mrchantey/os
+git remote -v         # expect origin = github.com/mrchantey/arch-config
 ```
 
 ### 2. Commit local work ("our own")
@@ -132,4 +132,4 @@ Report what you pushed, what you pulled, and which patches you ran (or that none
 - **`hyprland.lua` is special**: a live Hyprland regenerates a default stub the instant that symlink goes missing, which aborts the whole hypr stow. `just stow-symlinks` pre-creates it atomically — don't `rm` it by hand mid-sync.
 - **Content vs structure**: a one-line edit to an existing tracked file usually needs *no* patch (symlink already points at it); a *new* file/module needs a relink. **The exception is a config owned by a long-running daemon** (hypr, fcitx5, voxtype): the new bytes are live on disk, but the process won't act on them until it re-reads — so even a pure content edit there still needs the matching reload/restart from the table. When in doubt, the table's "Action" column is always safe to run.
 - **Don't reflexively re-run install recipes.** A pull that only touched config installs nothing new — only `just install-*` when the package *lists* changed, and confirm first (they use `sudo`/`yay`).
-- **Never `rm` a "blocking" file to clear a stow conflict.** Stow folds whole directories: `~/.config/autostart` is often a *symlink to the repo dir*, so a file inside it that looks like a plain real file is actually the repo file surfaced through that folded symlink — `rm`-ing it deletes it straight out of `~/me/os` (recover with `git checkout -- <path>`). Check with `readlink ~/.config/<dir>` first. New files under an already-folded dir are live automatically; let `just stow-symlinks` (which is idempotent) handle real conflicts, and if it reports one, surface it rather than deleting.
+- **Never `rm` a "blocking" file to clear a stow conflict.** Stow folds whole directories: `~/.config/autostart` is often a *symlink to the repo dir*, so a file inside it that looks like a plain real file is actually the repo file surfaced through that folded symlink — `rm`-ing it deletes it straight out of `~/me/arch-config` (recover with `git checkout -- <path>`). Check with `readlink ~/.config/<dir>` first. New files under an already-folded dir are live automatically; let `just stow-symlinks` (which is idempotent) handle real conflicts, and if it reports one, surface it rather than deleting.
