@@ -7,7 +7,7 @@ image/webp=imv.desktop
 image/bmp=imv.desktop
 image/tiff=imv.desktop
 application/pdf=org.gnome.Evince.desktop
-text/html=google-chrome.desktop
+text/html=dev.zed.Zed.desktop
 x-scheme-handler/http=google-chrome.desktop
 x-scheme-handler/https=google-chrome.desktop
 x-scheme-handler/chrome=google-chrome.desktop
@@ -42,12 +42,18 @@ x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop
 # text/x-shellscript), and it does NOT walk ancestry, so an unlisted type falls
 # through to $BROWSER. Hence the second block (freedesktop names, for gio and
 # for future apps that register them) and the third (libmagic names, for
-# xdg-open). Deliberately not Zed: text/csv (Calc), text/html (browser), and
-# the documents, playlists, certificates and svg that are technically
+# xdg-open). text/html here is the *file* association only; http/https URLs
+# are x-scheme-handler entries above and still go to the browser. Deliberately
+# not Zed: the documents, playlists, certificates and svg that are technically
 # text/plain subclasses but have a real viewer registered.
 text/plain=dev.zed.Zed.desktop
 text/english=dev.zed.Zed.desktop
 text/markdown=dev.zed.Zed.desktop
+text/csv=dev.zed.Zed.desktop
+text/x-csv=dev.zed.Zed.desktop
+text/comma-separated-values=dev.zed.Zed.desktop
+text/x-comma-separated-values=dev.zed.Zed.desktop
+text/tab-separated-values=dev.zed.Zed.desktop
 text/x-markdown=dev.zed.Zed.desktop
 text/x-makefile=dev.zed.Zed.desktop
 text/x-c=dev.zed.Zed.desktop
